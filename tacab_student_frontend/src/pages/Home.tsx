@@ -1,8 +1,8 @@
 import { Outlet, useNavigate } from "react-router-dom"
 import Footer from "../components/Footer"
 import Header from "../components/Header"
-import { useSelector } from "react-redux"
-import type { RootState } from "@/redux/store"
+// import { useSelector } from "react-redux"
+// import type { RootState } from "@/redux/store"
 import { useEffect } from "react"
 
 function Home() {
@@ -28,9 +28,9 @@ function Home() {
   }, [])
 
   return (
-    <div className="w-full h-screen flex flex-col justify-between">
+    <div className="w-full h-screen flex flex-col">
       <Header />
-      <div className="h-s">
+      <div className="grow">
         <Outlet />
       </div>
       <Footer/>

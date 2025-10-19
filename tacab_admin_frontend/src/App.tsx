@@ -1,9 +1,12 @@
 import { RouterProvider } from "react-router-dom"
-import router from "./router"
+import { ThemeProvider } from "./components/ui/theme-provider"
+import { router } from "./router"
 
 function App() {
   return (
-    <RouterProvider router={router} />
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <RouterProvider router={router} />
+    </ThemeProvider>
   )
 }
 

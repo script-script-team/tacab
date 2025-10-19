@@ -9,20 +9,41 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import { useState } from "react";
 
 function Header() {
 
   const navigate = useNavigate();
   const login = localStorage.getItem("login");
 
+  const nav = [
+    {
+      name: "Home",
+      path: "/"
+    },
+    {
+      name: "About",
+      path: "/about"
+    },
+    {
+      name: "Services",
+      path: "/services"
+    },
+    {
+      name: "Help",
+      path: "/help"
+    },
+  ]
+
+  const [loc, setLoc] = useState("/");
+
   return (
     <div className="w-full fixed z-10 p-2 flex justify-between items-center bg-gray-900">
       <Logo />
       <div className="nav flex gap-3 px-4 py-1 rounded-full justify-center items-center">
-        <Link className="hover:text-gray-700 text-white" to="/">Home</Link>
-        <Link className="hover:text-gray-700 text-white" to="/about">About</Link>
-        <Link className="hover:text-gray-700 text-white" to="/services">Services</Link>
-        <Link className="hover:text-gray-700 text-white" to="/help">Help</Link>
+        {nav.map((link, index) => (
+          <Link key={index} onClick={() => setLoc(link.path)} className={`${link.path === loc ? "bg-white text-black px-4": "text-white"} rounded-full flex`} to={link.path}>{link.name}</Link>
+        ))}
       </div>
 
       <div className="flex gap-2 justify-between items-center">
