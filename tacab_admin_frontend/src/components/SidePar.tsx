@@ -4,16 +4,11 @@ import { RiUserSettingsLine, RiUploadCloud2Fill } from "react-icons/ri";
 import { TbLayoutDashboardFilled } from "react-icons/tb";
 import { FaClipboardList } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Button } from "./ui/button";
-import { useDispatch } from "react-redux";
-import type { AppDispatch } from "@/pages/redux/store";
-import { logout } from "@/pages/redux/auth/login.slice";
 
 function SidePar() {
 
   const location = useLocation();
   const path = location.pathname;
-  const dispath = useDispatch<AppDispatch>();
 
   const navigate = useNavigate();
   const opt = [
@@ -45,7 +40,7 @@ function SidePar() {
   ]
 
   return (
-    <div className="flex flex-col justify-between p-4 rounded-lg w-[250px] bg-white dark:bg-gray-950">
+    <div className="flex flex-col md:h-[95vh] lg:h-[95vh] xl:h-[95vh] xs:gap-4 p-4 rounded-lg md:w-[250px] lg:w-[250px] xl:w-[250px] sm:w-full xs:w-full bg-white dark:bg-gray-950">
 
       <div className="flex flex-col gap-4">
         <div className="flex gap-2">
@@ -55,22 +50,17 @@ function SidePar() {
 
       <h2 className="text-lg text-gray-400 font-[500]">Menu</h2>
 
-      <div className="flex flex-col gap-4">
+      <div className="flex md:flex-col lg:flex-col xl:flex-col xs:justify-between sm:justify-between md:gap-4 lg:gap-4 xl:gap-4 sm:flex-row xs:flex-row">
         {opt.map((opt, index) => {
           return <div onClick={() => navigate(`${opt.path}`)} key={index} className={`cursor-pointer flex items-center gap-3 rounded-tr-md rounded-br-md ${opt.path === path ? "bg-gray-100 dark:bg-gray-800": ""} relative before:-translate-y-8 overflow-hidden before:content-[''] before:w-[5px] before:h-full ${opt.path === path ? "before:bg-green-500 before:translate-y-0": ""} before:left-0 before:absolute before:rounded-full before:duration-700`}>
-            <div className={`w-8 h-8 rounded-sm ${opt.path === path ? "text-black dark:text-white": "bg-blue-500 text-white dark:text-black"} flex justify-center items-center`}>
+            <div className={`w-8 h-8 xs:rounded-full sm:rounded-full md:rounded-sm lg:rounded-sm xl:rounded-sm ${opt.path === path ? "text-black dark:text-white": "bg-blue-500 text-white dark:text-black"} flex justify-center items-center`}>
               {opt.icon}
             </div>
-            <h2 className="text-sm">{opt.name}</h2>
+            <h2 className="text-sm sm:hidden xs:hidden md:block lg:block xl:block">{opt.name}</h2>
           </div>
         })}
       </div>
       </div>
-
-      <Button onClick={() => {
-        window.location.reload();
-        dispath(logout());
-      }} variant={"destructive"} className="cursor-pointer">Logout</Button>
       
     </div>
   )

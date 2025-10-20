@@ -3,10 +3,10 @@ import * as yup from "yup"
 import  { useFormik } from "formik"
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
-import { login, randomLogin, student } from "../Example";
 import { toast } from "sonner";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { admins } from "../Example";
 
 function Login() {
 
@@ -14,24 +14,24 @@ function Login() {
 
   const formik = useFormik({
     initialValues: {
-      id: "",
+      email: "",
       pass: ""
     },
     onSubmit(values) {
       const data = {
         ...values
       }
-      if(login.some((u) => u.id === data.id && u.pass === data.pass)) {
+      if(admins.some((u) => u.email === data.email && u.pass === data.pass)) {
         navigate("/");
-        localStorage.setItem("login", JSON.stringify(student[randomLogin(0, student?.length - 1)]));
+        localStorage.setItem("login", JSON.stringify(admins.find((u) => u.email === data.email && u.pass === data.pass)));
         window.location.reload();
         return;
       }else {
-        toast.error("Incorrect id or pass")
+        toast.error("Incorrect email or pass")
       }
     },
     validationSchema: yup.object({
-      id: yup.string().length(8, "Id must be at least 8 length").required("Id is required"),
+      email: yup.string().email().required("Email is required"),
       pass: yup.string().max(100, "Password limit reach").required("Password is required")
     })
   });
@@ -49,8 +49,8 @@ function Login() {
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
             <label className="font-[500] text-gray-600">Email</label>
-            <Input onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.id} name="id" type="text" placeholder="Email" />
-            <p className="text-red-500 font-bold">{formik.touched.id && formik.errors.id}</p>
+            <Input onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.email} name="email" type="text" placeholder="Email" />
+            <p className="text-red-500 font-bold">{formik.touched.email && formik.errors.email}</p>
           </div>
         <div className="flex flex-col gap-2">
           <label className="font-[500] text-gray-600">Password</label>
