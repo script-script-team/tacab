@@ -3,40 +3,38 @@ import * as yup from 'yup'
 import { useFormik } from 'formik'
 import { Input } from '@/components/ui/input'
 import { useNavigate } from 'react-router-dom'
-import { toast } from 'sonner'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import { admins } from '../Example'
+import { useLogin } from '@/react-query/login.hook'
+import { toast } from 'sonner'
+import { useDispatch } from 'react-redux'
+import { login } from '../redux/auth/login.slice'
 
 function Login() {
   const navigate = useNavigate()
+  const { mutate: loginFn, isPending } = useLogin()
+  const dispatch = useDispatch()
 
   const formik = useFormik({
     initialValues: {
       email: '',
-      pass: '',
+      password: '',
     },
     onSubmit(values) {
-      const data = {
-        ...values,
-      }
-      if (admins.some((u) => u.email === data.email && u.pass === data.pass)) {
-        navigate('/')
-        localStorage.setItem(
-          'login',
-          JSON.stringify(
-            admins.find((u) => u.email === data.email && u.pass === data.pass)
-          )
-        )
-        window.location.reload()
-        return
-      } else {
-        toast.error('Incorrect email or pass')
-      }
+      loginFn(values, {
+        onSuccess: (res) => {
+          toast.success('logged in successfully')
+          dispatch(login(res.admin))
+          navigate('/')
+        },
+        onError: (error) => {
+          toast.error(error.message || 'Login failed')
+        },
+      })
     },
     validationSchema: yup.object({
       email: yup.string().email().required('Email is required'),
-      pass: yup
+      password: yup
         .string()
         .max(100, 'Password limit reach')
         .required('Password is required'),
@@ -76,21 +74,22 @@ function Login() {
                 <Input
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  value={formik.values.pass}
-                  name='pass'
+                  value={formik.values.password}
+                  name='password'
                   type='password'
                   placeholder='Password'
                 />
                 <p className='text-red-500 font-bold'>
-                  {formik.touched.pass && formik.errors.pass}
+                  {formik.touched.password && formik.errors.password}
                 </p>
               </div>
             </div>
             <Button
               type='submit'
               className='cursor-pointer bg-blue-600 hover:bg-blue-700 h-[40px] text-white'
+              disabled={isPending}
             >
-              Login
+              {isPending ? 'Logging in...' : 'Login'}
             </Button>
           </div>
         </form>
