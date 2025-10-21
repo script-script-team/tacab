@@ -1,8 +1,13 @@
 import { AdminDashboard } from '@/components/AdminDashboard'
 import DashboardHeader from '@/components/DashboardHeader'
 import { admins } from '../Example'
+import { useGetAllAdmins } from '@/react-query/admin.hooks'
 
 function Admins() {
+  const { data } = useGetAllAdmins()
+
+  console.log(data)
+
   return (
     <div className='w-full min-h-[95vh] h-full flex flex-col gap-2 rounded-lg overflow-hidden'>
       <DashboardHeader />

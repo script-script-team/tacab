@@ -1,5 +1,6 @@
 import type { IAdminDashboardProp } from '@/pages/types/admin.types'
-import { Eye, Pencil, Trash } from 'lucide-react'
+import { Eye, Pencil } from 'lucide-react'
+import { DeleteAlert } from './DeleteAlert'
 
 export const AdminDashboard = ({ name, email, img }: IAdminDashboardProp) => {
   const iconSize = 20
@@ -20,7 +21,7 @@ export const AdminDashboard = ({ name, email, img }: IAdminDashboardProp) => {
           <Pencil size={iconSize} />
         </button>
         <button className={`flex-1 ${iconsStyle} bg-red-500`}>
-          <Trash size={iconSize} />
+          <DeleteAlert iconSize={iconSize} />
         </button>
         <button className={`flex-1 ${iconsStyle} bg-green-500`}>
           <Eye size={iconSize} />
