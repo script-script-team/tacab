@@ -1,7 +1,6 @@
 export interface IAdminDashboardProp {
   name: string
   email: string
-  img: string
 }
 
 export interface IAdminProp {
@@ -12,4 +11,9 @@ export interface IAdminProp {
   main_admin: boolean
   createdAt: string
   updatedAt: string
+}
+
+export interface IGetALlAdminsRes {
+  ok: boolean
+  admins: IAdminProp[]
 }

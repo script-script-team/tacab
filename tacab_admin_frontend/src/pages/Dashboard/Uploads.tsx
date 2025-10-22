@@ -2,14 +2,16 @@ import DashboardHeader from '@/components/DashboardHeader'
 import { Button } from '@/components/ui/button'
 import Upload from '@/components/Upload'
 import { Plus } from 'lucide-react'
-import { uploads } from '../Example'
 import { useRef } from 'react'
 import type { ChangeEvent } from 'react'
 import { useDispatch } from 'react-redux'
 import { setIsOpen, setSelectedFile } from '../redux/uploadDialog.slice'
 import { UploadDialog } from '@/components/UploadDialog'
+import { useGetAllUploads } from '@/react-query/uploads.hooks'
+import Loading from '@/components/Loading'
 
 function Uploads() {
+  const { data: uploads, isLoading } = useGetAllUploads()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const dispatch = useDispatch()
 
@@ -20,7 +22,6 @@ function Uploads() {
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (file) {
-      console.log('Selected file:', file)
       dispatch(setIsOpen(true))
       dispatch(setSelectedFile(file))
     }
@@ -48,23 +49,29 @@ function Uploads() {
                 onChange={handleFileChange}
               />
             </div>
-            <div className='space-y-2'>
-              <h1 className='font-medium'>Total uploads: ({uploads.length})</h1>
-              <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-4'>
-                {uploads.slice(0, 3).map((upload, index) => (
-                  <Upload
-                    term={upload.term}
-                    year={upload.year}
-                    subject={upload.subject}
-                    number_of_students={upload.number_of_students}
-                    key={index}
-                  />
-                ))}
+            {isLoading ? (
+              <Loading />
+            ) : (
+              <div className='space-y-2'>
+                <h1 className='font-medium'>
+                  Total uploads: ({uploads?.total})
+                </h1>
+                <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-4'>
+                  {uploads?.uploads.slice(0, 3).map((upload, index) => (
+                    <Upload
+                      term={upload.term}
+                      year={upload.year}
+                      number_of_students={upload.students.length}
+                      admin={upload.admin.name}
+                      key={index}
+                    />
+                  ))}
+                </div>
+                <div className='w-full flex justify-center'>
+                  <Button variant={'link'}>View More</Button>
+                </div>
               </div>
-              <div className='w-full flex justify-center'>
-                <Button variant={'link'}>View More</Button>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

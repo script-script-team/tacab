@@ -4,13 +4,14 @@ import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  console.log('hello')
   const isAdmin = useSelector((state: RootState) => state.loginSlice.admin)
   const navigate = useNavigate()
 
   useEffect(() => {
     if (!isAdmin.name) {
       navigate('/auth/login', { replace: true })
+    } else {
+      navigate('/')
     }
   }, [isAdmin, navigate])
 
