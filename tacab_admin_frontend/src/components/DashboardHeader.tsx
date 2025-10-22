@@ -1,12 +1,14 @@
 import { Theme } from './ui/mode-toggle'
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
+import { Avatar } from './ui/avatar'
 import { Button } from './ui/button'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '@/pages/redux/auth/login.slice'
+import type { RootState } from '@/pages/redux/store'
+import CustomAvatar from './CustomAvatar'
 
 const DashboardHeader = () => {
-  const login = JSON.parse(localStorage.getItem('login')!)
+  const admin = useSelector((state: RootState) => state.loginSlice.admin)
   const dispatch = useDispatch()
 
   return (
@@ -17,8 +19,7 @@ const DashboardHeader = () => {
         <Popover>
           <PopoverTrigger>
             <Avatar className='cursor-pointer'>
-              <AvatarImage src={login?.img} />
-              <AvatarFallback>{login?.[0]?.toUpperCase()}</AvatarFallback>
+              <CustomAvatar name={admin.name} />
             </Avatar>
           </PopoverTrigger>
           <PopoverContent>
@@ -35,8 +36,8 @@ const DashboardHeader = () => {
           </PopoverContent>
         </Popover>
         <div className='flex flex-col'>
-          <small className='font-bold'>{login?.name}</small>
-          <small className='text-[10px]'>{login?.role}</small>
+          <small className='font-bold'>{admin.name}</small>
+          <small className='text-[10px]'>{admin.email}</small>
         </div>
       </div>
     </header>
