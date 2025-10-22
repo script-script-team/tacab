@@ -79,7 +79,7 @@ function DashIntro() {
                     <item.icons size={iconSize} />
                     <Count
                       start={0}
-                      end={85}
+                      end={item.value || 0}
                       className={`font-bold ${item.color} text-2xl`}
                     />
                     <h2>{item.text}</h2>
