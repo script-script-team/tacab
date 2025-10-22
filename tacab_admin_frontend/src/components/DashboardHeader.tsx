@@ -6,10 +6,18 @@ import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '@/pages/redux/auth/login.slice'
 import type { RootState } from '@/pages/redux/store'
 import CustomAvatar from './CustomAvatar'
+import { useLogout } from '@/react-query/login.hook'
+import { toast } from 'sonner'
+import Loading from './Loading'
+import { useNavigate } from 'react-router-dom'
 
 const DashboardHeader = () => {
   const admin = useSelector((state: RootState) => state.loginSlice.admin)
+  const { mutate: logoutFn, isPending } = useLogout()
   const dispatch = useDispatch()
+  const navigate = useNavigate()
+
+  if (isPending) return <Loading />
 
   return (
     <header className='flex bg-white dark:bg-gray-950 rounded-lg p-3 justify-between items-center'>
@@ -25,11 +33,20 @@ const DashboardHeader = () => {
           <PopoverContent>
             <Button
               onClick={() => {
-                window.location.reload()
+                logoutFn(undefined, {
+                  onSuccess: (res) => {
+                    toast.success(res.message)
+                    navigate('/auth/login')
+                  },
+                  onError: (err) => {
+                    toast.success(err.message)
+                  },
+                })
                 dispatch(logout())
               }}
               variant={'destructive'}
               className='cursor-pointer'
+              disabled={isPending}
             >
               Logout
             </Button>

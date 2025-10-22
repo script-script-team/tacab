@@ -26,9 +26,9 @@ export const useLogin = () => {
 }
 
 export const useLogout = () => {
-  return useQuery({
-    queryKey: ['logout'],
-    queryFn: async () => {
+  return useMutation({
+    mutationKey: ['logout'],
+    mutationFn: async () => {
       try {
         const res = await api.get(`${BASE_API_URL}/api/auth/logout`)
 
