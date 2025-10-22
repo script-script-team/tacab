@@ -47,7 +47,7 @@ function DashIntro() {
   return (
     <div className="w-full min-h-[95vh] flex flex-col gap-2 rounded-lg overflow-hidden">
        <header className="flex bg-white dark:bg-gray-950 rounded-lg p-3 justify-between items-center">
-         <div className="flex gap-2 w-[50%]">
+         <div className="flex gap-2 xs:w-[70%] sm:w-[80%] md:w-[50%] lg:w-[50%] xl:w-[50%]">
             <Theme />
             <form className="w-full flex" onSubmit={formik.handleSubmit}>
               <Input onChange={formik.handleChange} onBlur={formik.handleBlur} name="text" value={formik.values.text} className="w-full" placeholder="Search..." />
