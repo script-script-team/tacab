@@ -6,9 +6,18 @@ import { useFormik } from 'formik'
 import * as yup from 'yup'
 import { useEffect } from 'react'
 import { toast } from 'sonner'
-import DashboardHeader from '@/components/DashboardHeader'
+import { Theme } from '@/components/ui/mode-toggle'
+import { Input } from '@/components/ui/input'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Button } from '@/components/ui/button'
+import { useDispatch } from 'react-redux'
+import type { AppDispatch } from '../redux/store'
+import { logout } from '../redux/auth/login.slice'
 
 function DashIntro() {
+
+  const dispatch = useDispatch<AppDispatch>()
+
   const formik = useFormik({
     initialValues: {
       text: '',
@@ -34,40 +43,58 @@ function DashIntro() {
   }, [formik.touched.text, formik.errors.text])
 
   return (
-    <div className='w-full min-h-[95vh] flex flex-col gap-2 rounded-lg overflow-hidden'>
-      <DashboardHeader />
-
-      <div className='flex w-full gap-2 xs:flex-col sm:flex-col md:flex-row lg:flex-row xl:flex-row'>
-        <div className='w-full flex flex-col gap-2'>
-          <div className='w-full p-3 flex flex-col bg-white dark:bg-gray-950 rounded-lg'>
-            <h2 className='font-medium text-gray-400'>Total:</h2>
-            <div className='flex justify-between text-center'>
-              <div className='flex flex-col'>
-                <Count start={0} end={85} className='font-bold text-blue-500' />
-                <h2>Students</h2>
-              </div>
-              <div className='flex flex-col'>
-                <Count
-                  start={0}
-                  end={44}
-                  className='font-bold text-green-500'
-                />
-                <h2>Uploads</h2>
-              </div>
-              <div className='flex flex-col'>
-                <Count start={0} end={12} className='font-bold text-cyan-500' />
-                <h2>Courses</h2>
-              </div>
-              <div className='flex flex-col'>
-                <Count
-                  start={0}
-                  end={4}
-                  className='font-bold text-orange-500'
-                />
-                <h2>Admins</h2>
-              </div>
+    <div className="w-full min-h-[95vh] flex flex-col gap-2 rounded-lg overflow-hidden">
+       <header className="flex bg-white dark:bg-gray-950 rounded-lg p-3 justify-between items-center">
+         <div className="flex gap-2 w-[50%]">
+            <Theme />
+            <form className="w-full flex" onSubmit={formik.handleSubmit}>
+              <Input onChange={formik.handleChange} onBlur={formik.handleBlur} name="text" value={formik.values.text} className="w-full" placeholder="Search..." />
+            </form>
+         </div>
+            <div className="flex gap-2">
+            <Popover>
+              <PopoverTrigger>
+                <Avatar className="cursor-pointer">
+                  <AvatarImage src="" />
+                  <AvatarFallback>M</AvatarFallback>
+                  </Avatar></PopoverTrigger>
+              <PopoverContent><Button onClick={() => {
+                    window.location.reload();
+                    dispatch(logout());
+                }} variant={"destructive"} className="cursor-pointer">Logout</Button></PopoverContent>
+          </Popover>
+            <div className="flex flex-col">
+              <small className="font-bold"></small>
+              <small className="text-[10px]"></small>
             </div>
+            </div>
+       </header>
+
+       <div className="flex w-full gap-2 xs:flex-col sm:flex-col md:flex-row lg:flex-row xl:flex-row">
+        
+        <div className="w-full flex flex-col gap-2">
+
+        <div className="w-full p-3 flex flex-col bg-white dark:bg-gray-950 rounded-lg">
+          <h2 className="font-medium text-gray-400">Total:</h2>
+          <div className="flex justify-between text-center">
+            <div className="flex flex-col">
+            <Count start={0} end={85} className="font-bold text-blue-500" />
+            <h2>Students</h2>
           </div>
+          <div className="flex flex-col">
+            <Count start={0} end={44} className="font-bold text-green-500" />
+            <h2>Uploads</h2>
+          </div>
+          <div className="flex flex-col">
+            <Count start={0} end={12} className="font-bold text-cyan-500" />
+            <h2>Courses</h2>
+          </div>
+          <div className="flex flex-col">
+            <Count start={0} end={4} className="font-bold text-orange-500" />
+            <h2>Admins</h2>
+          </div>
+          </div>
+        </div>
 
           <div className='w-full flex bg-white dark:bg-gray-950 rounded-lg'>
             <Statistics />

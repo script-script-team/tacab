@@ -1,6 +1,6 @@
 import { Theme } from "@/components/mode-toggle"
 import Logo from "@/components/ui/Logo"
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { Button } from "./ui/button";
 import { IoMenu } from "react-icons/io5";
 import { IoIosLogOut } from "react-icons/io";
@@ -10,11 +10,13 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "@/redux/store";
+import { logout } from "@/redux/auth/login.slice";
 
 function Header() {
 
-  const navigate = useNavigate();
-  const login = localStorage.getItem("login");
+  const dispatch = useDispatch<AppDispatch>();
 
   const nav = [
     {
@@ -47,18 +49,14 @@ function Header() {
       </div>
 
       <div className="flex gap-2 justify-between items-center">
-        {login &&
         <Popover>
           <PopoverTrigger><IoMenu className="text-white text-4xl cursor-pointer" /></PopoverTrigger>
           <PopoverContent>
             <Button onClick={() => {
-          localStorage.removeItem("login");
-          navigate("/auth/login");
-          window.location.reload();
+              dispatch(logout())
         }} className="cursor-pointer text-white bg-red-600 hover:bg-red-500"><IoIosLogOut />Logout</Button>
             </PopoverContent> 
         </Popover>
-        }
         <Theme />
       </div>
     </div>
