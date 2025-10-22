@@ -1,23 +1,19 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Avatar } from '@/components/ui/avatar'
 import { Statistics } from '@/components/ui/Statistics'
 import Count from 'react-countup'
-import { admins, Courses } from '../Example'
+import { Courses } from '../Example'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 import { useEffect } from 'react'
 import { toast } from 'sonner'
-import { Theme } from '@/components/ui/mode-toggle'
-import { Input } from '@/components/ui/input'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { Button } from '@/components/ui/button'
-import { useDispatch } from 'react-redux'
-import type { AppDispatch } from '../redux/store'
-import { logout } from '../redux/auth/login.slice'
+import { FileText, UserLock, Users } from 'lucide-react'
+import { useGetDashboardSummary } from '@/react-query/dashboard.hooks'
+import CustomAvatar from '@/components/CustomAvatar'
+import Loading from '@/components/Loading'
 
 function DashIntro() {
-
-  const dispatch = useDispatch<AppDispatch>()
-
+  const { data, isLoading } = useGetDashboardSummary()
+  const iconSize = 20
   const formik = useFormik({
     initialValues: {
       text: '',
@@ -42,59 +38,56 @@ function DashIntro() {
     }
   }, [formik.touched.text, formik.errors.text])
 
+  const totalStudents = data?.data.totalStudents
+  const totalUploads = data?.data.totalUploads
+  const totalAdmins = data?.data.totalAdmins
+  // const recentUploads = data?.data.recentUploads
+  const admins = data?.data.admins
+
+  const dashboardItems = [
+    {
+      icons: Users,
+      color: 'text-blue-500',
+      text: 'Students',
+      value: totalStudents,
+    },
+    {
+      icons: FileText,
+      color: 'text-green-500',
+      text: 'Uploads',
+      value: totalUploads,
+    },
+    {
+      icons: UserLock,
+      color: 'text-orange-500',
+      text: 'Admins',
+      value: totalAdmins,
+    },
+  ]
+
   return (
-    <div className="w-full min-h-[95vh] flex flex-col gap-2 rounded-lg overflow-hidden">
-       <header className="flex bg-white dark:bg-gray-950 rounded-lg p-3 justify-between items-center">
-         <div className="flex gap-2 w-[50%]">
-            <Theme />
-            <form className="w-full flex" onSubmit={formik.handleSubmit}>
-              <Input onChange={formik.handleChange} onBlur={formik.handleBlur} name="text" value={formik.values.text} className="w-full" placeholder="Search..." />
-            </form>
-         </div>
-            <div className="flex gap-2">
-            <Popover>
-              <PopoverTrigger>
-                <Avatar className="cursor-pointer">
-                  <AvatarImage src="" />
-                  <AvatarFallback>M</AvatarFallback>
-                  </Avatar></PopoverTrigger>
-              <PopoverContent><Button onClick={() => {
-                    window.location.reload();
-                    dispatch(logout());
-                }} variant={"destructive"} className="cursor-pointer">Logout</Button></PopoverContent>
-          </Popover>
-            <div className="flex flex-col">
-              <small className="font-bold"></small>
-              <small className="text-[10px]"></small>
-            </div>
-            </div>
-       </header>
-
-       <div className="flex w-full gap-2 xs:flex-col sm:flex-col md:flex-row lg:flex-row xl:flex-row">
-        
-        <div className="w-full flex flex-col gap-2">
-
-        <div className="w-full p-3 flex flex-col bg-white dark:bg-gray-950 rounded-lg">
-          <h2 className="font-medium text-gray-400">Total:</h2>
-          <div className="flex justify-between text-center">
-            <div className="flex flex-col">
-            <Count start={0} end={85} className="font-bold text-blue-500" />
-            <h2>Students</h2>
+    <div className='w-full min-h-[95vh] flex flex-col gap-2 rounded-lg overflow-hidden'>
+      <div className='flex w-full gap-2 xs:flex-col sm:flex-col md:flex-row lg:flex-row xl:flex-row'>
+        <div className='w-full flex flex-col gap-2'>
+          <div className='w-full p-3 flex flex-col bg-white dark:bg-gray-950 rounded-lg'>
+            {isLoading ? (
+              <Loading />
+            ) : (
+              <div className='flex justify-between text-center'>
+                {dashboardItems.map((item, index) => (
+                  <div className='flex flex-col items-center' key={index}>
+                    <item.icons size={iconSize} />
+                    <Count
+                      start={0}
+                      end={85}
+                      className={`font-bold ${item.color} text-2xl`}
+                    />
+                    <h2>{item.text}</h2>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-          <div className="flex flex-col">
-            <Count start={0} end={44} className="font-bold text-green-500" />
-            <h2>Uploads</h2>
-          </div>
-          <div className="flex flex-col">
-            <Count start={0} end={12} className="font-bold text-cyan-500" />
-            <h2>Courses</h2>
-          </div>
-          <div className="flex flex-col">
-            <Count start={0} end={4} className="font-bold text-orange-500" />
-            <h2>Admins</h2>
-          </div>
-          </div>
-        </div>
 
           <div className='w-full flex bg-white dark:bg-gray-950 rounded-lg'>
             <Statistics />
@@ -135,7 +128,7 @@ function DashIntro() {
               </h2>
             </div>
             <div className='flex flex-col gap-2'>
-              {admins.map((a, i) => {
+              {admins?.map((a, i) => {
                 return (
                   <div
                     key={i}
@@ -143,8 +136,7 @@ function DashIntro() {
                   >
                     <div className='flex gap-2'>
                       <Avatar>
-                        <AvatarImage src={`${a.img}`} />
-                        <AvatarFallback>CN</AvatarFallback>
+                        <CustomAvatar name={a.name} />
                       </Avatar>
                       <div className='flex flex-col'>
                         <small className='font-bold'>{a.name}</small>
@@ -152,9 +144,7 @@ function DashIntro() {
                       </div>
                     </div>
                     <div className='flex flex-col'>
-                      <small className='font-bold text-cyan-700'>
-                        {a.role}
-                      </small>
+                      <small className='font-bold text-cyan-700'>Admin</small>
                     </div>
                   </div>
                 )
