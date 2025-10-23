@@ -8,13 +8,13 @@ import {
 } from '@/components/ui/table'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import { MdDelete } from 'react-icons/md'
 import { PickDate } from '@/components/ui/date'
 import { useState } from 'react'
 import { useGetAllUploads } from '@/react-query/uploads.hooks'
 import Loading from '@/components/Loading'
 import { shortText } from '@/lib/utils'
 import { UpdateUploadDialog } from '@/components/UpdateUploadDialog'
+import DeleteUploadDialog from '@/components/DeleteUploadDialog'
 
 dayjs.extend(relativeTime)
 
@@ -54,7 +54,7 @@ function Results() {
                   <TableCell>{d.students.length}</TableCell>
                   <TableCell>{dayjs(d.createdAt).fromNow()}</TableCell>
                   <TableCell className='flex gap-2'>
-                    <MdDelete className='cursor-pointer text-red-500' />
+                    <DeleteUploadDialog id={d.id} />
                     <UpdateUploadDialog id={d.id} />
                   </TableCell>
                 </TableRow>

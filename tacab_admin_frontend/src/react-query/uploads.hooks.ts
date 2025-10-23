@@ -133,3 +133,25 @@ export const useUpdateUpload = () => {
     },
   })
 }
+
+export const useDeleteUpload = () => {
+  return useMutation({
+    mutationKey: ['delete-upload'],
+    mutationFn: async (id: string) => {
+      try {
+        const res = await api.delete(`${BASE_API_URL}/api/upload/${id}`)
+
+        if (!res.data.ok) {
+          throw new Error(res.data.message || 'Fieled to delete upload')
+        }
+
+        return res.data as IUpdateUploadRes
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+          throw new Error(error.response.data?.message || 'Unknown Error')
+        }
+        throw error
+      }
+    },
+  })
+}
