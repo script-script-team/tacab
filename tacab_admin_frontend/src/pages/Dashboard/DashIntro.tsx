@@ -1,11 +1,6 @@
 import { Avatar } from '@/components/ui/avatar'
 import { Statistics } from '@/components/ui/Statistics'
 import Count from 'react-countup'
-import { Courses } from '../Example'
-import { useFormik } from 'formik'
-import * as yup from 'yup'
-import { useEffect } from 'react'
-import { toast } from 'sonner'
 import { FileText, UserLock, Users } from 'lucide-react'
 import { useGetDashboardSummary } from '@/react-query/dashboard.hooks'
 import CustomAvatar from '@/components/CustomAvatar'
@@ -14,29 +9,6 @@ import Loading from '@/components/Loading'
 function DashIntro() {
   const { data, isLoading } = useGetDashboardSummary()
   const iconSize = 20
-  const formik = useFormik({
-    initialValues: {
-      text: '',
-    },
-    onSubmit(value) {
-      const data = {
-        ...value,
-      }
-      console.log(data)
-    },
-    validationSchema: yup.object({
-      text: yup
-        .string()
-        .min(1, 'text is too short')
-        .max(20, 'text limit reach!'),
-    }),
-  })
-
-  useEffect(() => {
-    if (formik.touched.text && formik.errors.text) {
-      toast.error(formik.touched.text && formik.errors.text)
-    }
-  }, [formik.touched.text, formik.errors.text])
 
   const totalStudents = data?.data.totalStudents
   const totalUploads = data?.data.totalUploads
@@ -97,32 +69,7 @@ function DashIntro() {
         <div className='xs:w-full sm:w-full md:w-[50%] lg:w-[50%] xl:w-[50%] rounded-lg bg-white dark:bg-gray-950 p-4 flex flex-col gap-16'>
           <div className='flex flex-col gap-4'>
             <div className='flex justify-between'>
-              <h2 className='text-gray-400 font-medium'>Recentely Courses:</h2>
-              <h2 className='text-blue-600 hover:text-blue-400 hover:underline cursor-pointer'>
-                See all
-              </h2>
-            </div>
-            <div className='flex gap-2'>
-              {Courses.slice(0, 3).map((c, i) => {
-                return (
-                  <div
-                    key={i}
-                    className='w-full hover:flex-5 flex-1 duration-500 cursor-pointer'
-                  >
-                    <img
-                      className='w-full h-[20vh] rounded-lg object-cover'
-                      src={`${c.pic}`}
-                    />
-                    <small>{c.name}</small>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-
-          <div className='flex flex-col gap-4'>
-            <div className='flex justify-between'>
-              <h2 className='text-gray-400 font-medium'>Recentely Admins:</h2>
+              <h2 className='text-gray-400 font-medium'>Admins:</h2>
               <h2 className='text-blue-600 hover:text-blue-400 hover:underline cursor-pointer'>
                 See all
               </h2>
