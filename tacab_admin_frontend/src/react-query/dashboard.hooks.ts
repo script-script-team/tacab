@@ -3,6 +3,7 @@ import api from './axios'
 import { BASE_API_URL } from '@/pages/constant'
 import type { IGetDashboardSummaryRes } from '@/pages/types/dashboard.types'
 import axios from 'axios'
+import type { statistics } from '@/pages/types/statistics.type'
 
 export const useGetDashboardSummary = () => {
   return useQuery({
@@ -27,5 +28,30 @@ export const useGetDashboardSummary = () => {
         throw error
       }
     },
+  })
+}
+
+export const getStatistics = () => {
+  return useQuery({
+    queryKey: ['statistics'],
+    queryFn: async() => {
+      try {
+        const res = await api.get(`${BASE_API_URL}/api/dashboard/statistics`);
+
+        if(!res.data.ok) {
+          throw new Error(
+            res.data.message || "Fieled to get the statistics"
+          )
+        }
+
+        return res.data as statistics
+
+      } catch (error) {
+        if(axios.isAxiosError(error) && error.message) {
+          throw new Error(error.response?.data.message || "Unkown Error")
+        }
+        throw error
+      }
+    }
   })
 }

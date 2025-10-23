@@ -7,6 +7,7 @@ export const store = configureStore({
     loginSlice: loginSlice.reducer,
     uploadDialog: uploadDialogSlice.reducer,
   },
+  devTools: true
 })
 
 export type RootState = ReturnType<typeof store.getState>
