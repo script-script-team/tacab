@@ -2,7 +2,12 @@ import { BASE_API_URL } from '@/pages/constant'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import api from './axios'
 import axios from 'axios'
-import type { IExtractFile, IGetAllUploadRes } from '@/pages/types/upload.types'
+import type {
+  IExtractFile,
+  IGetAllUploadRes,
+  ISaveUpload,
+} from '@/pages/types/upload.types'
+import type { IStudentProp } from '@/pages/types/student.types'
 
 export const useGetAllUploads = () => {
   return useQuery({
@@ -48,6 +53,28 @@ export const useExtractData = () => {
         }
 
         return res.data as IExtractFile
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+          throw new Error(error.response.data?.message || 'Unknown Error')
+        }
+        throw error
+      }
+    },
+  })
+}
+
+export const useSaveData = () => {
+  return useMutation({
+    mutationKey: ['save-data'],
+    mutationFn: async (data: { subject: string; data: IStudentProp[] }) => {
+      try {
+        const res = await api.post(`${BASE_API_URL}/api/upload/save`, data)
+
+        if (!res.data.ok) {
+          throw new Error(res.data.message || 'Fieled to save upload')
+        }
+
+        return res.data as ISaveUpload
       } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
           throw new Error(error.response.data?.message || 'Unknown Error')

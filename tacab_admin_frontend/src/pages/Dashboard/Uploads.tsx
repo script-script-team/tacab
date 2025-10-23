@@ -10,11 +10,13 @@ import { useExtractData, useGetAllUploads } from '@/react-query/uploads.hooks'
 import Loading from '@/components/Loading'
 import { toast } from 'sonner'
 import type { IStudentProp } from '../types/student.types'
+import { Link } from 'react-router-dom'
 
 function Uploads() {
   const { data: uploads, isLoading } = useGetAllUploads()
   const { mutate: extractFile, isPending } = useExtractData()
   const [extractRes, setExtractRes] = useState<IStudentProp[]>()
+  const [subject, setSubject] = useState<string>()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const dispatch = useDispatch()
 
@@ -30,9 +32,17 @@ function Uploads() {
         onSuccess: (res) => {
           dispatch(setIsOpen(true))
           setExtractRes(res.data)
+          setSubject(res.subject)
+
+          if (fileInputRef.current) {
+            fileInputRef.current.value = ''
+          }
         },
         onError: (err) => {
           toast.error(err.message)
+          if (fileInputRef.current) {
+            fileInputRef.current.value = ''
+          }
         },
       })
     }
@@ -41,7 +51,11 @@ function Uploads() {
   return (
     <div className='w-full p-3 flex flex-col bg-white dark:bg-gray-950 rounded-lg h-full space-y-8'>
       <div className='flex justify-end'>
-        {isPending ? <Loading /> : <UploadDialog data={extractRes || []} />}
+        {isPending ? (
+          <Loading />
+        ) : (
+          <UploadDialog data={extractRes || []} subject={subject || ''} />
+        )}
         <Button onClick={handleButtonClick}>
           <Plus />
           Upload File
@@ -72,7 +86,9 @@ function Uploads() {
             ))}
           </div>
           <div className='w-full flex justify-center'>
-            <Button variant={'link'}>View More</Button>
+            <Link to={'/results'}>
+              <Button variant={'link'}>View More</Button>
+            </Link>
           </div>
         </div>
       )}

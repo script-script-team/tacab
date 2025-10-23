@@ -30,3 +30,17 @@ export interface IExtractFile {
   subject: string
   data: IStudentProp[]
 }
+
+export interface ISaveUpload {
+  ok: boolean
+  message: string
+  uploadId: string
+  summary: {
+    total: number
+    success: number
+    errors: number
+    duplicates: number
+    updated: number
+    new: number
+  }
+}
