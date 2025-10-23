@@ -1,0 +1,161 @@
+import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Plus } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+
+interface FormData {
+  name: string
+  email: string
+  phone_number: string
+  password: string
+  confirm_password: string
+}
+
+export function NewAdminDialog() {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm<FormData>({
+    defaultValues: {
+      name: '',
+      email: '',
+      phone_number: '',
+      password: '',
+      confirm_password: '',
+    },
+  })
+
+  const password = watch('password')
+
+  const onSubmit = async (data: FormData) => {
+    try {
+      // Call your API here to create admin
+      console.log('Form Data:', data)
+      toast.success('Admin created successfully!')
+      reset()
+    } catch (err) {
+      toast.error('Failed to create admin')
+      console.error(err)
+    }
+  }
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button>
+          <Plus />
+          Add admin
+        </Button>
+      </DialogTrigger>
+
+      <DialogContent className='sm:max-w-[425px]'>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <DialogHeader>
+            <DialogTitle>New Admin</DialogTitle>
+            <DialogDescription>
+              Create a new administrator account. Enter the admin's info.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className='grid gap-4 my-5'>
+            <div className='grid gap-2'>
+              <Label htmlFor='name'>Name</Label>
+              <Input
+                id='name'
+                {...register('name', { required: 'Name is required' })}
+              />
+              {errors.name && (
+                <p className='text-sm text-red-500'>{errors.name.message}</p>
+              )}
+            </div>
+
+            <div className='grid gap-2'>
+              <Label htmlFor='email'>Email</Label>
+              <Input
+                id='email'
+                type='email'
+                {...register('email', { required: 'Email is required' })}
+              />
+              {errors.email && (
+                <p className='text-sm text-red-500'>{errors.email.message}</p>
+              )}
+            </div>
+
+            <div className='grid gap-2'>
+              <Label htmlFor='phone_number'>Phone Number</Label>
+              <Input
+                id='phone_number'
+                {...register('phone_number', {
+                  required: 'Phone number is required',
+                })}
+              />
+              {errors.phone_number && (
+                <p className='text-sm text-red-500'>
+                  {errors.phone_number.message}
+                </p>
+              )}
+            </div>
+
+            <div className='grid gap-2'>
+              <Label htmlFor='password'>Password</Label>
+              <Input
+                id='password'
+                type='password'
+                {...register('password', { required: 'Password is required' })}
+              />
+              {errors.password && (
+                <p className='text-sm text-red-500'>
+                  {errors.password.message}
+                </p>
+              )}
+            </div>
+
+            <div className='grid gap-2'>
+              <Label htmlFor='confirm_password'>Confirm Password</Label>
+              <Input
+                id='confirm_password'
+                type='password'
+                {...register('confirm_password', {
+                  required: 'Please confirm password',
+                  validate: (value) =>
+                    value === password || 'Passwords do not match',
+                })}
+              />
+              {errors.confirm_password && (
+                <p className='text-sm text-red-500'>
+                  {errors.confirm_password.message}
+                </p>
+              )}
+            </div>
+          </div>
+
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant='outline' type='button'>
+                Cancel
+              </Button>
+            </DialogClose>
+            <Button type='submit' disabled={isSubmitting}>
+              {isSubmitting ? 'Saving...' : 'Save'}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  )
+}
