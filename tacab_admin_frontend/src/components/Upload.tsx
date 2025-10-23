@@ -1,6 +1,7 @@
 import type { IUploadInfo } from '@/pages/types/upload.types'
 import Badge from './Badge'
 import { Button } from './ui/button'
+import { Link } from 'react-router-dom'
 
 const Upload = ({ term, year, admin, number_of_students }: IUploadInfo) => {
   console.log(admin)
@@ -18,8 +19,10 @@ const Upload = ({ term, year, admin, number_of_students }: IUploadInfo) => {
         <h1>
           <strong>Students:</strong> {number_of_students}
         </h1>
-        <div className='mt-10'>
-          <Button>More details</Button>
+        <div className='mt-5'>
+          <Link to={'/results'}>
+            <Button>More details</Button>
+          </Link>
         </div>
       </div>
     </div>
