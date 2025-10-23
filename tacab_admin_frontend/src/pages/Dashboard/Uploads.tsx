@@ -1,16 +1,20 @@
 import { Button } from '@/components/ui/button'
 import Upload from '@/components/Upload'
 import { Plus } from 'lucide-react'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import type { ChangeEvent } from 'react'
 import { useDispatch } from 'react-redux'
 import { setIsOpen, setSelectedFile } from '../redux/uploadDialog.slice'
 import { UploadDialog } from '@/components/UploadDialog'
-import { useGetAllUploads } from '@/react-query/uploads.hooks'
+import { useExtractData, useGetAllUploads } from '@/react-query/uploads.hooks'
 import Loading from '@/components/Loading'
+import { toast } from 'sonner'
+import type { IStudentProp } from '../types/student.types'
 
 function Uploads() {
   const { data: uploads, isLoading } = useGetAllUploads()
+  const { mutate: extractFile, isPending } = useExtractData()
+  const [extractRes, setExtractRes] = useState<IStudentProp[]>()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const dispatch = useDispatch()
 
@@ -21,15 +25,23 @@ function Uploads() {
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (file) {
-      dispatch(setIsOpen(true))
       dispatch(setSelectedFile(file))
+      extractFile(file, {
+        onSuccess: (res) => {
+          dispatch(setIsOpen(true))
+          setExtractRes(res.data)
+        },
+        onError: (err) => {
+          toast.error(err.message)
+        },
+      })
     }
   }
 
   return (
     <div className='w-full p-3 flex flex-col bg-white dark:bg-gray-950 rounded-lg h-full space-y-8'>
       <div className='flex justify-end'>
-        <UploadDialog />
+        {isPending ? <Loading /> : <UploadDialog data={extractRes || []} />}
         <Button onClick={handleButtonClick}>
           <Plus />
           Upload File

@@ -9,12 +9,12 @@ import {
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { MdDelete } from 'react-icons/md'
-import { TbEyeClosed } from 'react-icons/tb'
 import { FiEdit } from 'react-icons/fi'
 import { PickDate } from '@/components/ui/date'
 import { useState } from 'react'
 import { useGetAllUploads } from '@/react-query/uploads.hooks'
 import Loading from '@/components/Loading'
+import { shortText } from '@/lib/utils'
 
 dayjs.extend(relativeTime)
 
@@ -33,7 +33,7 @@ function Results() {
           <TableHeader>
             <TableRow>
               <TableHead>Upload Id</TableHead>
-              <TableHead>Term</TableHead>
+              <TableHead>Name</TableHead>
               <TableHead>Year</TableHead>
               <TableHead>Uploaded By</TableHead>
               <TableHead>Date</TableHead>
@@ -44,13 +44,14 @@ function Results() {
             {uploads?.uploads.map((d, i) => {
               return (
                 <TableRow key={i}>
-                  <TableCell className='font-medium'>{d.id}</TableCell>
+                  <TableCell className='font-medium'>
+                    {shortText(d.id)}
+                  </TableCell>
                   <TableCell>{d.term}</TableCell>
                   <TableCell>{d.year}</TableCell>
                   <TableCell>{d.admin.name}</TableCell>
                   <TableCell>{dayjs(d.createdAt).fromNow()}</TableCell>
                   <TableCell className='flex gap-2'>
-                    <TbEyeClosed className='cursor-pointer' />
                     <MdDelete className='cursor-pointer text-red-500' />
                     <FiEdit className='cursor-pointer text-yellow-500' />
                   </TableCell>

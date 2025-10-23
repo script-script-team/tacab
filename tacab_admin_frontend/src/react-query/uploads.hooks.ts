@@ -1,8 +1,8 @@
 import { BASE_API_URL } from '@/pages/constant'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import api from './axios'
 import axios from 'axios'
-import type { IGetAllUploadRes } from '@/pages/types/upload.types'
+import type { IExtractFile, IGetAllUploadRes } from '@/pages/types/upload.types'
 
 export const useGetAllUploads = () => {
   return useQuery({
@@ -16,6 +16,38 @@ export const useGetAllUploads = () => {
         }
 
         return res.data as IGetAllUploadRes
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+          throw new Error(error.response.data?.message || 'Unknown Error')
+        }
+        throw error
+      }
+    },
+  })
+}
+
+export const useExtractData = () => {
+  return useMutation({
+    mutationKey: ['extract-data'],
+    mutationFn: async (file: File) => {
+      try {
+        const res = await api.post(
+          `${BASE_API_URL}/api/upload/excel`,
+          { 'excel-file': file },
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          }
+        )
+
+        if (!res.data.ok) {
+          throw new Error(
+            res.data.message || 'Fieled to exctract data from upload'
+          )
+        }
+
+        return res.data as IExtractFile
       } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
           throw new Error(error.response.data?.message || 'Unknown Error')

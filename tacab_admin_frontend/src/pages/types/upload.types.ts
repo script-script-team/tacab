@@ -24,3 +24,9 @@ export interface IGetAllUploadRes {
   total: number
   uploads: IUploadProp[]
 }
+
+export interface IExtractFile {
+  ok: boolean
+  subject: string
+  data: IStudentProp[]
+}

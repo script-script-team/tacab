@@ -13,9 +13,10 @@ import { setIsOpen, setSelectedFile } from '@/pages/redux/uploadDialog.slice'
 import { FileText } from 'lucide-react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ScrollArea, ScrollBar } from './ui/scroll-area'
-import { data } from '@/pages/Example'
+import type { IStudentProp } from '@/pages/types/student.types'
+import { useEffect } from 'react'
 
-export function UploadDialog() {
+export function UploadDialog({ data }: { data: IStudentProp[] }) {
   const uploadDialogState = useSelector(
     (state: RootState) => state.uploadDialog
   )
@@ -27,6 +28,14 @@ export function UploadDialog() {
       dispatch(setSelectedFile(null))
     }
   }
+
+  useEffect(() => {
+    if (!data.length) {
+      dispatch(setIsOpen(false))
+    } else {
+      dispatch(setIsOpen(true))
+    }
+  }, [data, dispatch])
 
   const headers = data.length > 0 ? Object.keys(data[0]) : []
 
@@ -58,7 +67,13 @@ export function UploadDialog() {
                 <tr key={i}>
                   {headers.map((header) => (
                     <td key={header} className='border px-2 py-1'>
-                      {row[header as keyof typeof row]}
+                      {(() => {
+                        const cell: unknown = row[header as keyof typeof row]
+                        if (cell === null || cell === undefined) return ''
+                        return typeof cell === 'object'
+                          ? JSON.stringify(cell)
+                          : String(cell)
+                      })()}
                     </td>
                   ))}
                 </tr>
