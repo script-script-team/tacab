@@ -44,3 +44,14 @@ export interface ISaveUpload {
     new: number
   }
 }
+
+export interface IGetSingleUploadRes {
+  ok: boolean
+  upload: IUploadProp
+  students: IStudentProp[]
+}
+
+export interface IUpdateUploadRes {
+  ok: boolean
+  message: string
+}

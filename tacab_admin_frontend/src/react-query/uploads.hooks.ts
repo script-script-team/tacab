@@ -5,7 +5,9 @@ import axios from 'axios'
 import type {
   IExtractFile,
   IGetAllUploadRes,
+  IGetSingleUploadRes,
   ISaveUpload,
+  IUpdateUploadRes,
 } from '@/pages/types/upload.types'
 import type { IStudentProp } from '@/pages/types/student.types'
 
@@ -75,6 +77,53 @@ export const useSaveData = () => {
         }
 
         return res.data as ISaveUpload
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+          throw new Error(error.response.data?.message || 'Unknown Error')
+        }
+        throw error
+      }
+    },
+  })
+}
+
+export const useGetSingleUpload = (id: string) => {
+  return useQuery({
+    queryKey: ['single-upload', id],
+    queryFn: async () => {
+      try {
+        const res = await api.get(`${BASE_API_URL}/api/upload/${id}`)
+
+        if (!res.data.ok) {
+          throw new Error(res.data.message || 'Fieled to get single upload')
+        }
+
+        return res.data as IGetSingleUploadRes
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+          throw new Error(error.response.data?.message || 'Unknown Error')
+        }
+        throw error
+      }
+    },
+  })
+}
+
+export const useUpdateUpload = () => {
+  return useMutation({
+    mutationKey: ['update-upload'],
+    mutationFn: async (data: { id: string; term: string; year: number }) => {
+      try {
+        const res = await api.put(`${BASE_API_URL}/api/upload/${data.id}`, {
+          term: data.term,
+          year: data.year,
+        })
+
+        if (!res.data.ok) {
+          throw new Error(res.data.message || 'Fieled to update upload')
+        }
+
+        return res.data as IUpdateUploadRes
       } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
           throw new Error(error.response.data?.message || 'Unknown Error')
