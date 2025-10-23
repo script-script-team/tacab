@@ -11,29 +11,29 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import {
-  useGetSingleUpload,
-  useUpdateUpload,
-} from '@/react-query/uploads.hooks'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { FiEdit } from 'react-icons/fi'
 import Loading from './Loading'
 import { toast } from 'sonner'
 import { useQueryClient } from '@tanstack/react-query'
+import {
+  useGetSingleStudent,
+  useUpdateStudent,
+} from '@/react-query/student.hooks'
 
 interface FormData {
-  term: string
-  year: number
+  name: string
+  phone_number: string
 }
 
-export function UpdateUploadDialog({ id }: { id: string }) {
+export function UpdateStudentDialog({ id }: { id: number }) {
   const [isOpen, setIsOpen] = useState<boolean>(false)
-  const { data, isLoading } = useGetSingleUpload(id, {
-    queryKey: ['single-upload', id],
+  const { data, isLoading } = useGetSingleStudent(id, {
+    queryKey: ['single-student', id],
     enabled: isOpen,
   })
-  const { mutate: updateUpload, isPending } = useUpdateUpload()
+  const { mutate: updateStudent, isPending } = useUpdateStudent()
   const queryClient = useQueryClient()
 
   const {
@@ -43,8 +43,8 @@ export function UpdateUploadDialog({ id }: { id: string }) {
     reset,
   } = useForm<FormData>({
     defaultValues: {
-      term: '',
-      year: new Date().getFullYear(),
+      name: '',
+      phone_number: '',
     },
   })
 
@@ -53,11 +53,11 @@ export function UpdateUploadDialog({ id }: { id: string }) {
       id,
       ...data,
     }
-    updateUpload(updateData, {
+    updateStudent(updateData, {
       onSuccess: (res) => {
         toast.success(res.message || 'Updated successfully')
         setIsOpen(false)
-        queryClient.invalidateQueries({ queryKey: ['all-uploads'] })
+        queryClient.invalidateQueries({ queryKey: ['all-students'] })
       },
       onError: (err) => {
         toast.error(err.message || 'Failed to update')
@@ -66,10 +66,10 @@ export function UpdateUploadDialog({ id }: { id: string }) {
   }
 
   useEffect(() => {
-    if (data?.upload.term && data.upload.year) {
+    if (data?.student.name && data.student.phone_number) {
       reset({
-        term: data.upload.term || '',
-        year: data.upload.year || new Date().getFullYear(),
+        name: data.student.name || '',
+        phone_number: data.student.phone_number || '',
       })
     }
   }, [data, reset])
@@ -93,25 +93,28 @@ export function UpdateUploadDialog({ id }: { id: string }) {
 
           <div className='grid gap-4 py-4'>
             <div className='grid gap-2'>
-              <Label htmlFor='term'>Name</Label>
+              <Label htmlFor='name'>Name</Label>
               <Input
-                id='term'
-                {...register('term', { required: 'Name is required' })}
+                id='name'
+                {...register('name', { required: 'Name is required' })}
               />
-              {errors.term && (
-                <p className='text-sm text-red-500'>{errors.term.message}</p>
+              {errors.name && (
+                <p className='text-sm text-red-500'>{errors.name.message}</p>
               )}
             </div>
 
             <div className='grid gap-2'>
-              <Label htmlFor='year'>Year</Label>
+              <Label htmlFor='phone_number'>Number</Label>
               <Input
-                id='year'
-                type='number'
-                {...register('year', { required: 'Year is required' })}
+                id='phone-number'
+                {...register('phone_number', {
+                  required: 'Number is required',
+                })}
               />
-              {errors.year && (
-                <p className='text-sm text-red-500'>{errors.year.message}</p>
+              {errors.phone_number && (
+                <p className='text-sm text-red-500'>
+                  {errors.phone_number.message}
+                </p>
               )}
             </div>
           </div>

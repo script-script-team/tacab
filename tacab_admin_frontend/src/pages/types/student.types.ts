@@ -21,3 +21,25 @@ export interface IMarks {
   createdAt: string
   updatedAt: string
 }
+
+export interface IFullStudentProp {
+  id: number
+  name: string
+  phone_number: string
+  subject: string
+  upload_id: string
+  marks_id: string
+  createdAt: string
+  updatedAt: string
+  marks: IMarks
+}
+
+export interface IGetSingleStudentRes {
+  ok: boolean
+  student: IFullStudentProp
+}
+
+export interface IGetAllStudentsRes {
+  ok: boolean
+  students: IFullStudentProp[]
+}
