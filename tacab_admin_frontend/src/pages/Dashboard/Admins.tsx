@@ -5,7 +5,6 @@ import { useGetAllAdmins } from '@/react-query/admin.hooks'
 
 function Admins() {
   const { data, isLoading } = useGetAllAdmins()
-
   return (
     <div className='w-full p-3 flex flex-col bg-white dark:bg-gray-950 rounded-lg h-full'>
       <div className='flex justify-end'>
@@ -16,7 +15,7 @@ function Admins() {
       ) : (
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-5'>
           {data?.admins.map((admin, index) => (
-            <AdminDashboard name={admin.name} email={admin.email} key={index} />
+            <AdminDashboard admin={admin} key={index} />
           ))}
         </div>
       )}

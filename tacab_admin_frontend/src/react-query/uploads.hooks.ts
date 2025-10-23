@@ -1,9 +1,5 @@
 import { BASE_API_URL } from '@/pages/constant'
-import {
-  useMutation,
-  useQuery,
-  type UseQueryOptions,
-} from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import api from './axios'
 import axios from 'axios'
 import type {
@@ -91,15 +87,7 @@ export const useSaveData = () => {
   })
 }
 
-export const useGetSingleUpload = (
-  id: string,
-  options?: UseQueryOptions<
-    IGetSingleUploadRes,
-    Error,
-    IGetSingleUploadRes,
-    [string, string]
-  >
-) => {
+export const useGetSingleUpload = (id: string) => {
   return useQuery({
     queryKey: ['single-upload', id],
     queryFn: async () => {
@@ -118,8 +106,6 @@ export const useGetSingleUpload = (
         throw error
       }
     },
-    enabled: options?.enabled ?? true,
-    ...options,
   })
 }
 

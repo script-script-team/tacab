@@ -11,28 +11,26 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { FiEdit } from 'react-icons/fi'
-import Loading from './Loading'
 import { toast } from 'sonner'
 import { useQueryClient } from '@tanstack/react-query'
-import {
-  useGetSingleStudent,
-  useUpdateStudent,
-} from '@/react-query/student.hooks'
+import { useUpdateStudent } from '@/react-query/student.hooks'
+import type { IFullStudentProp } from '@/pages/types/student.types'
 
 interface FormData {
+  id: number
   name: string
   phone_number: string
 }
 
-export function UpdateStudentDialog({ id }: { id: number }) {
+export function UpdateStudentDialog({
+  student,
+}: {
+  student: IFullStudentProp
+}) {
   const [isOpen, setIsOpen] = useState<boolean>(false)
-  const { data, isLoading } = useGetSingleStudent(id, {
-    queryKey: ['single-student', id],
-    enabled: isOpen,
-  })
   const { mutate: updateStudent, isPending } = useUpdateStudent()
   const queryClient = useQueryClient()
 
@@ -40,20 +38,16 @@ export function UpdateStudentDialog({ id }: { id: number }) {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    reset,
   } = useForm<FormData>({
     defaultValues: {
-      name: '',
-      phone_number: '',
+      id: student.id,
+      name: student.name || '',
+      phone_number: student.phone_number || '',
     },
   })
 
   const onSubmit = (data: FormData) => {
-    const updateData = {
-      id,
-      ...data,
-    }
-    updateStudent(updateData, {
+    updateStudent(data, {
       onSuccess: (res) => {
         toast.success(res.message || 'Updated successfully')
         setIsOpen(false)
@@ -65,17 +59,7 @@ export function UpdateStudentDialog({ id }: { id: number }) {
     })
   }
 
-  useEffect(() => {
-    if (data?.student.name && data.student.phone_number) {
-      reset({
-        name: data.student.name || '',
-        phone_number: data.student.phone_number || '',
-      })
-    }
-  }, [data, reset])
-  return isLoading ? (
-    <Loading />
-  ) : (
+  return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <FiEdit className='cursor-pointer text-blue-500' />

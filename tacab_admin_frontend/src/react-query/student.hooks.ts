@@ -1,9 +1,5 @@
 import { BASE_API_URL } from '@/pages/constant'
-import {
-  useMutation,
-  useQuery,
-  type UseQueryOptions,
-} from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import api from './axios'
 import axios from 'axios'
 import type { IUpdateUploadRes } from '@/pages/types/upload.types'
@@ -56,15 +52,7 @@ export const useDeleteStudent = () => {
   })
 }
 
-export const useGetSingleStudent = (
-  id: number,
-  options?: UseQueryOptions<
-    IGetSingleStudentRes,
-    Error,
-    IGetSingleStudentRes,
-    [string, number]
-  >
-) => {
+export const useGetSingleStudent = (id: number) => {
   return useQuery({
     queryKey: ['single-student', id],
     queryFn: async () => {
@@ -83,8 +71,6 @@ export const useGetSingleStudent = (
         throw error
       }
     },
-    enabled: options?.enabled ?? true,
-    ...options,
   })
 }
 

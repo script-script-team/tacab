@@ -17,3 +17,21 @@ export interface IGetALlAdminsRes {
   ok: boolean
   admins: IAdminProp[]
 }
+
+export interface IAdminSummary {
+  ok: boolean
+  data: {
+    adminId: number
+    totalUploads: number
+    totalStudents: number
+    recentUploads: IRecentUploadProp[]
+  }
+}
+
+export interface IRecentUploadProp {
+  id: string
+  term: string
+  year: number
+  uploadDate: string
+  studentCount: number
+}

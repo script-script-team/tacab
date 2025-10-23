@@ -11,72 +11,69 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useCreateAdmin } from '@/react-query/admin.hooks'
+import type { IAdminProp } from '@/pages/types/admin.types'
+import { useUpdateAdmin } from '@/react-query/admin.hooks'
 import { useQueryClient } from '@tanstack/react-query'
-import { Plus } from 'lucide-react'
+import { Pencil } from 'lucide-react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
 interface FormData {
+  id: number
   name: string
   email: string
   phone_number: string
-  password: string
-  confirm_password: string
 }
 
-export function NewAdminDialog() {
-  const { mutate: newAdmin, isPending } = useCreateAdmin()
+export function UpdateAdminDialog({
+  iconSize,
+  admin,
+}: {
+  iconSize: number
+  admin: IAdminProp
+}) {
+  const { mutate: updateAdmin, isPending } = useUpdateAdmin()
   const queryClient = useQueryClient()
+  const [isOpen, setIsOpen] = useState<boolean>(false)
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     defaultValues: {
-      name: '',
-      email: '',
-      phone_number: '',
-      password: '',
-      confirm_password: '',
+      id: admin.id,
+      name: admin.name || '',
+      email: admin.email || '',
+      phone_number: admin.phone_number || '',
     },
   })
 
-  const password = watch('password')
-
   const onSubmit = async (data: FormData) => {
-    try {
-      newAdmin(data, {
-        onSuccess: (res) => {
-          queryClient.invalidateQueries({ queryKey: ['all-admins'] })
-          toast.success(res.message || 'Admin created successfully')
-        },
-        onError: (err) => {
-          toast.error(err.message || 'Failed to create admin')
-        },
-      })
-    } catch (err) {
-      toast.error('Failed to create admin')
-      console.error(err)
-    }
+    updateAdmin(data, {
+      onSuccess: (res) => {
+        queryClient.invalidateQueries({ queryKey: ['all-admins'] })
+        toast.success(res.message || 'Admin info updated successfully!')
+        setIsOpen(false)
+      },
+      onError: (err) => {
+        toast.error(err.message || 'Failed to update admin info')
+      },
+    })
   }
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button>
-          <Plus />
-          Add admin
-        </Button>
+        <Pencil size={iconSize} />
       </DialogTrigger>
 
       <DialogContent className='sm:max-w-[425px]'>
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
-            <DialogTitle>New Admin</DialogTitle>
+            <DialogTitle>{admin.name}</DialogTitle>
             <DialogDescription>
-              Create a new administrator account. Enter the admin's info.
+              Update the administrator&apos;s information. Click save when done.
             </DialogDescription>
           </DialogHeader>
 
@@ -115,38 +112,6 @@ export function NewAdminDialog() {
               {errors.phone_number && (
                 <p className='text-sm text-red-500'>
                   {errors.phone_number.message}
-                </p>
-              )}
-            </div>
-
-            <div className='grid gap-2'>
-              <Label htmlFor='password'>Password</Label>
-              <Input
-                id='password'
-                type='password'
-                {...register('password', { required: 'Password is required' })}
-              />
-              {errors.password && (
-                <p className='text-sm text-red-500'>
-                  {errors.password.message}
-                </p>
-              )}
-            </div>
-
-            <div className='grid gap-2'>
-              <Label htmlFor='confirm_password'>Confirm Password</Label>
-              <Input
-                id='confirm_password'
-                type='password'
-                {...register('confirm_password', {
-                  required: 'Please confirm password',
-                  validate: (value) =>
-                    value === password || 'Passwords do not match',
-                })}
-              />
-              {errors.confirm_password && (
-                <p className='text-sm text-red-500'>
-                  {errors.confirm_password.message}
                 </p>
               )}
             </div>

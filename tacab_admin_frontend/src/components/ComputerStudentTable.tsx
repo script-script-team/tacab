@@ -45,7 +45,7 @@ const ComputerStudentTable = ({
               <TableCell>{d.marks.grade}</TableCell>
               <TableCell className='flex gap-2'>
                 <DeleteStudentDialog id={d.id} />
-                <UpdateStudentDialog id={d.id} />
+                <UpdateStudentDialog student={d} />
               </TableCell>
             </TableRow>
           )

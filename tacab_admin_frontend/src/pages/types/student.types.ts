@@ -1,6 +1,6 @@
 export interface IStudentProp {
   name: string
-  phone_number: number
+  phone_number: string
   subject: number
   marks: IMarks
 }

@@ -55,7 +55,7 @@ function Results() {
                   <TableCell>{dayjs(d.createdAt).fromNow()}</TableCell>
                   <TableCell className='flex gap-2'>
                     <DeleteUploadDialog id={d.id} />
-                    <UpdateUploadDialog id={d.id} />
+                    <UpdateUploadDialog upload={d} />
                   </TableCell>
                 </TableRow>
               )

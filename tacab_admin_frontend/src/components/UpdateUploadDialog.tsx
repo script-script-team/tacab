@@ -11,28 +11,22 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import {
-  useGetSingleUpload,
-  useUpdateUpload,
-} from '@/react-query/uploads.hooks'
-import { useEffect, useState } from 'react'
+import { useUpdateUpload } from '@/react-query/uploads.hooks'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { FiEdit } from 'react-icons/fi'
-import Loading from './Loading'
 import { toast } from 'sonner'
 import { useQueryClient } from '@tanstack/react-query'
+import type { IUploadProp } from '@/pages/types/upload.types'
 
 interface FormData {
+  id: string
   term: string
   year: number
 }
 
-export function UpdateUploadDialog({ id }: { id: string }) {
+export function UpdateUploadDialog({ upload }: { upload: IUploadProp }) {
   const [isOpen, setIsOpen] = useState<boolean>(false)
-  const { data, isLoading } = useGetSingleUpload(id, {
-    queryKey: ['single-upload', id],
-    enabled: isOpen,
-  })
   const { mutate: updateUpload, isPending } = useUpdateUpload()
   const queryClient = useQueryClient()
 
@@ -40,20 +34,16 @@ export function UpdateUploadDialog({ id }: { id: string }) {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    reset,
   } = useForm<FormData>({
     defaultValues: {
-      term: '',
-      year: new Date().getFullYear(),
+      id: upload.id,
+      term: upload.term || '',
+      year: upload.year || new Date().getFullYear(),
     },
   })
 
   const onSubmit = (data: FormData) => {
-    const updateData = {
-      id,
-      ...data,
-    }
-    updateUpload(updateData, {
+    updateUpload(data, {
       onSuccess: (res) => {
         toast.success(res.message || 'Updated successfully')
         setIsOpen(false)
@@ -65,17 +55,7 @@ export function UpdateUploadDialog({ id }: { id: string }) {
     })
   }
 
-  useEffect(() => {
-    if (data?.upload.term && data.upload.year) {
-      reset({
-        term: data.upload.term || '',
-        year: data.upload.year || new Date().getFullYear(),
-      })
-    }
-  }, [data, reset])
-  return isLoading ? (
-    <Loading />
-  ) : (
+  return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <FiEdit className='cursor-pointer text-blue-500' />
