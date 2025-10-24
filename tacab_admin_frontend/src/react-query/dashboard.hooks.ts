@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
 import api from './axios'
-import { BASE_API_URL } from '@/pages/constant'
 import type { IGetDashboardSummaryRes } from '@/pages/types/dashboard.types'
 import axios from 'axios'
 import type { statistics } from '@/pages/types/statistics.type'
@@ -10,9 +9,7 @@ export const useGetDashboardSummary = () => {
     queryKey: ['dashboard-summary'],
     queryFn: async () => {
       try {
-        const res = await api.get(
-          `${BASE_API_URL}/api/dashboard/summary/system`
-        )
+        const res = await api.get(`/api/dashboard/summary/system`)
 
         if (!res.data.ok) {
           throw new Error(
@@ -31,27 +28,24 @@ export const useGetDashboardSummary = () => {
   })
 }
 
-export const getStatistics = () => {
+export const GetStatistics = () => {
   return useQuery({
     queryKey: ['statistics'],
-    queryFn: async() => {
+    queryFn: async () => {
       try {
-        const res = await api.get(`${BASE_API_URL}/api/dashboard/statistics`);
+        const res = await api.get(`/api/dashboard/statistics`)
 
-        if(!res.data.ok) {
-          throw new Error(
-            res.data.message || "Fieled to get the statistics"
-          )
+        if (!res.data.ok) {
+          throw new Error(res.data.message || 'Fieled to get the statistics')
         }
 
         return res.data as statistics
-
       } catch (error) {
-        if(axios.isAxiosError(error) && error.message) {
-          throw new Error(error.response?.data.message || "Unkown Error")
+        if (axios.isAxiosError(error) && error.message) {
+          throw new Error(error.response?.data.message || 'Unkown Error')
         }
         throw error
       }
-    }
+    },
   })
 }

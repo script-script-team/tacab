@@ -13,7 +13,15 @@ interface AxiosRequestConfigWithRetry extends AxiosRequestConfig {
 
 const api = axios.create({
   baseURL: BASE_API_URL,
-  withCredentials: true,
+})
+
+// Add access token from localStorage to every request
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('access_token')
+  if (token && config.headers) {
+    config.headers['Authorization'] = `Bearer ${token}`
+  }
+  return config
 })
 
 let isRefreshing = false
@@ -49,8 +57,17 @@ api.interceptors.response.use(
       isRefreshing = true
 
       try {
-        // ✅ send GET request to refresh-token route (cookies automatically included)
-        await api.get('/api/auth/refresh-token')
+        // Send refresh-token header from localStorage
+        const refreshToken = localStorage.getItem('refresh_token')
+        if (!refreshToken) throw new Error('No refresh token found')
+
+        const { data } = await api.get('/api/auth/refresh-token', {
+          headers: { 'X-Refresh-Token': refreshToken },
+        })
+
+        // Save new access token to localStorage
+        localStorage.setItem('access_token', data.accessToken)
+
         processQueue()
         return api(originalRequest) // retry original request
       } catch (err) {

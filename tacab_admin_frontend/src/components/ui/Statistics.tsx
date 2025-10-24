@@ -15,7 +15,7 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from '@/components/ui/chart'
-import { getStatistics } from '@/react-query/dashboard.hooks'
+import { GetStatistics } from '@/react-query/dashboard.hooks'
 import Loading from '../Loading'
 
 export const description = 'A line chart with a label'
@@ -32,7 +32,7 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export function Statistics() {
-  const { data, isLoading } = getStatistics()
+  const { data, isLoading } = GetStatistics()
 
   const chartData = data?.data
     .map((d) => {

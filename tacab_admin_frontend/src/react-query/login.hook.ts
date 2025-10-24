@@ -1,17 +1,17 @@
-import { BASE_API_URL } from '@/pages/constant'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import api from './axios'
 import axios from 'axios'
 import type { ILoginResponse, IWhoAmIRes } from '@/pages/types/login.type'
 
+// ✅ Login hook
 export const useLogin = () => {
   return useMutation({
     mutationFn: async (data: { email: string; password: string }) => {
       try {
-        const res = await api.post(`${BASE_API_URL}/api/auth/login`, data)
+        const res = await api.post('/api/auth/login', data)
 
         if (!res.data.ok) {
-          throw new Error(res.data.message || 'Login fieled')
+          throw new Error(res.data.message || 'Login failed')
         }
 
         return res.data as ILoginResponse
@@ -25,12 +25,18 @@ export const useLogin = () => {
   })
 }
 
+// ✅ Logout hook
 export const useLogout = () => {
   return useMutation({
     mutationKey: ['logout'],
     mutationFn: async () => {
       try {
-        const res = await api.get(`/api/auth/logout`)
+        // Clear tokens from localStorage
+        localStorage.removeItem('access_token')
+        localStorage.removeItem('refresh_token')
+
+        // Optional: call logout endpoint if needed
+        const res = await api.get('/api/auth/logout')
 
         if (!res.data.ok) {
           throw new Error(res.data.message || 'Logout failed')
@@ -39,30 +45,28 @@ export const useLogout = () => {
         return res.data
       } catch (error) {
         console.error(error)
-
         if (axios.isAxiosError(error)) {
           const message =
             (error.response?.data as { message?: string })?.message ||
             'Unknown Error'
           throw new Error(message)
         }
-
-        // Non-Axios error
         throw new Error('Unknown Error')
       }
     },
   })
 }
 
+// ✅ WhoAmI hook
 export const useWhoAmI = () => {
   return useQuery({
     queryKey: ['whoami'],
     queryFn: async () => {
       try {
-        const res = await api.get(`/api/auth/whoami`)
+        const res = await api.get('/api/auth/whoami')
 
         if (!res.data.ok) {
-          throw new Error(res.data.message || 'Fieled to get the user')
+          throw new Error(res.data.message || 'Failed to get the user')
         }
 
         return res.data as IWhoAmIRes

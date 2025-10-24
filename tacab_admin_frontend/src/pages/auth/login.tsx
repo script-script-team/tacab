@@ -25,6 +25,8 @@ function Login() {
         onSuccess: (res) => {
           toast.success('logged in successfully')
           dispatch(login(res.admin))
+          localStorage.setItem('access_token', res.access_token)
+          localStorage.setItem('refresh_token', res.refresh_token)
           navigate('/')
         },
         onError: (error) => {
