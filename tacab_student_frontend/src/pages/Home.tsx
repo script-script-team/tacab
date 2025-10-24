@@ -1,6 +1,4 @@
 import { Outlet, useNavigate } from 'react-router-dom'
-import Footer from '../components/Footer'
-import Header from '../components/Header'
 import { useEffect } from 'react'
 import type { RootState } from '@/redux/store'
 import { useSelector } from 'react-redux'
@@ -11,17 +9,13 @@ function Home() {
 
   useEffect(() => {
     if (!isResult.student) {
-      navigate('/result')
+      navigate('/')
     }
   }, [isResult, navigate])
 
   return (
-    <div className='w-full h-screen flex flex-col'>
-      <Header />
-      <div className='grow'>
-        <Outlet />
-      </div>
-      <Footer />
+    <div>
+      <Outlet />
     </div>
   )
 }

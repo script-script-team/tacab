@@ -41,7 +41,7 @@ function Login() {
         {
           onSuccess: (res) => {
             dispatch(setResult(res))
-            navigate('/')
+            navigate('/result')
           },
           onError: (err) => {
             toast.error(err.message || 'Failed to get result')

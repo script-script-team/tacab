@@ -20,7 +20,7 @@ function Header() {
           <Button
             onClick={() => {
               dispatch(clearResult())
-              navigate('/result')
+              navigate('/')
             }}
             className='cursor-pointer text-white bg-red-600 hover:bg-red-500'
           >
