@@ -132,7 +132,6 @@ export const useDeleteAdmin = () => {
     mutationKey: ['delete-admin'],
     mutationFn: async (id: number) => {
       try {
-        console.log(id)
         const res = await api.delete(`${BASE_API_URL}/api/auth/delete/${id}`)
 
         if (!res.data.ok) {

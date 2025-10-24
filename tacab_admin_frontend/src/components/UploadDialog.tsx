@@ -92,7 +92,6 @@ export function UploadDialog({
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
     handleSave(values.term, values.year)
   }
 

@@ -5,6 +5,7 @@ import { FileText, UserLock, Users } from 'lucide-react'
 import { useGetDashboardSummary } from '@/react-query/dashboard.hooks'
 import CustomAvatar from '@/components/CustomAvatar'
 import Loading from '@/components/Loading'
+import { Link } from 'react-router-dom'
 
 function DashIntro() {
   const { data, isLoading } = useGetDashboardSummary()
@@ -70,9 +71,11 @@ function DashIntro() {
           <div className='flex flex-col gap-4'>
             <div className='flex justify-between'>
               <h2 className='text-gray-400 font-medium'>Admins:</h2>
-              <h2 className='text-blue-600 hover:text-blue-400 hover:underline cursor-pointer'>
-                See all
-              </h2>
+              <Link to={'/admins'}>
+                <h2 className='text-blue-600 hover:text-blue-400 hover:underline cursor-pointer'>
+                  See all
+                </h2>
+              </Link>
             </div>
             <div className='flex flex-col gap-2'>
               {admins?.map((a, i) => {
