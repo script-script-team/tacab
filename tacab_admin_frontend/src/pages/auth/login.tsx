@@ -48,7 +48,7 @@ function Login() {
       <Header />
       <div className='w-full h-[73vh] justify-center items-center flex'>
         <form onSubmit={formik.handleSubmit}>
-          <div className='container w-[440px] h-[440px] shadow-lg rounded-2xl m-auto p-4 grid'>
+          <div className='container w-[80%] md:w-[440px] h-fit shadow-lg rounded-2xl m-auto p-4 grid border border-red-500'>
             <div className='flex justify-center items-center flex-col gap-4'>
               <img
                 className='w-20 h-20 rounded-full object-cover'
@@ -88,7 +88,7 @@ function Login() {
             </div>
             <Button
               type='submit'
-              className='cursor-pointer bg-blue-600 hover:bg-blue-700 h-[40px] text-white'
+              className='cursor-pointer bg-blue-600 hover:bg-blue-700 h-10 text-white'
               disabled={isPending}
             >
               {isPending ? 'Logging in...' : 'Login'}
