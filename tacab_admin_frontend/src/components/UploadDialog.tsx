@@ -18,7 +18,6 @@ import { useEffect, useState } from 'react'
 import { useSaveData } from '@/react-query/uploads.hooks'
 import { toast } from 'sonner'
 import Loading from './Loading'
-import SaveSuccessAlert from './saveSuccessAlert'
 import {
   Form,
   FormControl,
@@ -32,6 +31,7 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import type { ISaveUpload } from '@/pages/types/upload.types'
+import SaveSuccessAlert from './SaveSuccessAlert'
 
 export function UploadDialog({
   data,
@@ -92,7 +92,6 @@ export function UploadDialog({
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
     handleSave(values.term, values.year)
   }
 

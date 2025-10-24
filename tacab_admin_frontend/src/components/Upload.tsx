@@ -4,7 +4,6 @@ import { Button } from './ui/button'
 import { Link } from 'react-router-dom'
 
 const Upload = ({ term, year, admin, number_of_students }: IUploadInfo) => {
-  console.log(admin)
   return (
     <div className='flex flex-col rounded-md bg-gray-100 dark:bg-gray-800'>
       <div className='flex justify-center items-center w-full p-5'>

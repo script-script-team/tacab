@@ -12,8 +12,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { useGetResult } from '@/react-query/result.hooks'
+import { toast } from 'sonner'
+import { useDispatch } from 'react-redux'
+import { setResult } from '@/redux/result.slice'
 
 function Login() {
+  const { mutate: getResult, isPending } = useGetResult()
+  const dispatch = useDispatch()
   const navigate = useNavigate()
 
   const formik = useFormik({
@@ -23,7 +29,25 @@ function Login() {
       subject: '',
     },
     onSubmit(values) {
-      console.log(values)
+      const formattedName = values.name
+        .toLowerCase()
+        .split(' ')
+        .filter(Boolean)
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ')
+
+      getResult(
+        { ...values, name: formattedName },
+        {
+          onSuccess: (res) => {
+            dispatch(setResult(res))
+            navigate('/')
+          },
+          onError: (err) => {
+            toast.error(err.message || 'Failed to get result')
+          },
+        }
+      )
     },
     validationSchema: yup.object({
       name: yup
@@ -39,7 +63,7 @@ function Login() {
   })
 
   return (
-    <div className='w-full h-screen py-20 flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-900'>
+    <div className='w-full min-h-screen py-10 flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-900'>
       <form
         onSubmit={formik.handleSubmit}
         className='sm:w-[500px] w-[90%] p-6 bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-2xl shadow-xl grid gap-6'
@@ -80,15 +104,17 @@ function Login() {
             <label className='font-medium text-gray-600 dark:text-gray-300'>
               Phone Number
             </label>
-            <Input
-              name='phone_number'
-              type='text'
-              placeholder='e.g 4567890'
-              value={formik.values.phone_number}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              className='bg-white/50 dark:bg-gray-700/50 backdrop-blur-sm'
-            />
+            <div>
+              <Input
+                name='phone_number'
+                type='text'
+                placeholder='e.g 4567890'
+                value={formik.values.phone_number}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className='bg-white/50 dark:bg-gray-700/50 backdrop-blur-sm'
+              />
+            </div>
             {formik.touched.phone_number && formik.errors.phone_number && (
               <p className='text-red-500 text-sm'>
                 {formik.errors.phone_number}
@@ -105,7 +131,6 @@ function Login() {
               value={formik.values.subject}
               onValueChange={(value) => {
                 formik.setFieldValue('subject', value)
-                formik.setFieldTouched('subject', true)
               }}
             >
               <SelectTrigger className='w-full'>
@@ -129,8 +154,9 @@ function Login() {
         <Button
           type='submit'
           className='w-full bg-blue-600 hover:bg-blue-700 text-white h-12 rounded-lg font-semibold shadow-md transition-all duration-300'
+          disabled={isPending}
         >
-          Login
+          {isPending ? '...' : 'See Result'}
         </Button>
       </form>
       <div className='dark:text-gray-400 text-gray-300 text-center mt-5'>

@@ -1,11 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { loginSlice } from './auth/login.slice'
+import { resultSlice } from './result.slice'
 
 export const store = configureStore({
   reducer: {
-    loginSlice: loginSlice.reducer,
+    student: resultSlice.reducer,
   },
-  devTools: true
 })
 
 export type RootState = ReturnType<typeof store.getState>
