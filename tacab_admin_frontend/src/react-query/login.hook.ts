@@ -30,7 +30,7 @@ export const useLogout = () => {
     mutationKey: ['logout'],
     mutationFn: async () => {
       try {
-        const res = await api.get(`${BASE_API_URL}/api/auth/logout`)
+        const res = await api.get(`/api/auth/logout`)
 
         if (!res.data.ok) {
           throw new Error(res.data.message || 'Logout failed')
@@ -59,7 +59,7 @@ export const useWhoAmI = () => {
     queryKey: ['whoami'],
     queryFn: async () => {
       try {
-        const res = await api.get(`${BASE_API_URL}/api/auth/whoami`)
+        const res = await api.get(`/api/auth/whoami`)
 
         if (!res.data.ok) {
           throw new Error(res.data.message || 'Fieled to get the user')
