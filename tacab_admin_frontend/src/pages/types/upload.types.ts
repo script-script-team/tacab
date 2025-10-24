@@ -22,6 +22,7 @@ export interface IUploadProp {
 export interface IGetAllUploadRes {
   ok: boolean
   total: number
+  totalPage: number
   uploads: IUploadProp[]
 }
 

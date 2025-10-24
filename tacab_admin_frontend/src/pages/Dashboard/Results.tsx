@@ -10,23 +10,34 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { PickDate } from '@/components/ui/date'
 import { useState } from 'react'
-import { useGetAllUploads } from '@/react-query/uploads.hooks'
+import { searchUploads, useGetAllUploads } from '@/react-query/uploads.hooks'
 import Loading from '@/components/Loading'
 import { shortText } from '@/lib/utils'
 import { UpdateUploadDialog } from '@/components/UpdateUploadDialog'
 import DeleteUploadDialog from '@/components/DeleteUploadDialog'
+import { Button } from '@/components/ui/button'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 dayjs.extend(relativeTime)
 
 function Results() {
-  const { data: uploads, isLoading } = useGetAllUploads()
-
+  const [page, setPage] = useState(1);
+  const {data: uploads, isLoading } = useGetAllUploads(page)
   const [date, setDate] = useState<Date | undefined>(undefined)
+  const {data: search, isFetching } = searchUploads(date ? date.getFullYear().toString() : "");
+
+  const fillter = search ? search : uploads
 
   return (
     <div className='w-full rounded-lg p-4 bg-white dark:bg-gray-950 h-full'>
-      <PickDate date={date} setDate={setDate} />
-      {isLoading ? (
+      <div className="flex justify-between">
+        <PickDate date={date} setDate={setDate} />
+      {!search && <div className="flex gap-2">
+              <Button className='cursor-pointer' disabled={isLoading || isFetching || page === 1} onClick={() => setPage(page - 1)}><ChevronLeft /></Button>
+              <Button className='cursor-pointer' disabled={isLoading || isFetching || page >= uploads?.totalPage!} onClick={() => setPage(page + 1)}><ChevronRight /></Button>
+              </div>}
+      </div>
+      {isLoading || isFetching  ? (
         <Loading />
       ) : (
         <Table>
@@ -42,7 +53,7 @@ function Results() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {uploads?.uploads.map((d, i) => {
+            {fillter?.uploads?.map((d, i) => {
               return (
                 <TableRow key={i}>
                   <TableCell className='font-medium'>
@@ -50,8 +61,8 @@ function Results() {
                   </TableCell>
                   <TableCell>{d.term}</TableCell>
                   <TableCell>{d.year}</TableCell>
-                  <TableCell>{d.admin.name}</TableCell>
-                  <TableCell>{d.students.length}</TableCell>
+                  <TableCell>{d.admin?.name}</TableCell>
+                  <TableCell>{d.students?.length}</TableCell>
                   <TableCell>{dayjs(d.createdAt).fromNow()}</TableCell>
                   <TableCell className='flex gap-2'>
                     <DeleteUploadDialog id={d.id} />

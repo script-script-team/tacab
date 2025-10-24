@@ -40,6 +40,7 @@ export interface IGetSingleStudentRes {
 }
 
 export interface IGetAllStudentsRes {
-  ok: boolean
+  ok: boolean,
+  total: number,
   students: IFullStudentProp[]
 }
