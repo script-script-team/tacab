@@ -13,7 +13,7 @@ import type { IStudentProp } from '../types/student.types'
 import { Link } from 'react-router-dom'
 
 function Uploads() {
-  const { data: uploads, isLoading } = useGetAllUploads()
+  const { data: uploads, isLoading } = useGetAllUploads(1)
   const { mutate: extractFile, isPending } = useExtractData()
   const [extractRes, setExtractRes] = useState<IStudentProp[]>()
   const [subject, setSubject] = useState<string>()

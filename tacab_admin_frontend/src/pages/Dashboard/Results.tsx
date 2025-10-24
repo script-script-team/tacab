@@ -10,7 +10,7 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { PickDate } from '@/components/ui/date'
 import { useState } from 'react'
-import { searchUploads, useGetAllUploads } from '@/react-query/uploads.hooks'
+import { SearchUploads, useGetAllUploads } from '@/react-query/uploads.hooks'
 import Loading from '@/components/Loading'
 import { shortText } from '@/lib/utils'
 import { UpdateUploadDialog } from '@/components/UpdateUploadDialog'
@@ -21,23 +21,43 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 dayjs.extend(relativeTime)
 
 function Results() {
-  const [page, setPage] = useState(1);
-  const {data: uploads, isLoading } = useGetAllUploads(page)
+  const [page, setPage] = useState(1)
+  const { data: uploads, isLoading } = useGetAllUploads(page)
   const [date, setDate] = useState<Date | undefined>(undefined)
-  const {data: search, isFetching } = searchUploads(date ? date.getFullYear().toString() : "");
+  const { data: search, isFetching } = SearchUploads(
+    date ? date.getFullYear().toString() : ''
+  )
 
   const fillter = search ? search : uploads
 
   return (
     <div className='w-full rounded-lg p-4 bg-white dark:bg-gray-950 h-full'>
-      <div className="flex justify-between">
+      <div className='flex justify-between'>
         <PickDate date={date} setDate={setDate} />
-      {!search && <div className="flex gap-2">
-              <Button className='cursor-pointer' disabled={isLoading || isFetching || page === 1} onClick={() => setPage(page - 1)}><ChevronLeft /></Button>
-              <Button className='cursor-pointer' disabled={isLoading || isFetching || page >= uploads?.totalPage!} onClick={() => setPage(page + 1)}><ChevronRight /></Button>
-              </div>}
+        {!search && (
+          <div className='flex gap-2'>
+            <Button
+              className='cursor-pointer'
+              disabled={isLoading || isFetching || page === 1}
+              onClick={() => setPage(page - 1)}
+            >
+              <ChevronLeft />
+            </Button>
+            <Button
+              className='cursor-pointer'
+              disabled={
+                isLoading ||
+                isFetching ||
+                (uploads?.totalPage ? page >= uploads.totalPage : false)
+              }
+              onClick={() => setPage(page + 1)}
+            >
+              <ChevronRight />
+            </Button>
+          </div>
+        )}
       </div>
-      {isLoading || isFetching  ? (
+      {isLoading || isFetching ? (
         <Loading />
       ) : (
         <Table>

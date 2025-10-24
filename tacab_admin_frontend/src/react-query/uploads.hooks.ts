@@ -33,29 +33,27 @@ export const useGetAllUploads = (page: number) => {
   })
 }
 
-export const searchUploads = (data: string) => {
+export const SearchUploads = (data: string) => {
   return useQuery({
     queryKey: ['searchUploads', data],
     queryFn: async () => {
       try {
-        
-        const res = await api.get(`${BASE_API_URL}/api/upload/search/${data}`);
+        const res = await api.get(`${BASE_API_URL}/api/upload/search/${data}`)
 
-        if(!res.data.ok) {
-          throw new Error(res.data.error || "Fieled to search!")
+        if (!res.data.ok) {
+          throw new Error(res.data.error || 'Fieled to search!')
         }
 
         return res.data as IGetAllUploadRes
-
       } catch (error) {
-        if(axios.isAxiosError(error) && error.response) {
-          throw new Error(error.response.data.message || "Unknown Error")
+        if (axios.isAxiosError(error) && error.response) {
+          throw new Error(error.response.data.message || 'Unknown Error')
         }
         throw error
       }
     },
-    enabled: !!data
-  });
+    enabled: !!data,
+  })
 }
 
 export const useExtractData = () => {
