@@ -15,7 +15,12 @@ const api = axios.create({
   baseURL: BASE_API_URL,
 })
 
-// Add access token from localStorage to every request
+// Separate instance to avoid recursive interceptor calls
+const refreshApi = axios.create({
+  baseURL: BASE_API_URL,
+})
+
+// Add Authorization header for all normal requests
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('access_token')
   if (token && config.headers) {
@@ -40,13 +45,17 @@ api.interceptors.response.use(
   async (error: AxiosError) => {
     const originalRequest = error.config as AxiosRequestConfigWithRetry
 
-    // only trigger on 401 and not retried yet
+    // only trigger once for each request
     if (error.response?.status === 401 && !originalRequest._retry) {
-      if (originalRequest.url?.includes('/refresh-token')) {
-        // refresh token failed → logout user
+      // if it's the refresh endpoint itself → logout or reject
+      if (originalRequest.url?.includes('/auth/refresh-token')) {
+        console.warn('Refresh token expired or invalid')
+        localStorage.removeItem('access_token')
+        localStorage.removeItem('refresh_token')
         return Promise.reject(error)
       }
 
+      // If refresh is in progress, queue the request
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject })
@@ -57,21 +66,23 @@ api.interceptors.response.use(
       isRefreshing = true
 
       try {
-        // Send refresh-token header from localStorage
         const refreshToken = localStorage.getItem('refresh_token')
         if (!refreshToken) throw new Error('No refresh token found')
 
-        const { data } = await api.get('/api/auth/refresh-token', {
+        // 🔥 This will always send even if access token is expired
+        const { data } = await refreshApi.get('/api/auth/refresh-token', {
           headers: { 'X-Refresh-Token': refreshToken },
         })
 
-        // Save new access token to localStorage
+        // store new access token
         localStorage.setItem('access_token', data.accessToken)
 
         processQueue()
-        return api(originalRequest) // retry original request
+        return api(originalRequest) // retry the failed request
       } catch (err) {
         processQueue(err as Error)
+        localStorage.removeItem('access_token')
+        localStorage.removeItem('refresh_token')
         return Promise.reject(err)
       } finally {
         isRefreshing = false
