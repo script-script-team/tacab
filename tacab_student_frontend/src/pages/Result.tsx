@@ -49,10 +49,14 @@ function Result() {
       : computerSubjects
 
   useEffect(() => {
-    if (!data.student.createdAt) {
+    if (!data?.student?.name || !data?.student?.id || !data?.student?.marks) {
       navigate('/')
     }
   }, [data, navigate])
+
+  if (!data?.student?.name || !data?.student?.id || !data?.student?.marks) {
+    return null
+  }
 
   return (
     <div className='w-full h-screen flex flex-col'>
