@@ -2,7 +2,7 @@ import Logo from './ui/Logo'
 
 function Footer() {
   return (
-    <div className='w-full p-6 dark:text-white text-black bg-gray-200 dark:bg-gray-800/70 backdrop-blur-3xl'>
+    <div className='w-full p-6 text-white bg-gray-900 backdrop-blur-3xl'>
       <div className='grid grid-cols-1 sm:grid-cols-2'>
         <div className='flex gap-2 items-center space-y-2'>
           <Logo />
