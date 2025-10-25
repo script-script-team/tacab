@@ -49,9 +49,14 @@ function Result() {
   ]
 
   const computerSubjects = [
-    { sub: 'Book 1', marks: marks.book_1 ?? 0 },
-    { sub: 'Book 2', marks: marks.book_2 ?? 0 },
-    { sub: 'Book 3', marks: marks.book_3 ?? 0 },
+    { sub: 'Windows', marks: marks.windows ?? 0 },
+    { sub: 'Word', marks: marks.word ?? 0 },
+    { sub: 'Excel', marks: marks.excel ?? 0 },
+    { sub: 'Power Point', marks: marks.power_point ?? 0 },
+    { sub: 'Access', marks: marks.access ?? 0 },
+    { sub: 'Publisher', marks: marks.publisher ?? 0 },
+    { sub: 'Outlook', marks: marks.outlook ?? 0 },
+    { sub: 'Computer literacy and internet', marks: marks.computer_literacy ?? 0 },
     { sub: 'Networking', marks: marks.networking ?? 0 },
     { sub: 'Database', marks: marks.database ?? 0 },
   ]
