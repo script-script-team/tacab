@@ -23,9 +23,14 @@ const ComputerStudentTable = ({
           <TableHead>Name</TableHead>
           <TableHead>Number</TableHead>
           <TableHead>Subject</TableHead>
-          <TableHead>Book 1</TableHead>
-          <TableHead>Book 2</TableHead>
-          <TableHead>Book 3</TableHead>
+          <TableHead>windows</TableHead>
+          <TableHead>word</TableHead>
+          <TableHead>excel</TableHead>
+          <TableHead>Power point</TableHead>
+          <TableHead>access</TableHead>
+          <TableHead>publisher</TableHead>
+          <TableHead>outlook</TableHead>
+          <TableHead>computer literacy</TableHead>
           <TableHead>Average</TableHead>
           <TableHead>Grade</TableHead>
         </TableRow>
@@ -38,9 +43,14 @@ const ComputerStudentTable = ({
               <TableCell>{d.name}</TableCell>
               <TableCell>{d.phone_number}</TableCell>
               <TableCell>{d.subject}</TableCell>
-              <TableCell>{d.marks.book_1}</TableCell>
-              <TableCell>{d.marks.book_2}</TableCell>
-              <TableCell>{d.marks.book_3}</TableCell>
+              <TableCell>{d.marks.windows}</TableCell>
+              <TableCell>{d.marks.word}</TableCell>
+              <TableCell>{d.marks.excel}</TableCell>
+              <TableCell>{d.marks.power_point}</TableCell>
+              <TableCell>{d.marks.access}</TableCell>
+              <TableCell>{d.marks.publisher}</TableCell>
+              <TableCell>{d.marks.outlook}</TableCell>
+              <TableCell>{d.marks.computer_literacy}</TableCell>
               <TableCell>{d.marks.average}</TableCell>
               <TableCell>{d.marks.grade}</TableCell>
               <TableCell className='flex gap-2'>

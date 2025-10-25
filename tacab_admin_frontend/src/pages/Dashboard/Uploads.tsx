@@ -79,7 +79,7 @@ function Uploads() {
               <Upload
                 term={upload.term}
                 year={upload.year}
-                number_of_students={upload.students.length}
+                number_of_students={upload.students._count}
                 admin={upload.admin.name}
                 key={index}
               />

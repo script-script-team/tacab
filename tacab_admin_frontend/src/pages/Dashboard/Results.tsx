@@ -82,7 +82,7 @@ function Results() {
                   <TableCell>{d.term}</TableCell>
                   <TableCell>{d.year}</TableCell>
                   <TableCell>{d.admin?.name}</TableCell>
-                  <TableCell>{d.students?.length}</TableCell>
+                  <TableCell>{d.students._count}</TableCell>
                   <TableCell>{dayjs(d.createdAt).fromNow()}</TableCell>
                   <TableCell className='flex gap-2'>
                     <DeleteUploadDialog id={d.id} />

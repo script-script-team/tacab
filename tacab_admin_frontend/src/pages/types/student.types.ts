@@ -13,9 +13,14 @@ export interface IMarks {
   networking: number | null
   database: number | null
   programming: number | null
-  book_1: number | null
-  book_2: number | null
-  book_3: number | null
+  windows: number | null
+  word: number | null
+  excel: number | null
+  power_point: number | null
+  access: number | null
+  publisher: number | null
+  outlook: number | null
+  computer_literacy: number | null
   average: number | null
   grade: string
   createdAt: string
