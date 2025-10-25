@@ -3,9 +3,12 @@ import { ChartPie, GraduationCap, IdCard, Medal } from 'lucide-react'
 import type { RootState } from '@/redux/store'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 function Result() {
   const data = useSelector((state: RootState) => state.student.result)
+  const navigate = useNavigate()
 
   const marks = data?.student?.marks
   const numbers = Object.values(marks || {}).filter(
@@ -44,6 +47,12 @@ function Result() {
     data?.student?.subject?.toLowerCase() === 'it'
       ? itSubjects
       : computerSubjects
+
+  useEffect(() => {
+    if (!data.student) {
+      navigate('/')
+    }
+  }, [data, navigate])
 
   return (
     <div className='w-full h-screen flex flex-col'>
