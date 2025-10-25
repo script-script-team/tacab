@@ -49,7 +49,7 @@ function Result() {
       : computerSubjects
 
   useEffect(() => {
-    if (!data.student) {
+    if (!data.student.createdAt) {
       navigate('/')
     }
   }, [data, navigate])
