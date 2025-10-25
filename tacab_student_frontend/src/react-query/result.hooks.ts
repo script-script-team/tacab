@@ -1,6 +1,5 @@
 import { useMutation } from '@tanstack/react-query'
 import { api } from './axios.hoooks'
-import { BASE_API_URL } from '@/constant'
 import axios from 'axios'
 import type { IGetResultRes } from '@/types/login.type'
 
@@ -13,7 +12,7 @@ export const useGetResult = () => {
       subject: string
     }) => {
       try {
-        const res = await api.post(`${BASE_API_URL}/api/student/`, data)
+        const res = await api.post(`/api/student/`, data)
 
         if (!res.data.ok) {
           throw new Error(res.data.message || 'Fieled to delete student')
