@@ -16,11 +16,11 @@ export interface IUploadProp {
   createdAt: string
   updatedAt: string
   admin: IAdminProp
-  students: Count
+  _count: Count
 }
 
 export interface Count {
-  _count: number;
+  students: number
 }
 
 export interface IGetAllUploadRes {
