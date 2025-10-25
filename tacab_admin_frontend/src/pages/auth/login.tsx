@@ -48,7 +48,7 @@ function Login() {
       <Header />
       <div className='w-full h-fit my-5 flex-1 justify-center items-center flex'>
         <form onSubmit={formik.handleSubmit}>
-          <div className='w-[90%] md:w-[440px] h-fit shadow-lg'>
+          <div className='w-[90%] md:w-[440px] mx-auto md:mx-0 h-fit shadow-lg'>
             <div className='flex justify-center items-center flex-col gap-4'>
               <img
                 className='w-20 h-20 rounded-full object-cover'
