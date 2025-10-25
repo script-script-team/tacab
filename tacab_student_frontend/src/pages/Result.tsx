@@ -10,53 +10,56 @@ function Result() {
   const data = useSelector((state: RootState) => state.student.result)
   const navigate = useNavigate()
 
-  const marks = data?.student?.marks
-  const numbers = Object.values(marks || {}).filter(
-    (v) => typeof v === 'number' && v !== null
-  )
-  const average =
-    numbers.length > 0
-      ? (numbers.reduce((a, b) => a + b, 0) / numbers.length).toFixed(2)
-      : 0
-
-  const studentInfo = [
-    { icon: GraduationCap, name: 'Name', value: data.student.name },
-    { icon: IdCard, name: 'ID', value: data.student.id },
-    { icon: Medal, name: 'Grade', value: data.student.marks.grade },
-    { icon: ChartPie, name: 'Average', value: average + '%' },
-  ]
-
-  const itSubjects = [
-    { sub: 'A+', marks: marks?.a_plus },
-    { sub: 'Multimedia', marks: marks?.multimedia },
-    { sub: 'Web Design', marks: marks?.web_desing },
-    { sub: 'Networking', marks: marks?.networking },
-    { sub: 'Database', marks: marks?.database },
-    { sub: 'Programming', marks: marks?.programming },
-  ]
-
-  const computerSubjects = [
-    { sub: 'Book 1', marks: marks?.book_1 },
-    { sub: 'Book 2', marks: marks?.book_2 },
-    { sub: 'Book 3', marks: marks?.book_3 },
-    { sub: 'Networking', marks: marks?.networking },
-    { sub: 'Database', marks: marks?.database },
-  ]
-
-  const subjects =
-    data?.student?.subject?.toLowerCase() === 'it'
-      ? itSubjects
-      : computerSubjects
-
   useEffect(() => {
     if (!data?.student?.name || !data?.student?.id || !data?.student?.marks) {
       navigate('/')
     }
   }, [data, navigate])
 
-  if (!data?.student?.name || !data?.student?.id || !data?.student?.marks) {
+  if (!data || !data.student || !data?.student?.marks) {
     return null
   }
+
+  const student = data?.student || {}
+  const marks = student?.marks || {}
+
+  const numbers = Object.values(marks).filter(
+    (v) => typeof v === 'number' && v !== null
+  )
+
+  const average =
+    numbers.length > 0
+      ? (numbers.reduce((a, b) => a + b, 0) / numbers.length).toFixed(2)
+      : '0'
+
+  const studentInfo = [
+    { icon: GraduationCap, name: 'Name', value: student.name || 'N/A' },
+    { icon: IdCard, name: 'ID', value: student.id || 'N/A' },
+    { icon: Medal, name: 'Grade', value: marks.grade || 'N/A' },
+    { icon: ChartPie, name: 'Average', value: `${average}%` },
+  ]
+
+  const itSubjects = [
+    { sub: 'A+', marks: marks.a_plus ?? 0 },
+    { sub: 'Multimedia', marks: marks.multimedia ?? 0 },
+    { sub: 'Web Design', marks: marks.web_desing ?? 0 },
+    { sub: 'Networking', marks: marks.networking ?? 0 },
+    { sub: 'Database', marks: marks.database ?? 0 },
+    { sub: 'Programming', marks: marks.programming ?? 0 },
+  ]
+
+  const computerSubjects = [
+    { sub: 'Book 1', marks: marks.book_1 ?? 0 },
+    { sub: 'Book 2', marks: marks.book_2 ?? 0 },
+    { sub: 'Book 3', marks: marks.book_3 ?? 0 },
+    { sub: 'Networking', marks: marks.networking ?? 0 },
+    { sub: 'Database', marks: marks.database ?? 0 },
+  ]
+
+  const subjects =
+    data?.student?.subject?.toLowerCase() === 'it'
+      ? itSubjects
+      : computerSubjects
 
   return (
     <div className='w-full h-screen flex flex-col'>
