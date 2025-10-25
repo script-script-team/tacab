@@ -44,19 +44,21 @@ function Login() {
   })
 
   return (
-    <div className='flex flex-col w-full h-screen'>
+    <div className='flex flex-col w-full min-h-screen'>
       <Header />
-      <div className='w-full h-[73vh] justify-center items-center flex'>
+      <div className='w-full h-fit my-5 flex-1 justify-center items-center flex'>
         <form onSubmit={formik.handleSubmit}>
-          <div className='container w-[80%] md:w-[440px] h-fit shadow-lg rounded-2xl m-auto p-4 grid border border-red-500'>
+          <div className='w-[90%] md:w-[440px] h-fit shadow-lg'>
             <div className='flex justify-center items-center flex-col gap-4'>
               <img
                 className='w-20 h-20 rounded-full object-cover'
                 src='/logo.jpg'
               />
-              <h2 className='text-3xl font-bold'>Welcome to tacab collage</h2>
+              <h2 className='text-3xl font-bold text-center'>
+                Welcome to tacab collage
+              </h2>
             </div>
-            <div className='flex flex-col gap-4'>
+            <div className='flex flex-col gap-4 my-2'>
               <div className='flex flex-col gap-2'>
                 <label className='font-medium text-gray-600'>Email</label>
                 <Input
@@ -88,7 +90,7 @@ function Login() {
             </div>
             <Button
               type='submit'
-              className='cursor-pointer bg-blue-600 hover:bg-blue-700 h-10 text-white'
+              className='cursor-pointer bg-blue-600 hover:bg-blue-700 w-full h-10 text-white'
               disabled={isPending}
             >
               {isPending ? 'Logging in...' : 'Login'}
