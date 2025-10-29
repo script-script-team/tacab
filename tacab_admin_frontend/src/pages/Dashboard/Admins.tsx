@@ -6,7 +6,7 @@ import { useGetAllAdmins } from '@/react-query/admin.hooks'
 function Admins() {
   const { data, isLoading } = useGetAllAdmins()
   return (
-    <div className='w-full p-3 flex flex-col bg-white dark:bg-gray-950 rounded-lg h-full'>
+    <div className='relative w-full p-3 flex flex-col bg-white dark:bg-gray-950 rounded-lg h-full'>
       <div className='flex justify-end'>
         <NewAdminDialog />
       </div>

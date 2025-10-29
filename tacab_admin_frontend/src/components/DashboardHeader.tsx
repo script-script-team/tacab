@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom'
 
 const DashboardHeader = () => {
   const admin = useSelector((state: RootState) => state.loginSlice.admin)
+  const loading = useSelector((state: RootState) => state.whoImLoading.loading)
   const { mutate: logoutFn, isPending } = useLogout()
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -23,7 +24,7 @@ const DashboardHeader = () => {
     <header className='flex bg-white dark:bg-gray-950 rounded-lg p-3 justify-between items-center'>
       <Theme />
 
-      <div className='flex gap-2'>
+      {loading ? <Loading /> : <div className='flex gap-2'>
         <Popover>
           <PopoverTrigger>
             <Avatar className='cursor-pointer'>
@@ -56,7 +57,7 @@ const DashboardHeader = () => {
           <small className='font-bold'>{admin.name}</small>
           <small className='text-[10px]'>{admin.email}</small>
         </div>
-      </div>
+      </div>}
     </header>
   )
 }

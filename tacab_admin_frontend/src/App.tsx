@@ -4,8 +4,8 @@ import { router } from './router'
 import { useDispatch } from 'react-redux'
 import { useWhoAmI } from './react-query/login.hook'
 import { login } from './pages/redux/auth/login.slice'
-import Loading from './components/Loading'
 import { useEffect } from 'react'
+import { setLoading } from './pages/redux/loading.slice'
 
 function App() {
   const dispatch = useDispatch()
@@ -17,9 +17,9 @@ function App() {
     }
   }, [data, dispatch])
 
-  if (isLoading) {
-    return <Loading />
-  }
+  useEffect(() => {
+    dispatch(setLoading(isLoading))
+  }, [isLoading])
 
   return (
     <ThemeProvider defaultTheme='system' storageKey='vite-ui-theme'>

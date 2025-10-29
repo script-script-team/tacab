@@ -8,10 +8,10 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (!isAdmin.name) {
-      navigate('/auth/login', { replace: true })
-    } else {
+    if (isAdmin) {
       navigate('/')
+    } else {
+      navigate('/auth/login', { replace: true })
     }
   }, [isAdmin, navigate])
 

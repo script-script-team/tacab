@@ -43,15 +43,13 @@ export function Statistics() {
     })
     .reverse()
 
-  return isLoading ? (
-    <Loading />
-  ) : (
-    <Card className='w-full h-fill'>
+  return (
+    <Card className='w-full h-full flex-1 relative'>
       <CardHeader>
         <CardTitle>Upload Statistics</CardTitle>
         <CardDescription>{new Date().toDateString()}</CardDescription>
       </CardHeader>
-      <CardContent>
+      {isLoading ? <Loading /> : <CardContent>
         <ChartContainer config={chartConfig}>
           <LineChart
             accessibilityLayer
@@ -96,7 +94,7 @@ export function Statistics() {
             </Line>
           </LineChart>
         </ChartContainer>
-      </CardContent>
+      </CardContent>}
     </Card>
   )
 }
