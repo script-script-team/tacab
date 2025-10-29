@@ -8,12 +8,34 @@ import type {
   IGetSingleStudentRes,
 } from '@/pages/types/student.types'
 
-export const useGetAllStudents = (page: number) => {
+export const useGetAllItStudents = (page: number) => {
   return useQuery({
-    queryKey: ['all-students', page],
+    queryKey: ['it-students', page],
     queryFn: async () => {
       try {
-        const res = await api.get(`${BASE_API_URL}/api/student/?page=${page}`)
+        const res = await api.get(`${BASE_API_URL}/api/student/it?page=${page}`)
+
+        if (!res.data.ok) {
+          throw new Error(res.data.message || 'Fieled to get all student')
+        }
+
+        return res.data as IGetAllStudentsRes
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+          throw new Error(error.response.data?.message || 'Unknown Error')
+        }
+        throw error
+      }
+    },
+  })
+}
+
+export const useGetAllComputerStudents = (page: number) => {
+  return useQuery({
+    queryKey: ['computer-students', page],
+    queryFn: async () => {
+      try {
+        const res = await api.get(`/api/student/computer?page=${page}`)
 
         if (!res.data.ok) {
           throw new Error(res.data.message || 'Fieled to get all student')

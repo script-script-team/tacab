@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
-  useGetAllStudents,
+  useGetAllComputerStudents,
+  useGetAllItStudents,
   useSearchStudent,
 } from '@/react-query/student.hooks'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
@@ -14,19 +15,14 @@ import { useState } from 'react'
 function Students() {
   const [page, setPage] = useState(1)
   const [value, SetValue] = useState('')
-  const { data, isLoading } = useGetAllStudents(page)
-  const { data: student, isFetching } = useSearchStudent(value)
+  const { data, isLoading } = useGetAllItStudents(page)
+  const { data: comData, isLoading: comLoading } = useGetAllComputerStudents(page)
+  const { data: student, isLoading: searchLoading } = useSearchStudent(value)
 
-  const ITStudents = data?.students?.filter((std) => std.subject === 'IT')
-  const ComputerStudents = data?.students?.filter(
-    (std) => std.subject === 'Computer'
-  )
-  const ITSearchStudents = student?.students?.filter(
-    (std) => std.subject === 'IT'
-  )
-  const ComputerSearchStudents = student?.students?.filter(
-    (std) => std.subject === 'Computer'
-  )
+  const ITStudents = data?.students
+  const ComputerStudents = comData?.students
+  const ITSearchStudents = student?.students
+  const ComputerSearchStudents = student?.students
 
   const displayedITStudents =
     value && ITSearchStudents?.length ? ITSearchStudents : ITStudents
@@ -49,14 +45,14 @@ function Students() {
           <div className='flex gap-2'>
             <Button
               className='cursor-pointer'
-              disabled={isLoading || isFetching || page === 1}
+              disabled={isLoading || searchLoading || comLoading || page === 1}
               onClick={() => setPage(page - 1)}
             >
               <ChevronLeft />
             </Button>
             <Button
               className='cursor-pointer'
-              disabled={isLoading || isFetching || page >= (data?.total ?? 0)}
+              disabled={isLoading || searchLoading || comLoading || page >= (data?.total ?? 0)}
               onClick={() => setPage(page + 1)}
             >
               <ChevronRight />
@@ -64,7 +60,7 @@ function Students() {
           </div>
         )}
       </div>
-      {isLoading || isFetching ? (
+      {isLoading || searchLoading || comLoading ? (
         <Loading />
       ) : (
         <div className='flex w-full flex-col gap-6'>

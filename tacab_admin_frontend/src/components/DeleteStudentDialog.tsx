@@ -22,7 +22,8 @@ const DeleteStudentDialog = ({ id }: { id: number }) => {
   const handleDeleting = () => {
     deleteStudent(id, {
       onSuccess: (res) => {
-        queryClient.invalidateQueries({ queryKey: ['all-students'] })
+        queryClient.invalidateQueries({ queryKey: ['it-students'] })
+        queryClient.invalidateQueries({ queryKey: ['computer-students'] })
         toast.success(res.message || 'Deleted student ')
       },
       onError: (err) => {

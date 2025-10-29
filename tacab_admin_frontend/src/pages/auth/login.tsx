@@ -9,6 +9,8 @@ import { useLogin } from '@/react-query/login.hook'
 import { toast } from 'sonner'
 import { useDispatch } from 'react-redux'
 import { login } from '../redux/auth/login.slice'
+import { useState } from 'react'
+import { Eye, EyeClosed, Mail } from 'lucide-react'
 
 function Login() {
   const navigate = useNavigate()
@@ -43,12 +45,14 @@ function Login() {
     }),
   })
 
+  const [see, setSee] = useState(false);
+
   return (
     <div className='flex flex-col w-full min-h-screen'>
       <Header />
       <div className='w-full h-fit my-5 flex-1 justify-center items-center flex'>
         <form onSubmit={formik.handleSubmit}>
-          <div className='w-[90%] md:w-[440px] mx-auto md:mx-0 h-fit shadow-lg'>
+          <div className='w-[90%] p-8 rounded-lg md:w-[440px] mx-auto md:mx-0 h-fit shadow-lg'>
             <div className='flex justify-center items-center flex-col gap-4'>
               <img
                 className='w-20 h-20 rounded-full object-cover'
@@ -61,7 +65,8 @@ function Login() {
             <div className='flex flex-col gap-4 my-2'>
               <div className='flex flex-col gap-2'>
                 <label className='font-medium text-gray-600'>Email</label>
-                <Input
+                <div className="flex items-center justify-center gap-2">
+                  <Input
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.email}
@@ -69,20 +74,25 @@ function Login() {
                   type='text'
                   placeholder='Email'
                 />
+                <Mail />
+                </div>
                 <p className='text-red-500 font-bold'>
                   {formik.touched.email && formik.errors.email}
                 </p>
               </div>
               <div className='flex flex-col gap-2'>
                 <label className='font-medium text-gray-600'>Password</label>
-                <Input
+                <div className="flex justify-center items-center gap-2">
+                  <Input
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.password}
                   name='password'
-                  type='password'
+                  type={`${see ? "text": "password"}`}
                   placeholder='Password'
                 />
+                {see ? <Eye className='cursor-pointer' onClick={() => setSee(false)} />: <EyeClosed className='cursor-pointer' onClick={() => setSee(true)} />}
+                </div>
                 <p className='text-red-500 font-bold'>
                   {formik.touched.password && formik.errors.password}
                 </p>
