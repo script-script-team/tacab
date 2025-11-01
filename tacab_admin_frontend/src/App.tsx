@@ -22,7 +22,7 @@ function App() {
 
   useEffect(() => {
     dispatch(setLoading(isLoading))
-  }, [isLoading])
+  }, [isLoading, dispatch])
 
   return (
     <ThemeProvider defaultTheme='system' storageKey='vite-ui-theme'>
