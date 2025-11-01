@@ -16,7 +16,7 @@ export const useGetAllUploads = (page: number) => {
     queryKey: ['all-uploads', page],
     queryFn: async () => {
       try {
-        const res = await api.get(`${BASE_API_URL}/api/upload/?page=${page}`)
+        const res = await api.get(`${BASE_API_URL}/api/upload?page=${page}`)
 
         if (!res.data.ok) {
           throw new Error(res.data.message || 'Fieled to get the uploads')

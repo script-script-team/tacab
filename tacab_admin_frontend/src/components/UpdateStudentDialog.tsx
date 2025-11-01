@@ -51,7 +51,8 @@ export function UpdateStudentDialog({
       onSuccess: (res) => {
         toast.success(res.message || 'Updated successfully')
         setIsOpen(false)
-        queryClient.invalidateQueries({ queryKey: ['all-students'] })
+        queryClient.invalidateQueries({ queryKey: ['it-students'] })
+        queryClient.invalidateQueries({ queryKey: ['computer-students'] })
       },
       onError: (err) => {
         toast.error(err.message || 'Failed to update')

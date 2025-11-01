@@ -31,7 +31,7 @@ function Results() {
   const fillter = search ? search : uploads
 
   return (
-    <div className='w-full rounded-lg p-4 bg-white dark:bg-gray-950 h-full'>
+    <div className='relative w-full rounded-lg p-4 bg-white dark:bg-gray-950 h-full'>
       <div className='flex justify-between'>
         <PickDate date={date} setDate={setDate} />
         {!search && (
