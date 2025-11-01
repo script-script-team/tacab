@@ -1,4 +1,4 @@
-import { RouterProvider } from 'react-router-dom'
+import { RouterProvider, useNavigate } from 'react-router-dom'
 import { ThemeProvider } from './components/ui/theme-provider'
 import { router } from './router'
 import { useDispatch } from 'react-redux'
@@ -9,13 +9,16 @@ import { useEffect } from 'react'
 
 function App() {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const { data, isLoading } = useWhoAmI()
 
   useEffect(() => {
-    if (data) {
+    if (!data?.admin.name) {
+      navigate('/auth/login')
+    } else {
       dispatch(login(data.admin))
     }
-  }, [data, dispatch])
+  }, [data, dispatch, navigate])
 
   if (isLoading) {
     return <Loading />
