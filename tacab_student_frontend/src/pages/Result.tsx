@@ -11,7 +11,11 @@ function Result() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (!data?.student?.name || !data?.student?.id || !data?.student?.marks) {
+    if (
+      !data?.student?.name ||
+      !data?.student?.student_code ||
+      !data?.student?.marks
+    ) {
       navigate('/')
     }
   }, [data, navigate])
@@ -34,7 +38,7 @@ function Result() {
 
   const studentInfo = [
     { icon: GraduationCap, name: 'Name', value: student.name || 'N/A' },
-    { icon: IdCard, name: 'ID', value: student.id || 'N/A' },
+    { icon: IdCard, name: 'ID', value: student.student_code || 'N/A' },
     { icon: Medal, name: 'Grade', value: marks.grade || 'N/A' },
     { icon: ChartPie, name: 'Average', value: `${average}%` },
   ]

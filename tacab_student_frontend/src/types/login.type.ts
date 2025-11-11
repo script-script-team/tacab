@@ -19,6 +19,7 @@ export interface IGetResultRes {
   student: {
     id: number
     name: string
+    student_code: number
     phone_number: string
     subject: string
     upload_id: string

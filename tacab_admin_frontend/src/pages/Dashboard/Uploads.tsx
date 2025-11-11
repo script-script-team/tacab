@@ -50,7 +50,7 @@ function Uploads() {
   }
 
   return (
-    <div className='w-full p-3 flex min-h-[83.5vh] flex-col bg-white dark:bg-gray-950 rounded-lg h-full space-y-8'>
+    <div className='w-full p-3 relative flex min-h-[83.5vh] flex-col bg-white dark:bg-gray-950 rounded-lg h-full space-y-8'>
       <div className='flex justify-end'>
         {isPending ? (
           <Loading />

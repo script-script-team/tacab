@@ -17,7 +17,7 @@ const ComputerStudentTable = ({
   students: IFullStudentProp[]
 }) => {
   return !students.length ? (
-    <NotFoundMessage message='No IT students found!' />
+    <NotFoundMessage message='No Computer students found!' />
   ) : (
     <Table>
       <TableHeader>
