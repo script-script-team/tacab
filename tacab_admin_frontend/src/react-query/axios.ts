@@ -45,6 +45,15 @@ api.interceptors.response.use(
   async (error: AxiosError) => {
     const originalRequest = error.config as AxiosRequestConfigWithRetry
 
+    //idle logout 
+
+    if(error.response?.status === 440) {
+        console.warn('Session expired, logout')
+        localStorage.removeItem('access_token')
+        localStorage.removeItem('refresh_token')
+        return Promise.reject(error)
+    }
+
     // only trigger once for each request
     if (error.response?.status === 401 && !originalRequest._retry) {
       // if it's the refresh endpoint itself → logout or reject
