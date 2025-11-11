@@ -30,6 +30,7 @@ export interface IMarks {
 export interface IFullStudentProp {
   id: number
   name: string
+  student_code: number
   phone_number: string
   subject: string
   upload_id: string
@@ -45,7 +46,7 @@ export interface IGetSingleStudentRes {
 }
 
 export interface IGetAllStudentsRes {
-  ok: boolean,
-  total: number,
+  ok: boolean
+  total: number
   students: IFullStudentProp[]
 }

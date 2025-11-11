@@ -9,13 +9,16 @@ import {
 } from './ui/table'
 import DeleteStudentDialog from './DeleteStudentDialog'
 import { UpdateStudentDialog } from './UpdateStudentDialog'
+import NotFoundMessage from '@/pages/Dashboard/NotFoundMessage'
 
 const ComputerStudentTable = ({
   students,
 }: {
   students: IFullStudentProp[]
 }) => {
-  return (
+  return !students.length ? (
+    <NotFoundMessage message='No IT students found!' />
+  ) : (
     <Table>
       <TableHeader>
         <TableRow>
@@ -39,7 +42,7 @@ const ComputerStudentTable = ({
         {students.map((d, i) => {
           return (
             <TableRow key={i}>
-              <TableCell className='font-medium'>{d.id}</TableCell>
+              <TableCell className='font-medium'>{d.student_code}</TableCell>
               <TableCell>{d.name}</TableCell>
               <TableCell>{d.phone_number}</TableCell>
               <TableCell>{d.subject}</TableCell>

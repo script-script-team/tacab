@@ -11,6 +11,7 @@ import Loading from '@/components/Loading'
 import { toast } from 'sonner'
 import type { IStudentProp } from '../types/student.types'
 import { Link } from 'react-router-dom'
+import NotFoundMessage from './NotFoundMessage'
 
 function Uploads() {
   const { data: uploads, isLoading } = useGetAllUploads(1)
@@ -49,7 +50,7 @@ function Uploads() {
   }
 
   return (
-    <div className='w-full p-3 flex flex-col bg-white dark:bg-gray-950 rounded-lg h-full space-y-8'>
+    <div className='w-full p-3 flex min-h-[83.5vh] flex-col bg-white dark:bg-gray-950 rounded-lg h-full space-y-8'>
       <div className='flex justify-end'>
         {isPending ? (
           <Loading />
@@ -71,6 +72,8 @@ function Uploads() {
       </div>
       {isLoading ? (
         <Loading />
+      ) : !uploads?.uploads.length && !isLoading ? (
+        <NotFoundMessage message='No Uploads Found!' />
       ) : (
         <div className='space-y-2'>
           <h1 className='font-medium'>Total uploads: ({uploads?.total})</h1>

@@ -17,7 +17,6 @@ import type { IStudentProp } from '@/pages/types/student.types'
 import { useEffect, useState } from 'react'
 import { useSaveData } from '@/react-query/uploads.hooks'
 import { toast } from 'sonner'
-import Loading from './Loading'
 import {
   Form,
   FormControl,
@@ -44,7 +43,9 @@ export function UploadDialog({
     (state: RootState) => state.uploadDialog
   )
   const dispatch = useDispatch()
-  const { mutate: saveData, isPending } = useSaveData()
+  const [progress, setProgress] = useState<number>(0)
+  const [displayProgress, setDisplayProgress] = useState<number>(0)
+  const { mutate: saveData, isPending } = useSaveData(setProgress)
   const [isSuccessOpen, setIsSuccessOpen] = useState<boolean>(false)
   const [saveRes, setSaveRes] = useState<ISaveUpload>()
 
@@ -103,6 +104,23 @@ export function UploadDialog({
     }
   }, [data, dispatch, subject])
 
+  useEffect(() => {
+    if (progress < 100) {
+      const timer = setInterval(() => {
+        setDisplayProgress((prev) => {
+          if (prev < progress) return prev + 1
+          return prev
+        })
+      }, 15)
+      return () => clearInterval(timer)
+    } else {
+      const timer = setInterval(() => {
+        setDisplayProgress((prev) => (prev < 99 ? prev + 1 : prev))
+      }, 80)
+      return () => clearInterval(timer)
+    }
+  }, [progress])
+
   const headers = data.length > 0 ? Object.keys(data[0]) : []
 
   return (
@@ -113,7 +131,14 @@ export function UploadDialog({
         data={saveRes!}
       />
       {isPending ? (
-        <Loading />
+        <div className='fixed top-0 left-0 backdrop-blur-2xl w-full flex flex-col items-center justify-center h-screen'>
+          <div className='text-5xl font-bold text-primary'>
+            {displayProgress}%
+          </div>
+          <div className='mt-2 text-sm text-muted-foreground'>
+            Saving data...
+          </div>
+        </div>
       ) : (
         <Dialog
           open={uploadDialogState.isOpen}

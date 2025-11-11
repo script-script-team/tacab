@@ -88,12 +88,19 @@ export const useExtractData = () => {
   })
 }
 
-export const useSaveData = () => {
+export const useSaveData = (onProgress?: (progress: number) => void) => {
   return useMutation({
     mutationKey: ['save-data'],
     mutationFn: async (data: { subject: string; data: IStudentProp[] }) => {
       try {
-        const res = await api.post(`${BASE_API_URL}/api/upload/save`, data)
+        const res = await api.post(`${BASE_API_URL}/api/upload/save`, data, {
+          onUploadProgress: (event) => {
+            if (event.total) {
+              const percent = Math.round((event.loaded * 100) / event.total)
+              if (onProgress) onProgress(percent)
+            }
+          },
+        })
 
         if (!res.data.ok) {
           throw new Error(res.data.message || 'Fieled to save upload')
