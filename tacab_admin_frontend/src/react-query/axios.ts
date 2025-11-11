@@ -41,7 +41,11 @@ const processQueue = (error: Error | null = null) => {
 }
 
 api.interceptors.response.use(
-  (response: AxiosResponse) => response,
+  (response: AxiosResponse) => {
+    const newToken = response.headers['x-access-token'];
+    if (newToken) localStorage.setItem('access_token', newToken);
+    return response;
+  },
   async (error: AxiosError) => {
     const originalRequest = error.config as AxiosRequestConfigWithRetry
 
@@ -51,6 +55,7 @@ api.interceptors.response.use(
         console.warn('Session expired, logout')
         localStorage.removeItem('access_token')
         localStorage.removeItem('refresh_token')
+        window.location.href = "/auth/login"
         return Promise.reject(error)
     }
 
