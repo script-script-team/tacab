@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { useLogin } from '@/react-query/login.hook'
+import { setRefreshToken } from '@/lib/tokenStore'
 import { toast } from 'sonner'
 import { useDispatch } from 'react-redux'
 import { login } from '../redux/auth/login.slice'
@@ -27,8 +28,10 @@ function Login() {
         onSuccess: (res) => {
           toast.success('logged in successfully')
           dispatch(login(res.admin))
+          // store access token in localStorage (so it persists across reloads)
           localStorage.setItem('access_token', res.access_token)
-          localStorage.setItem('refresh_token', res.refresh_token)
+          // store refresh token in-memory only for better security
+          setRefreshToken(res.refresh_token)
           navigate('/')
         },
         onError: (error) => {
@@ -45,7 +48,7 @@ function Login() {
     }),
   })
 
-  const [see, setSee] = useState(false);
+  const [see, setSee] = useState(false)
 
   return (
     <div className='flex flex-col w-full min-h-screen'>
@@ -65,16 +68,16 @@ function Login() {
             <div className='flex flex-col gap-4 my-2'>
               <div className='flex flex-col gap-2'>
                 <label className='font-medium text-gray-600'>Email</label>
-                <div className="flex items-center justify-center gap-2">
+                <div className='flex items-center justify-center gap-2'>
                   <Input
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.email}
-                  name='email'
-                  type='text'
-                  placeholder='Email'
-                />
-                <Mail />
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.email}
+                    name='email'
+                    type='text'
+                    placeholder='Email'
+                  />
+                  <Mail />
                 </div>
                 <p className='text-red-500 font-bold'>
                   {formik.touched.email && formik.errors.email}
@@ -82,16 +85,26 @@ function Login() {
               </div>
               <div className='flex flex-col gap-2'>
                 <label className='font-medium text-gray-600'>Password</label>
-                <div className="flex justify-center items-center gap-2">
+                <div className='flex justify-center items-center gap-2'>
                   <Input
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.password}
-                  name='password'
-                  type={`${see ? "text": "password"}`}
-                  placeholder='Password'
-                />
-                {see ? <Eye className='cursor-pointer' onClick={() => setSee(false)} />: <EyeClosed className='cursor-pointer' onClick={() => setSee(true)} />}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.password}
+                    name='password'
+                    type={`${see ? 'text' : 'password'}`}
+                    placeholder='Password'
+                  />
+                  {see ? (
+                    <Eye
+                      className='cursor-pointer'
+                      onClick={() => setSee(false)}
+                    />
+                  ) : (
+                    <EyeClosed
+                      className='cursor-pointer'
+                      onClick={() => setSee(true)}
+                    />
+                  )}
                 </div>
                 <p className='text-red-500 font-bold'>
                   {formik.touched.password && formik.errors.password}

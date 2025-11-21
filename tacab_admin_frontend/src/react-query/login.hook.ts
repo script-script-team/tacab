@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import api from './axios'
 import axios from 'axios'
+import { clearRefreshToken } from '@/lib/tokenStore'
 import type { ILoginResponse, IWhoAmIRes } from '@/pages/types/login.type'
 
 // ✅ Login hook
@@ -31,9 +32,9 @@ export const useLogout = () => {
     mutationKey: ['logout'],
     mutationFn: async () => {
       try {
-        // Clear tokens from localStorage
+        // Clear tokens from storage
         localStorage.removeItem('access_token')
-        localStorage.removeItem('refresh_token')
+        clearRefreshToken()
 
         // Optional: call logout endpoint if needed
         const res = await api.get('/api/auth/logout')

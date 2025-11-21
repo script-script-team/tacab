@@ -1,6 +1,7 @@
 import { BASE_API_URL } from '@/pages/constant'
 import axios, { AxiosError } from 'axios'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
+import { getRefreshToken, clearRefreshToken } from '@/lib/tokenStore'
 
 interface FailedQueueItem {
   resolve: (value?: unknown) => void
@@ -51,7 +52,7 @@ api.interceptors.response.use(
       if (originalRequest.url?.includes('/auth/refresh-token')) {
         console.warn('Refresh token expired or invalid')
         localStorage.removeItem('access_token')
-        localStorage.removeItem('refresh_token')
+        clearRefreshToken()
         return Promise.reject(error)
       }
 
@@ -66,7 +67,7 @@ api.interceptors.response.use(
       isRefreshing = true
 
       try {
-        const refreshToken = localStorage.getItem('refresh_token')
+        const refreshToken = getRefreshToken()
         if (!refreshToken) throw new Error('No refresh token found')
 
         // 🔥 This will always send even if access token is expired
@@ -82,7 +83,7 @@ api.interceptors.response.use(
       } catch (err) {
         processQueue(err as Error)
         localStorage.removeItem('access_token')
-        localStorage.removeItem('refresh_token')
+        clearRefreshToken()
         return Promise.reject(err)
       } finally {
         isRefreshing = false
