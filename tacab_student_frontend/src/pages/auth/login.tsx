@@ -24,20 +24,14 @@ function Login() {
 
   const formik = useFormik({
     initialValues: {
-      name: '',
+      password: '',
       phone_number: '',
       subject: '',
     },
     onSubmit(values) {
-      const formattedName = values.name
-        .toLowerCase()
-        .split(' ')
-        .filter(Boolean)
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ')
 
       getResult(
-        { ...values, name: formattedName },
+        { ...values, name: values.password },
         {
           onSuccess: (res) => {
             dispatch(setResult(res))
@@ -50,10 +44,10 @@ function Login() {
       )
     },
     validationSchema: yup.object({
-      name: yup
+      password: yup
         .string()
-        .min(2, 'Name must be at least 2 characters')
-        .required('Name is required'),
+        .min(2, 'Password must be at least 2 characters')
+        .required('Password is required'),
       phone_number: yup
         .string()
         .min(5, 'Phone number must be at least 5 characters')
@@ -84,19 +78,19 @@ function Login() {
         <div className='flex flex-col gap-4'>
           <div className='flex flex-col gap-2'>
             <label className='font-medium text-gray-600 dark:text-gray-300'>
-              Name
+              Password
             </label>
             <Input
               name='name'
               type='text'
               placeholder='e.g Hebel Hebel'
-              value={formik.values.name}
+              value={formik.values.password}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               className='bg-white/50 dark:bg-gray-700/50 backdrop-blur-sm'
             />
-            {formik.touched.name && formik.errors.name && (
-              <p className='text-red-500 text-sm'>{formik.errors.name}</p>
+            {formik.touched.password && formik.errors.password && (
+              <p className='text-red-500 text-sm'>{formik.errors.password}</p>
             )}
           </div>
 
