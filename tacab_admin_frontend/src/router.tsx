@@ -7,8 +7,9 @@ import DashIntro from './pages/Dashboard/DashIntro'
 import Uploads from './pages/Dashboard/Uploads'
 import Results from './pages/Dashboard/Results'
 import Students from './pages/Dashboard/Students'
-import Settings from './pages/Dashboard/Admins'
+import AdminSettings from './pages/Dashboard/Admins'
 import { ProtectedRoute } from './components/ProtectedRoute'
+import Settings from './pages/Dashboard/Settings'
 
 export const router = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ export const router = createBrowserRouter([
           },
           {
             path: 'admins',
+            element: <AdminSettings />,
+          },
+          {
+            path: 'settings',
             element: <Settings />,
           },
         ],
