@@ -4,6 +4,7 @@ import { RiUserSettingsLine, RiUploadCloud2Fill } from 'react-icons/ri'
 import { TbLayoutDashboardFilled } from 'react-icons/tb'
 import { FaClipboardList } from 'react-icons/fa'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { Settings } from 'lucide-react'
 
 function SidePar() {
   const location = useLocation()
@@ -35,6 +36,11 @@ function SidePar() {
       name: 'Manage admins',
       path: '/admins',
       icon: <RiUserSettingsLine />,
+    },
+    {
+      name: 'Settings',
+      path: "/settings",
+      icons: <Settings />
     },
   ]
 

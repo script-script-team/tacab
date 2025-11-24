@@ -1,7 +1,7 @@
 import { Avatar } from '@/components/ui/avatar'
 import { Statistics } from '@/components/ui/Statistics'
 import Count from 'react-countup'
-import { FileText, Settings, UserLock, Users } from 'lucide-react'
+import { FileText, UserLock, Users } from 'lucide-react'
 import { useGetDashboardSummary } from '@/react-query/dashboard.hooks'
 import CustomAvatar from '@/components/CustomAvatar'
 import Loading from '@/components/Loading'
@@ -35,11 +35,6 @@ function DashIntro() {
       color: 'text-orange-500',
       text: 'Admins',
       value: totalAdmins,
-    },
-    {
-      icons: Settings,
-      color: 'text-orange-500',
-      text: 'Settings',
     },
   ]
 
