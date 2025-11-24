@@ -29,9 +29,15 @@ function Login() {
       subject: '',
     },
     onSubmit(values) {
+      const formattedPassword = values.password
+        .toLowerCase()
+        .split(' ')
+        .filter(Boolean)
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ')
 
       getResult(
-        { ...values, name: values.password },
+        { ...values, name: formattedPassword },
         {
           onSuccess: (res) => {
             dispatch(setResult(res))
@@ -76,23 +82,6 @@ function Login() {
 
         {/* Form fields */}
         <div className='flex flex-col gap-4'>
-          <div className='flex flex-col gap-2'>
-            <label className='font-medium text-gray-600 dark:text-gray-300'>
-              Password
-            </label>
-            <Input
-              name='name'
-              type='text'
-              placeholder='e.g Hebel Hebel'
-              value={formik.values.password}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              className='bg-white/50 dark:bg-gray-700/50 backdrop-blur-sm'
-            />
-            {formik.touched.password && formik.errors.password && (
-              <p className='text-red-500 text-sm'>{formik.errors.password}</p>
-            )}
-          </div>
 
           <div className='flex flex-col gap-2'>
             <label className='font-medium text-gray-600 dark:text-gray-300'>
@@ -116,6 +105,24 @@ function Login() {
             )}
           </div>
 
+          <div className='flex flex-col gap-2'>
+            <label className='font-medium text-gray-600 dark:text-gray-300'>
+              Password
+            </label>
+            <Input
+              name='name'
+              type='text'
+              placeholder='e.g Hebel Hebel'
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              className='bg-white/50 dark:bg-gray-700/50 backdrop-blur-sm'
+            />
+            {formik.touched.password && formik.errors.password && (
+              <p className='text-red-500 text-sm'>{formik.errors.password}</p>
+            )}
+          </div>
+          
           <div className='flex flex-col gap-2'>
             <label className='font-medium text-gray-600 dark:text-gray-300'>
               Subject
