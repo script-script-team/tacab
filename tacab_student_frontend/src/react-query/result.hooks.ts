@@ -7,7 +7,7 @@ export const useGetResult = () => {
   return useMutation({
     mutationKey: ['get-result'],
     mutationFn: async (data: {
-      name: string
+      password: string
       phone_number: string
       subject: string
     }) => {

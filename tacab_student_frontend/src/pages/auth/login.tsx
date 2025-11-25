@@ -29,15 +29,9 @@ function Login() {
       subject: '',
     },
     onSubmit(values) {
-      const formattedPassword = values.password
-        .toLowerCase()
-        .split(' ')
-        .filter(Boolean)
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ')
 
       getResult(
-        { ...values, name: formattedPassword },
+        { ...values },
         {
           onSuccess: (res) => {
             dispatch(setResult(res))
@@ -110,7 +104,7 @@ function Login() {
               Password
             </label>
             <Input
-              name='name'
+              name='password'
               type='text'
               placeholder='e.g Hebel Hebel'
               value={formik.values.password}
