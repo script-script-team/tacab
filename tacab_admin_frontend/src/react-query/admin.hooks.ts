@@ -148,3 +148,30 @@ export const useDeleteAdmin = () => {
     },
   })
 }
+
+export const useChangePassword = () => {
+  return useMutation({
+    mutationKey: ['change-password'],
+    mutationFn: async (data: { defaultPassword: string; password: string }) => {
+      try {
+        const res = await api.post(`${BASE_API_URL}/api/auth/change-password`, {
+          defaultPassword: data.defaultPassword,
+          password: data.password,
+        })
+
+        if (!res.data.ok) {
+          throw new Error(
+            res.data.message || 'Fieled to change default password'
+          )
+        }
+
+        return res.data as IUpdateUploadRes
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+          throw new Error(error.response.data?.message || 'Unknown Error')
+        }
+        throw error
+      }
+    },
+  })
+}

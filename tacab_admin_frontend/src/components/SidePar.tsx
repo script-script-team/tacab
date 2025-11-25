@@ -4,7 +4,7 @@ import { RiUserSettingsLine, RiUploadCloud2Fill } from 'react-icons/ri'
 import { TbLayoutDashboardFilled } from 'react-icons/tb'
 import { FaClipboardList } from 'react-icons/fa'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Settings } from 'lucide-react'
+import { FiSettings } from 'react-icons/fi'
 
 function SidePar() {
   const location = useLocation()
@@ -39,8 +39,8 @@ function SidePar() {
     },
     {
       name: 'Settings',
-      path: "/settings",
-      icons: <Settings />
+      path: '/settings',
+      icon: <FiSettings />,
     },
   ]
 

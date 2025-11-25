@@ -10,8 +10,20 @@ import {
 import DeleteStudentDialog from './DeleteStudentDialog'
 import { UpdateStudentDialog } from './UpdateStudentDialog'
 import NotFoundMessage from '@/pages/Dashboard/NotFoundMessage'
+import { useState } from 'react'
+import { Eye, EyeOff } from 'lucide-react'
 
 const ITStudentsTable = ({ students }: { students: IFullStudentProp[] }) => {
+  const [visiblePasswords, setVisiblePasswords] = useState<
+    Record<number, boolean>
+  >({})
+  const togglePassword = (id: number) => {
+    setVisiblePasswords((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }))
+  }
+
   return !students.length ? (
     <NotFoundMessage message='No IT students found!' />
   ) : (
@@ -19,7 +31,6 @@ const ITStudentsTable = ({ students }: { students: IFullStudentProp[] }) => {
       <TableHeader>
         <TableRow>
           <TableHead>Id</TableHead>
-          <TableHead>Password</TableHead>
           <TableHead>Name</TableHead>
           <TableHead>Number</TableHead>
           <TableHead>Subject</TableHead>
@@ -30,6 +41,7 @@ const ITStudentsTable = ({ students }: { students: IFullStudentProp[] }) => {
           <TableHead>Database</TableHead>
           <TableHead>Programming</TableHead>
           <TableHead>Grade</TableHead>
+          <TableHead>Password</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -37,7 +49,6 @@ const ITStudentsTable = ({ students }: { students: IFullStudentProp[] }) => {
           return (
             <TableRow key={i}>
               <TableCell className='font-medium'>{d.student_code}</TableCell>
-              <TableCell>{d.password}</TableCell>
               <TableCell>{d.name}</TableCell>
               <TableCell>{d.phone_number}</TableCell>
               <TableCell>{d.subject}</TableCell>
@@ -48,6 +59,23 @@ const ITStudentsTable = ({ students }: { students: IFullStudentProp[] }) => {
               <TableCell>{d.marks.database}</TableCell>
               <TableCell>{d.marks.programming}</TableCell>
               <TableCell>{d.marks.grade}</TableCell>
+              <TableCell>
+                <div className='flex items-center gap-2'>
+                  <span>{visiblePasswords[d.id] ? d.password : '••••••'}</span>
+
+                  <button
+                    type='button'
+                    onClick={() => togglePassword(d.id)}
+                    className='text-gray-600 hover:text-black'
+                  >
+                    {visiblePasswords[d.id] ? (
+                      <EyeOff size={16} />
+                    ) : (
+                      <Eye size={16} />
+                    )}
+                  </button>
+                </div>
+              </TableCell>
               <TableCell className='flex gap-2'>
                 <DeleteStudentDialog id={d.id} />
                 <UpdateStudentDialog student={d} />

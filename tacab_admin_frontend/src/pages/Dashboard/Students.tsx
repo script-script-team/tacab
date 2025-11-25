@@ -98,33 +98,45 @@ function Students() {
             )}
           </div>
 
-          {isLoading || searchLoading || comLoading ? (
-            <Loading />
-          ) : (
-            <div className='flex w-full flex-col gap-6'>
-              <Tabs defaultValue='it'>
-                <TabsList>
-                  <TabsTrigger onClick={() => setSelected('it')} value='it'>
-                    IT Students
-                  </TabsTrigger>
-                  <TabsTrigger
-                    onClick={() => setSelected('computer')}
-                    value='computer'
-                  >
-                    Computer Students
-                  </TabsTrigger>
-                </TabsList>
-                <TabsContent value='it'>
+          <div className='flex w-full flex-col gap-6'>
+            <Tabs defaultValue='it'>
+              <TabsList>
+                <TabsTrigger onClick={() => setSelected('it')} value='it'>
+                  IT Students
+                </TabsTrigger>
+                <TabsTrigger
+                  onClick={() => setSelected('computer')}
+                  value='computer'
+                >
+                  Computer Students
+                </TabsTrigger>
+              </TabsList>
+
+              {/* IT TAB */}
+              <TabsContent value='it'>
+                <div className='relative min-h-[200px]'>
+                  {(isLoading || searchLoading) && select === 'it' && (
+                    <Loading />
+                  )}
+
                   <ITStudentsTable students={displayedITStudents || []} />
-                </TabsContent>
-                <TabsContent value='computer'>
+                </div>
+              </TabsContent>
+
+              {/* COMPUTER TAB */}
+              <TabsContent value='computer'>
+                <div className='relative min-h-[200px]'>
+                  {(comLoading || searchLoading) && select === 'computer' && (
+                    <Loading />
+                  )}
+
                   <ComputerStudentTable
                     students={displayedComputerStudents || []}
                   />
-                </TabsContent>
-              </Tabs>
-            </div>
-          )}
+                </div>
+              </TabsContent>
+            </Tabs>
+          </div>
         </>
       )}
     </div>

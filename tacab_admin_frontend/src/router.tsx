@@ -9,7 +9,7 @@ import Results from './pages/Dashboard/Results'
 import Students from './pages/Dashboard/Students'
 import AdminSettings from './pages/Dashboard/Admins'
 import { ProtectedRoute } from './components/ProtectedRoute'
-import Settings from './pages/Dashboard/Settings'
+import { Settings } from './pages/Dashboard/Settings'
 
 export const router = createBrowserRouter([
   {
