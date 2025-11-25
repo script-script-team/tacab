@@ -200,7 +200,7 @@ function Header({ studentName, id }: { studentName: string; id: number }) {
                     <AlertDialogFooter>
                       <AlertDialogCancel>Cancel</AlertDialogCancel>
                       <AlertDialogAction
-                        disabled={isPending}
+                        disabled={isPending || !formik.isValid}
                         className='cursor-pointer'
                         type='submit'
                       >
