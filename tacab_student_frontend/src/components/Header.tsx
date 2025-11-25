@@ -22,10 +22,14 @@ import { Input } from './ui/input'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 import { useChangePassword } from '@/react-query/result.hooks'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
+import { Eye, EyeOff } from 'lucide-react'
 
 function Header({ studentName, id }: { studentName: string; id: number }) {
+  const [showOldPassword, setShowOldPassword] = useState(false)
+  const [showNewPassword, setShowNewPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
 
@@ -103,40 +107,86 @@ function Header({ studentName, id }: { studentName: string; id: number }) {
                         requirements below.
                       </AlertDialogTitle>
                       <AlertDialogDescription className='grid gap-4'>
-                        <div className='grid'>
+                        {/* Old Password */}
+                        <div className='grid relative'>
                           <Input
                             onBlur={formik.handleBlur}
                             onChange={formik.handleChange}
                             name='oldPassword'
                             value={formik.values.oldPassword}
+                            type={showOldPassword ? 'text' : 'password'}
                             placeholder='Old password'
+                            className='pr-10'
                           />
+                          <button
+                            type='button'
+                            onClick={() => setShowOldPassword((prev) => !prev)}
+                            className='absolute right-3 top-1/2 -translate-y-1/2 text-gray-500'
+                          >
+                            {showOldPassword ? (
+                              <EyeOff size={18} />
+                            ) : (
+                              <Eye size={18} />
+                            )}
+                          </button>
                           <p className='text-red-500 font-bold'>
                             {formik.touched.oldPassword &&
                               formik.errors.oldPassword}
                           </p>
                         </div>
-                        <div className='grid'>
+
+                        {/* New Password */}
+                        <div className='grid relative'>
                           <Input
                             onBlur={formik.handleBlur}
                             onChange={formik.handleChange}
                             name='newPassword'
                             value={formik.values.newPassword}
-                            placeholder='New passoword'
+                            type={showNewPassword ? 'text' : 'password'}
+                            placeholder='New password'
+                            className='pr-10'
                           />
+                          <button
+                            type='button'
+                            onClick={() => setShowNewPassword((prev) => !prev)}
+                            className='absolute right-3 top-1/2 -translate-y-1/2 text-gray-500'
+                          >
+                            {showNewPassword ? (
+                              <EyeOff size={18} />
+                            ) : (
+                              <Eye size={18} />
+                            )}
+                          </button>
                           <p className='text-red-500 font-bold'>
                             {formik.touched.newPassword &&
                               formik.errors.newPassword}
                           </p>
                         </div>
-                        <div className='grid'>
+
+                        {/* Confirm Password */}
+                        <div className='grid relative'>
                           <Input
                             onBlur={formik.handleBlur}
                             onChange={formik.handleChange}
                             name='confirmPassword'
                             value={formik.values.confirmPassword}
+                            type={showConfirmPassword ? 'text' : 'password'}
                             placeholder='Confirm password'
+                            className='pr-10'
                           />
+                          <button
+                            type='button'
+                            onClick={() =>
+                              setShowConfirmPassword((prev) => !prev)
+                            }
+                            className='absolute right-3 top-1/2 -translate-y-1/2 text-gray-500'
+                          >
+                            {showConfirmPassword ? (
+                              <EyeOff size={18} />
+                            ) : (
+                              <Eye size={18} />
+                            )}
+                          </button>
                           <p className='text-red-500 font-bold'>
                             {formik.touched.confirmPassword &&
                               formik.errors.confirmPassword}
