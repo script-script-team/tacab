@@ -29,6 +29,7 @@ export interface IMarks {
 
 export interface IFullStudentProp {
   id: number
+  password: string
   name: string
   student_code: number
   phone_number: string

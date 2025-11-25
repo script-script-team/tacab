@@ -48,6 +48,7 @@ const DeleteUploadDialog = ({ id }: { id: string }) => {
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction asChild>
             <Button
+              className='text-white'
               variant={'destructive'}
               onClick={handleDeleting}
               disabled={isPending}

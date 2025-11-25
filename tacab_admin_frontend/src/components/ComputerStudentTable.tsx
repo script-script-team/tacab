@@ -23,6 +23,7 @@ const ComputerStudentTable = ({
       <TableHeader>
         <TableRow>
           <TableHead>Id</TableHead>
+          <TableHead>Password</TableHead>
           <TableHead>Name</TableHead>
           <TableHead>Number</TableHead>
           <TableHead>Subject</TableHead>
@@ -43,6 +44,7 @@ const ComputerStudentTable = ({
           return (
             <TableRow key={i}>
               <TableCell className='font-medium'>{d.student_code}</TableCell>
+              <TableCell>{d.password}</TableCell>
               <TableCell>{d.name}</TableCell>
               <TableCell>{d.phone_number}</TableCell>
               <TableCell>{d.subject}</TableCell>
