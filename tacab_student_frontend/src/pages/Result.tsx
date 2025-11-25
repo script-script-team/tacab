@@ -73,7 +73,7 @@ function Result() {
 
   return (
     <div className='w-full h-screen flex flex-col'>
-      <Header />
+      <Header studentName={data.student?.name?.[0].toUpperCase()} id={data.student?.id} />
       <div className='grow'>
         <div className='w-full mb-5'>
           <div className='mt-24'>
