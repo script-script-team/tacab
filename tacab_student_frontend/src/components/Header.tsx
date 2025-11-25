@@ -71,7 +71,7 @@ function Header({ studentName, id }: { studentName: string; id: number }) {
     if (isError) {
       toast.error(error.message)
     }
-  }, [isError, data?.ok])
+  }, [isError, data?.ok, error?.message, formik])
 
   return (
     <div className='w-full fixed z-10 py-4 bg-gray-200 dark:bg-gray-800/70 backdrop-blur-3xl shadow-md'>
@@ -109,7 +109,7 @@ function Header({ studentName, id }: { studentName: string; id: number }) {
                             onChange={formik.handleChange}
                             name='oldPassword'
                             value={formik.values.oldPassword}
-                            placeholder='Last password'
+                            placeholder='Old password'
                           />
                           <p className='text-red-500 font-bold'>
                             {formik.touched.oldPassword &&

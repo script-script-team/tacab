@@ -28,7 +28,8 @@ interface FormData {
 
 export function Settings() {
   const [isOpen, setIsOpen] = useState(false)
-  const [showPasswords, setShowPasswords] = useState(false)
+  const [showDefaultPassword, setShowDefaultPassword] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
   const queryClient = useQueryClient()
 
   const { data: defaultPasswordData, isLoading: loadingDefault } =
@@ -94,12 +95,13 @@ export function Settings() {
           </DialogHeader>
 
           <div className='grid gap-4 py-4'>
+            {/* Current Default Password */}
             <div className='grid gap-2'>
               <Label htmlFor='defaultPassword'>Current Default Password</Label>
               <div className='relative'>
                 <Input
                   id='defaultPassword'
-                  type={showPasswords ? 'text' : 'password'}
+                  type={showDefaultPassword ? 'text' : 'password'}
                   {...register('defaultPassword', {
                     required: 'Current password is required',
                   })}
@@ -109,10 +111,14 @@ export function Settings() {
                 />
                 <button
                   type='button'
-                  onClick={() => setShowPasswords((prev) => !prev)}
+                  onClick={() => setShowDefaultPassword((prev) => !prev)}
                   className='absolute right-3 top-1/2 -translate-y-1/2 text-gray-500'
                 >
-                  {showPasswords ? <EyeOff size={18} /> : <Eye size={18} />}
+                  {showDefaultPassword ? (
+                    <EyeOff size={18} />
+                  ) : (
+                    <Eye size={18} />
+                  )}
                 </button>
               </div>
               {errors.defaultPassword && (
@@ -122,16 +128,27 @@ export function Settings() {
               )}
             </div>
 
+            {/* New Password */}
             <div className='grid gap-2'>
               <Label htmlFor='password'>Your Password</Label>
-              <Input
-                id='password'
-                type={showPasswords ? 'text' : 'password'}
-                {...register('password', {
-                  required: 'New password is required',
-                })}
-                placeholder='Enter your password'
-              />
+              <div className='relative'>
+                <Input
+                  id='password'
+                  type={showPassword ? 'text' : 'password'}
+                  {...register('password', {
+                    required: 'New password is required',
+                  })}
+                  placeholder='Enter your password'
+                  className='pr-10'
+                />
+                <button
+                  type='button'
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className='absolute right-3 top-1/2 -translate-y-1/2 text-gray-500'
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
               {errors.password && (
                 <p className='text-sm text-red-500'>
                   {errors.password.message}

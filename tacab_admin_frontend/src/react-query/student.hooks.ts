@@ -71,7 +71,7 @@ export const useSearchStudent = (data: string) => {
         throw error
       }
     },
-    enabled: !!data
+    enabled: !!data,
   })
 }
 
@@ -126,11 +126,13 @@ export const useUpdateStudent = () => {
       id: number
       name: string
       phone_number: string
+      password: string
     }) => {
       try {
         const res = await api.put(`${BASE_API_URL}/api/student/${data.id}`, {
           name: data.name,
           phone_number: data.phone_number,
+          password: data.password,
         })
 
         if (!res.data.ok) {
