@@ -77,8 +77,9 @@ export function Settings() {
             <FiEdit className='mr-2' /> Change Default Password
           </Button>
           <div className='text-sm text-gray-600 dark:text-gray-400 mt-1'>
-            This button lets you change the default password for new students.
-            The default password is what new accounts use when first created.
+            Changing the default password will apply only to newly created
+            student accounts. Existing students will retain their current
+            passwords.
           </div>
         </div>
       </DialogTrigger>

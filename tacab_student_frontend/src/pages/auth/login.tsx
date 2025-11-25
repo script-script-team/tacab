@@ -16,8 +16,11 @@ import { useGetResult } from '@/react-query/result.hooks'
 import { toast } from 'sonner'
 import { useDispatch } from 'react-redux'
 import { setResult } from '@/redux/result.slice'
+import { useState } from 'react'
+import { Eye, EyeOff } from 'lucide-react'
 
 function Login() {
+  const [showPassword, setShowPassword] = useState(false)
   const { mutate: getResult, isPending } = useGetResult()
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -29,7 +32,6 @@ function Login() {
       subject: '',
     },
     onSubmit(values) {
-
       getResult(
         { ...values },
         {
@@ -76,7 +78,6 @@ function Login() {
 
         {/* Form fields */}
         <div className='flex flex-col gap-4'>
-
           <div className='flex flex-col gap-2'>
             <label className='font-medium text-gray-600 dark:text-gray-300'>
               Phone Number
@@ -103,20 +104,29 @@ function Login() {
             <label className='font-medium text-gray-600 dark:text-gray-300'>
               Password
             </label>
-            <Input
-              name='password'
-              type='text'
-              placeholder='e.g Hebel Hebel'
-              value={formik.values.password}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              className='bg-white/50 dark:bg-gray-700/50 backdrop-blur-sm'
-            />
+            <div className='relative'>
+              <Input
+                name='password'
+                type={showPassword ? 'text' : 'password'}
+                placeholder='Enter your password'
+                value={formik.values.password}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className='bg-white/50 dark:bg-gray-700/50 backdrop-blur-sm pr-10'
+              />
+              <button
+                type='button'
+                onClick={() => setShowPassword(!showPassword)}
+                className='absolute right-3 top-1/2 -translate-y-1/2 text-gray-500'
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
             {formik.touched.password && formik.errors.password && (
               <p className='text-red-500 text-sm'>{formik.errors.password}</p>
             )}
           </div>
-          
+
           <div className='flex flex-col gap-2'>
             <label className='font-medium text-gray-600 dark:text-gray-300'>
               Subject

@@ -46,7 +46,7 @@ function Students() {
               <Input
                 onChange={(e) => SetValue(e.target.value)}
                 className='xs:w-full sm:w-full md:w-[50%] lg:w-[50%] xl:w-[50%]'
-                placeholder='Search by name or number'
+                placeholder='Search by ID, name or number'
               />
             </form>
             {!ITSearchStudents && (
