@@ -72,10 +72,13 @@ function Header({ studentName, id }: { studentName: string; id: number }) {
     if (data?.ok) {
       formik.resetForm()
     }
-    if (isError) {
+  }, [data?.ok])
+
+  useEffect(() => {
+    if (isError && error?.message) {
       toast.error(error.message)
     }
-  }, [isError, data?.ok, error?.message, formik])
+  }, [isError])
 
   return (
     <div className='w-full fixed z-10 py-4 bg-gray-200 dark:bg-gray-800/70 backdrop-blur-3xl shadow-md'>
