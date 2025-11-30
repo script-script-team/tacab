@@ -1,0 +1,71 @@
+import Loading from "@/components/Loading";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import { useGetAllPayments } from "@/react-query/payment.hooks"
+import { Check, X } from "lucide-react";
+import { useEffect } from "react";
+import { toast } from "sonner";
+
+function Payment() {
+
+    const {data, isLoading, isError, error} = useGetAllPayments();
+
+    useEffect(() => {
+        if(isError) {
+            toast.error(error.message);
+        }
+    }, [isError]);
+
+  return (
+    <div className="w-full">
+        {isLoading ? <div className=""><Loading /></div>: <div className="w-full rounded-lg p-8 bg-white dark:bg-gray-950 min-h-[83.5vh]">
+        <div className="w-full flex justify-between items-center">
+            <h2>IT Department-Payment Status</h2>
+            <button className="rounded-full bg-blue-900 text-white py-1 px-2 text-[0.6rem] font-bold">7 Students</button>
+        </div>
+        <Table>
+      <TableCaption>A list of your recent payment.</TableCaption>
+      <TableHeader>
+        <TableRow>
+          <TableHead className="w-[100px]">Student Name</TableHead>
+          <TableHead>Student ID</TableHead>
+          <TableHead>Month 1</TableHead>
+          <TableHead>Month 2</TableHead>
+          <TableHead>Month 3</TableHead>
+          <TableHead>Month 4</TableHead>
+          <TableHead>Month 5</TableHead>
+          <TableHead>Month 6</TableHead>
+          <TableHead>Month 7</TableHead>
+          <TableHead>Month 8</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {data?.payments.map((p) => (
+          <TableRow key={p.student_id}>
+            <TableCell className="font-medium">{p.student?.name}</TableCell>
+            <TableCell>{p.student_id}</TableCell>
+            <TableCell>{p.month ? <Check />: <X />}</TableCell>
+            <TableCell>{p.month ? <Check />: <X />}</TableCell>
+            <TableCell>{p.month ? <Check />: <X />}</TableCell>
+            <TableCell>{p.month ? <Check />: <X />}</TableCell>
+            <TableCell>{p.month ? <Check />: <X />}</TableCell>
+            <TableCell>{p.month ? <Check />: <X />}</TableCell>
+            <TableCell>{p.month ? <Check />: <X />}</TableCell>
+            <TableCell>{p.month ? <Check />: <X />}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+    </div>}
+    </div>
+  )
+}
+
+export default Payment

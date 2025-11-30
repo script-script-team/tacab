@@ -5,6 +5,7 @@ import { TbLayoutDashboardFilled } from 'react-icons/tb'
 import { FaClipboardList } from 'react-icons/fa'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { FiSettings } from 'react-icons/fi'
+import { MdPayment } from 'react-icons/md'
 
 function SidePar() {
   const location = useLocation()
@@ -36,6 +37,11 @@ function SidePar() {
       name: 'Manage admins',
       path: '/admins',
       icon: <RiUserSettingsLine />,
+    },
+    {
+      name: 'Manage Payments',
+      path: '/payment',
+      icon: <MdPayment />,
     },
     {
       name: 'Settings',

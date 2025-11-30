@@ -10,6 +10,7 @@ import Students from './pages/Dashboard/Students'
 import AdminSettings from './pages/Dashboard/Admins'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { Settings } from './pages/Dashboard/Settings'
+import Payment from './pages/Dashboard/Payment'
 
 export const router = createBrowserRouter([
   {
@@ -43,6 +44,10 @@ export const router = createBrowserRouter([
           {
             path: 'admins',
             element: <AdminSettings />,
+          },
+          {
+            path: 'payment',
+            element: <Payment />
           },
           {
             path: 'settings',
