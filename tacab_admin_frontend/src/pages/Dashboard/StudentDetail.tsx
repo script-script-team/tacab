@@ -10,8 +10,9 @@ import {
 import { InfoItem } from '@/components/InfoItem'
 import { ProgressBar } from '@/components/ProgressBar'
 import { MonthGrid } from '@/components/MonthGrid'
-import { Button } from '@/components/ui/button'
-import { Pencil, Printer, Trash } from 'lucide-react'
+import { Printer } from 'lucide-react'
+import { UpdateStudentDialog } from '@/components/UpdateStudentDialog'
+import DeleteStudentDialog from '@/components/DeleteStudentDialog'
 
 const MarksTable = ({ marks }: { marks: IMarks | null }) => {
   if (!marks)
@@ -115,15 +116,9 @@ const StudentDetail = () => {
           </p>
         </div>
         <div className='flex gap-3'>
-          <Button onClick={() => window.print()}>
-            <Printer />
-          </Button>
-          <Button>
-            <Pencil />
-          </Button>
-          <Button variant='destructive'>
-            <Trash />
-          </Button>
+          <Printer onClick={() => window.print()} size={18} />
+          <UpdateStudentDialog student={student} />
+          <DeleteStudentDialog id={student.id} />
         </div>
       </div>
 
@@ -136,7 +131,7 @@ const StudentDetail = () => {
             <div className='grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-4'>
               <InfoItem label='Full Name' value={student.name} />
               <InfoItem label='Phone Number' value={student.phone_number} />
-              <InfoItem label='Subject / Course' value={student.subject} />
+              <InfoItem label='Subject' value={student.subject} />
               <InfoItem
                 label='Joined Date'
                 value={formatDate(student.createdAt)}
