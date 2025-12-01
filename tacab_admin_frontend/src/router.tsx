@@ -11,6 +11,8 @@ import AdminSettings from './pages/Dashboard/Admins'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { Settings } from './pages/Dashboard/Settings'
 import Payment from './pages/Dashboard/Payment'
+import ManageStudents from './pages/Dashboard/ManageStudents'
+import StudentDetail from './pages/Dashboard/StudentDetail'
 
 export const router = createBrowserRouter([
   {
@@ -38,6 +40,19 @@ export const router = createBrowserRouter([
             element: <Results />,
           },
           {
+            path: 'manage-students',
+            children: [
+              {
+                index: true,
+                element: <ManageStudents />,
+              },
+              {
+                path: ':id',
+                element: <StudentDetail />,
+              },
+            ],
+          },
+          {
             path: 'students',
             element: <Students />,
           },
@@ -47,7 +62,7 @@ export const router = createBrowserRouter([
           },
           {
             path: 'payment',
-            element: <Payment />
+            element: <Payment />,
           },
           {
             path: 'settings',

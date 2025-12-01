@@ -15,7 +15,7 @@ function App() {
     if (data) {
       dispatch(login(data.admin))
     }
-  }, [data, dispatch])
+  }, [data])
 
   if (isLoading) {
     return <Loading />

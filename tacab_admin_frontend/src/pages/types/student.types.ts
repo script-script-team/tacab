@@ -3,6 +3,7 @@ export interface IStudentProp {
   phone_number: string
   subject: number
   marks: IMarks
+  totalPayment: number
 }
 
 export interface IMarks {
@@ -27,6 +28,28 @@ export interface IMarks {
   updatedAt: string
 }
 
+export interface IPayment {
+  id: string
+  amount: number
+  month: string
+  year: number
+  createdAt: string
+  updatedAt: string
+}
+
+export interface IMonthPayment {
+  id: string
+  student_id: number
+  month_1: boolean
+  month_2: boolean
+  month_3: boolean
+  month_4: boolean
+  month_5: boolean
+  month_6: boolean
+  month_7: boolean
+  month_8: boolean
+}
+
 export interface IFullStudentProp {
   id: number
   password: string
@@ -38,7 +61,10 @@ export interface IFullStudentProp {
   marks_id: string
   createdAt: string
   updatedAt: string
-  marks: IMarks
+  marks: IMarks | null
+  payments: IPayment[]
+  monthPayments: IMonthPayment[] | null
+  totalPayment: number
 }
 
 export interface IGetSingleStudentRes {

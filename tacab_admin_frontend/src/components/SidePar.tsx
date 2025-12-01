@@ -2,7 +2,7 @@ import Logo from './ui/Logo'
 import { PiStudentFill } from 'react-icons/pi'
 import { RiUserSettingsLine, RiUploadCloud2Fill } from 'react-icons/ri'
 import { TbLayoutDashboardFilled } from 'react-icons/tb'
-import { FaClipboardList } from 'react-icons/fa'
+import { FaBook, FaClipboardList } from 'react-icons/fa'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { FiSettings } from 'react-icons/fi'
 import { MdPayment } from 'react-icons/md'
@@ -30,11 +30,16 @@ function SidePar() {
     },
     {
       name: 'Manage Students',
-      path: '/students',
+      path: '/manage-students',
       icon: <PiStudentFill />,
     },
     {
-      name: 'Manage admins',
+      name: 'Manage Results',
+      path: '/students',
+      icon: <FaBook />,
+    },
+    {
+      name: 'Manage Admins',
       path: '/admins',
       icon: <RiUserSettingsLine />,
     },
