@@ -155,7 +155,10 @@ const StudentDetail = () => {
               <h3 className='text-lg font-bold text-gray-700 dark:text-gray-200 mb-4'>
                 Monthly Payment Status
               </h3>
-              <MonthGrid monthPayments={student.monthPayments} />
+              <MonthGrid
+                monthPayments={student.monthPayments}
+                subject={student.subject}
+              />
             </div>
           </div>
 
