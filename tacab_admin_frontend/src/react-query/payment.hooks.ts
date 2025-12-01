@@ -10,7 +10,7 @@ export const useGetAllPayments = () => {
         queryFn: async() => {
             try {
 
-                const res = await api.get("/payment");
+                const res = await api.get("/api/payment");
 
                 if(!res.data.ok) {
                     throw new Error(res.data.message || "Failed to get data");

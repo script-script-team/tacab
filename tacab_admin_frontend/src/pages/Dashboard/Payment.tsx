@@ -51,14 +51,7 @@ function Payment() {
           <TableRow key={p.student_id}>
             <TableCell className="font-medium">{p.student?.name}</TableCell>
             <TableCell>{p.student_id}</TableCell>
-            <TableCell>{p.month ? <Check />: <X />}</TableCell>
-            <TableCell>{p.month ? <Check />: <X />}</TableCell>
-            <TableCell>{p.month ? <Check />: <X />}</TableCell>
-            <TableCell>{p.month ? <Check />: <X />}</TableCell>
-            <TableCell>{p.month ? <Check />: <X />}</TableCell>
-            <TableCell>{p.month ? <Check />: <X />}</TableCell>
-            <TableCell>{p.month ? <Check />: <X />}</TableCell>
-            <TableCell>{p.month ? <Check />: <X />}</TableCell>
+            <TableCell>{p.month === "Paid" ? <div className="p-2 rounded-full flex justify-center items-center bg-green-100 dark:bg-green-900"><Check /></div>: <div className="p-2 rounded-full flex justify-center items-center bg-red-100 dark:bg-red-900"><X /></div>}</TableCell>
           </TableRow>
         ))}
       </TableBody>
