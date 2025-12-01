@@ -4,14 +4,15 @@ import {
   useGetAllItStudents,
   useSearchStudent,
 } from '@/react-query/student.hooks'
-import { ChevronLeft, ChevronRight, Plus } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useState } from 'react'
 import NotFoundMessage from './NotFoundMessage'
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import Loading from '@/components/Loading'
-import ITStudentsTable from '@/components/ITStudentsTable'
 import ComputerManageStudent from '@/components/ComputerManageStudent'
+import { NewStudentDialog } from '@/components/RegisterStudent'
+import ITManageStudent from '@/components/ITManageStudent'
 
 const ManageStudents = () => {
   const [itPage, setItPage] = useState(1)
@@ -38,10 +39,7 @@ const ManageStudents = () => {
   return (
     <div className='relative w-full min-h-[83.5vh] p-3 flex flex-col gap-4 bg-white dark:bg-gray-950 rounded-lg h-full'>
       <div className='flex justify-end'>
-        <Button>
-          <Plus />
-          Register
-        </Button>
+        <NewStudentDialog />
       </div>
       {!data?.students && !isLoading ? (
         <NotFoundMessage message='No Students found!' />
@@ -125,7 +123,7 @@ const ManageStudents = () => {
                     <Loading />
                   )}
 
-                  <ITStudentsTable students={displayedITStudents || []} />
+                  <ITManageStudent students={displayedITStudents || []} />
                 </div>
               </TabsContent>
 

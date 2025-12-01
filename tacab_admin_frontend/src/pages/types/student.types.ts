@@ -61,7 +61,7 @@ export interface IFullStudentProp {
   marks_id: string
   createdAt: string
   updatedAt: string
-  marks: IMarks | null
+  marks: IMarks
   payments: IPayment[]
   monthPayments: IMonthPayment[] | null
   totalPayment: number

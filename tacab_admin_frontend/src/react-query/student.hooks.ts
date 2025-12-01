@@ -149,3 +149,35 @@ export const useUpdateStudent = () => {
     },
   })
 }
+
+export const useRegisterStudent = () => {
+  return useMutation({
+    mutationKey: ['register-student'],
+    mutationFn: async (data: {
+      name: string
+      phone_number: string
+      password: string
+      subject: string
+    }) => {
+      try {
+        const res = await api.post(`${BASE_API_URL}/api/student/register`, {
+          name: data.name,
+          phone_number: data.phone_number,
+          password: data.password,
+          subject: data.subject,
+        })
+
+        if (!res.data.ok) {
+          throw new Error(res.data.message || 'Fieled to register student')
+        }
+
+        return res.data as IUpdateUploadRes
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+          throw new Error(error.response.data?.message || 'Unknown Error')
+        }
+        throw error
+      }
+    },
+  })
+}
