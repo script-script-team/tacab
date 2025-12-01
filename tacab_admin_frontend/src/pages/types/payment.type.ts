@@ -1,5 +1,6 @@
 export interface allPayment {
     ok:       boolean;
+    totalPage: number;
     payments: Payment[];
 }
 

@@ -4,13 +4,13 @@ import api from "./axios";
 import type { allPayment } from "@/pages/types/payment.type";
 
 
-export const useGetAllPayments = () => {
+export const useGetAllPayments = (page: number) => {
     return useQuery({
-        queryKey: ["all-payments"],
+        queryKey: ["all-payments", page],
         queryFn: async() => {
             try {
 
-                const res = await api.get("/api/payment");
+                const res = await api.get("/api/payment?page="+page);
 
                 if(!res.data.ok) {
                     throw new Error(res.data.message || "Failed to get data");
@@ -24,6 +24,7 @@ export const useGetAllPayments = () => {
                 }
                 throw error
             }
-        }
+        },
+        enabled: !!page
     });
 }

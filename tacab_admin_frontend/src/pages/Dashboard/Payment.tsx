@@ -1,4 +1,5 @@
 import Loading from "@/components/Loading";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -9,13 +10,14 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { useGetAllPayments } from "@/react-query/payment.hooks"
-import { Check, X } from "lucide-react";
-import { useEffect } from "react";
+import { Check, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 function Payment() {
 
-    const {data, isLoading, isError, error} = useGetAllPayments();
+    const [page, setPage] = useState(1)
+    const {data, isLoading, isError, error} = useGetAllPayments(page);
 
     useEffect(() => {
         if(isError) {
@@ -28,7 +30,27 @@ function Payment() {
         {isLoading ? <div className=""><Loading /></div>: <div className="w-full rounded-lg p-8 bg-white dark:bg-gray-950 min-h-[83.5vh]">
         <div className="w-full flex justify-between items-center">
             <h2>IT Department-Payment Status</h2>
-            <button className="rounded-full bg-blue-900 text-white py-1 px-2 text-[0.6rem] font-bold">7 Students</button>
+           <div className="flex gap-2">
+            <div className='flex gap-2'>
+                <Button
+                  className='cursor-pointer'
+                  disabled={isLoading || page === 1}
+                  onClick={() => setPage(page - 1)}
+                >
+                  <ChevronLeft />
+                </Button>
+                <Button
+                  className='cursor-pointer'
+                  disabled={
+                    isLoading ||
+                    (data?.totalPage ? page >= data.totalPage : false)
+                  }
+                  onClick={() => setPage(page + 1)}
+                >
+                  <ChevronRight />
+                </Button>
+              </div>
+            <button className="rounded-full bg-blue-900 text-white py-1 px-2 text-[0.6rem] font-bold">7 Students</button></div>
         </div>
         <Table>
       <TableCaption>A list of your recent payment.</TableCaption>
