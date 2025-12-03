@@ -25,6 +25,17 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { useFormik } from "formik";
+import * as yup from "yup"
+import { Label } from "@/components/ui/label";
+import { months, years } from "./Payment";
 import { toast } from "sonner";
 import Loading from "@/components/Loading";
 
@@ -34,6 +45,28 @@ function ComputerPayment({page}:{page: number}) {
     const { mutate: updatePayment, isPending: updatePaymentIsPending, isError: updatePaymentIsError, error: updatePaymentError } = useUpdatePayment();
     const { mutate: deletePayment, isPending: deletePaymentIsPending, isError: deletePaymentIsError, error: deletePaymentError } = useDeletePayment();
 
+    const formik = useFormik({
+              initialValues: {
+                id: "",
+                student_id: "",
+                amount: "",
+                month: "",
+                year: ""
+              },
+              onSubmit(values) {
+                const data  = {
+                  ...values
+                }
+                updatePayment(data, {onSuccess(){
+                  client.invalidateQueries({queryKey: ["all-payments"]})
+                }})
+              },
+              validationSchema: yup.object({
+                amount: yup.number().typeError("Amount must be a valid digit").required("Amount is required"),
+                month: yup.string().required("Month is required"),
+                year: yup.number().typeError("Year must be a valid digit").required("Year is required")
+              })
+            });
 
     useEffect(() => {
         if(isError) {
@@ -137,16 +170,57 @@ function ComputerPayment({page}:{page: number}) {
                   <AlertDialogTitle>Update Payment</AlertDialogTitle>
                   <AlertDialogDescription>
                     Confirm updating the payment status for
-                    <form className="w-full grid gap-2">
-                      <Input placeholder="" />
-                      <Input placeholder="" />
-                      <Input placeholder="" />
+                    <form onSubmit={() => formik.handleSubmit} className="w-full mt-4 grid gap-4">
+                      <div className="grid">
+                        <div className="grid gap-2">
+                        <Label>Student ID</Label>
+                        <Input onChange={() => formik.handleChange} onBlur={formik.handleBlur} name="student_id" value={formik.values.student_id} placeholder="Student ID" />
+                        </div>
+                        <p className="text-red-500 font-bold">{formik.touched.student_id && formik.errors.student_id}</p>
+                      </div>
+                      <div className="grid">
+                        <div className="grid gap-2">
+                        <Label>Amount</Label>
+                        <Input onChange={() => formik.handleChange} onBlur={formik.handleBlur} name="Amount" value={formik.values.amount} placeholder="Amount" />
+                        </div>
+                        <p className="text-red-500 font-bold">{formik.touched.amount && formik.errors.amount}</p>
+                      </div>
+                      <div className="grid">
+                        <Select>
+                        <SelectTrigger className="w-[180px]">
+                          <SelectValue placeholder="Years" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {years.map((y, i) => {
+                            return <SelectItem key={i} value={JSON.stringify(y.year)}>{y.year}</SelectItem>
+                          })}
+                        </SelectContent>
+                      </Select>
+                       <p className="text-red-500 font-bold">{formik.touched.year && formik.errors.year}</p>
+                      </div>
+                      <div className="grid">
+                        <Select>
+                        <SelectTrigger className="w-[180px]">
+                          <SelectValue placeholder="Months" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {
+                            months.map((m, i) => {
+                              return <SelectItem key={i} value={m.month}>{m.month}</SelectItem>
+                            })
+                          }
+                        </SelectContent>
+                      </Select>
+                       <p className="text-red-500 font-bold">{formik.touched.month && formik.errors.month}</p>
+                      </div>
                     </form>
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={() => updatePayment(p.id, {onSuccess() {client.invalidateQueries({queryKey: ["all-payments"]})}})} disabled={updatePaymentIsPending}>{updatePaymentIsPending ? "Saving...": "Save"}</AlertDialogAction>
+                  <AlertDialogAction onClick={() =>  {formik.setFieldValue("id", p.id),
+                    formik.setFieldValue("student_id", p.student_id)
+                  }} disabled={updatePaymentIsPending}>{updatePaymentIsPending ? "Saving...": "Save"}</AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>

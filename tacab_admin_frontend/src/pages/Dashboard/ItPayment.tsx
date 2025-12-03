@@ -45,28 +45,7 @@ function ItPayment({page}:{page: number}) {
     const { mutate: updatePayment, isPending: updatePaymentIsPending, isError: updatePaymentIsError, error: updatePaymentError } = useUpdatePayment();
     const { mutate: deletePayment, isPending: deletePaymentIsPending, isError: deletePaymentIsError, error: deletePaymentError } = useDeletePayment();
 
-    const formik = useFormik({
-          initialValues: {
-            id: "",
-            student_id: "",
-            amount: "",
-            month: "",
-            year: ""
-          },
-          onSubmit(values) {
-            const data  = {
-              ...values
-            }
-            updatePayment(data, {onSuccess(){
-              client.invalidateQueries({queryKey: ["all-payments"]})
-            }})
-          },
-          validationSchema: yup.object({
-            amount: yup.number().typeError("Amount must be a valid digit").required("Amount is required"),
-            month: yup.string().required("Month is required"),
-            year: yup.number().typeError("Year must be a valid digit").required("Year is required")
-          })
-        });
+    onValueChange={(v) => formik.setFieldValue("year", v)}
 
     useEffect(() => {
         if(isError) {
@@ -179,7 +158,7 @@ function ItPayment({page}:{page: number}) {
                         <p className="text-red-500 font-bold">{formik.touched.amount && formik.errors.amount}</p>
                       </div>
                       <div className="grid">
-                        <Select>
+                        <Select onValueChange={(v) => formik.setFieldValue("year", v)}>
                         <SelectTrigger className="w-[180px]">
                           <SelectValue placeholder="Years" />
                         </SelectTrigger>
@@ -192,7 +171,7 @@ function ItPayment({page}:{page: number}) {
                        <p className="text-red-500 font-bold">{formik.touched.year && formik.errors.year}</p>
                       </div>
                       <div className="grid">
-                        <Select>
+                        <Select onValueChange={(v) => formik.setFieldValue("month", v)}>
                         <SelectTrigger className="w-[180px]">
                           <SelectValue placeholder="Months" />
                         </SelectTrigger>

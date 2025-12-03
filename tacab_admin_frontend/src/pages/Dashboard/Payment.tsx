@@ -166,7 +166,7 @@ function Payment() {
                         <p className="text-red-500 font-bold">{formik.touched.amount && formik.errors.amount}</p>
                       </div>
                       <div className="grid">
-                        <Select>
+                        <Select onValueChange={(v) => formik.setFieldValue("year", v)}>
                         <SelectTrigger className="w-[180px]">
                           <SelectValue placeholder="Years" />
                         </SelectTrigger>
@@ -179,7 +179,7 @@ function Payment() {
                        <p className="text-red-500 font-bold">{formik.touched.year && formik.errors.year}</p>
                       </div>
                       <div className="grid">
-                        <Select>
+                        <Select onValueChange={(v) => formik.setFieldValue("month", v)}>
                         <SelectTrigger className="w-[180px]">
                           <SelectValue placeholder="Months" />
                         </SelectTrigger>
