@@ -37,6 +37,7 @@ const ComputerStudentTable = ({
           <TableHead>computer literacy</TableHead>
           <TableHead>Average</TableHead>
           <TableHead>Grade</TableHead>
+          <TableHead>Action</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>

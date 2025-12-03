@@ -14,7 +14,7 @@ import { Link } from 'react-router-dom'
 
 const ITStudentsTable = ({ students }: { students: IFullStudentProp[] }) => {
   return !students.length ? (
-    <NotFoundMessage message='No IT students found!' />
+  <NotFoundMessage message='No IT students found!' />
   ) : (
     <Table>
       <TableHeader>
@@ -30,6 +30,7 @@ const ITStudentsTable = ({ students }: { students: IFullStudentProp[] }) => {
           <TableHead>Database</TableHead>
           <TableHead>Programming</TableHead>
           <TableHead>Grade</TableHead>
+          <TableHead>Action</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -39,16 +40,14 @@ const ITStudentsTable = ({ students }: { students: IFullStudentProp[] }) => {
               <TableCell className='font-medium'>
                 <Link
                   to={`/manage-students/${d.id}`}
-                  className='hover:text-blue-400 transition'
-                >
+                  className='hover:text-blue-400 transition'>
                   {d.student_code}
                 </Link>
               </TableCell>
               <TableCell>
                 <Link
                   to={`/manage-students/${d.id}`}
-                  className='hover:text-blue-400 transition'
-                >
+                  className='hover:text-blue-400 transition'>
                   {d.name}{' '}
                 </Link>
               </TableCell>

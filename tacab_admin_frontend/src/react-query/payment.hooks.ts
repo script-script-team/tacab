@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query"
 import axios from "axios";
 import api from "./axios";
-import type { allPayment } from "@/pages/types/payment.type";
+import type { allPayment, addPaymentBody, updatePaymentBody } from "@/pages/types/payment.type";
 
 
 export const useGetAllItPayments = (page: number) => {
@@ -57,10 +57,10 @@ export const useGetAllComputerPayments = (page: number) => {
 export const useAddPayment = () => {
     return useMutation({
         mutationKey: ["add-payment"],
-        mutationFn: async(id: string) => {
+        mutationFn: async(data: addPaymentBody) => {
             try {
 
-                const res = await api.post("/api/payment/" + id);
+                const res = await api.post("/api/payment", data);
 
                 if(!res.data.ok) {
                     throw new Error(res.data.message || "Failed to get the data");
@@ -80,10 +80,10 @@ export const useAddPayment = () => {
 export const useUpdatePayment = () => {
     return useMutation({
         mutationKey: ["update-payment"],
-        mutationFn: async(id: string) => {
+        mutationFn: async(data: updatePaymentBody) => {
             try {
 
-                const res = await api.put("/api/payment/" + id);
+                const res = await api.put("/api/payment/" + data.id, data);
 
                 if(!res.data.ok) {
                     throw new Error(res.data.message || "Failed to get the data");

@@ -36,3 +36,18 @@ export interface MonthPayment {
     month_7:    boolean;
     month_8:    boolean;
 }
+
+export interface addPaymentBody {
+  amount: string;
+  student_id: string;
+  month: string;
+  year: string;
+}
+
+export interface updatePaymentBody {
+  id: string;
+  amount: string;
+  student_id: string;
+  month: string;
+  year: string;
+}
