@@ -1,45 +1,45 @@
 export interface allPayment {
-    ok:        boolean;
-    totalPage: number;
-    payments:  Payment[];
+  ok: boolean;
+  totalPage: number;
+  payments: Payment[];
 }
 
 export interface Payment {
-    id:         string;
-    amount:     number;
-    student_id: number;
-    month:      string;
-    year:       number;
-    createdAt:  Date;
-    updatedAt:  Date;
-    student:    Student;
+  id: string;
+  amount: number;
+  student_id: number;
+  month: string;
+  year: number;
+  createdAt: Date;
+  updatedAt: Date;
+  student: Student;
 }
 
 export interface Student {
-    monthPayments: MonthPayment[];
-    id:            number;
-    student_code:  number;
-    name:          string;
-    phone_number:  string;
-    subject:       string;
-    createdAt:     Date;
+  monthPayments: MonthPayment[];
+  id: number;
+  student_code: number;
+  name: string;
+  phone_number: string;
+  subject: string;
+  createdAt: Date;
 }
 
 export interface MonthPayment {
-    student_id: number;
-    month_1:    boolean;
-    month_2:    boolean;
-    month_3:    boolean;
-    month_4:    boolean;
-    month_5:    boolean;
-    month_6:    boolean;
-    month_7:    boolean;
-    month_8:    boolean;
+  student_id: number;
+  month_1: boolean;
+  month_2: boolean;
+  month_3: boolean;
+  month_4: boolean;
+  month_5: boolean;
+  month_6: boolean;
+  month_7: boolean;
+  month_8: boolean;
 }
 
 export interface addPaymentBody {
-  amount: string;
-  student_id: string;
+  amount: number;
+  student_id: number;
   month: string;
   year: string;
 }

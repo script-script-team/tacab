@@ -6,12 +6,16 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 import { Check, X } from "lucide-react";
 import { FiEdit } from "react-icons/fi";
 import { Input } from "@/components/ui/input";
 import { MdDelete } from "react-icons/md";
-import { useDeletePayment, useGetAllComputerPayments, useUpdatePayment } from "@/react-query/payment.hooks";
+import {
+  useDeletePayment,
+  useGetAllComputerPayments,
+  useUpdatePayment,
+} from "@/react-query/payment.hooks";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import {
@@ -24,228 +28,239 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 import { useFormik } from "formik";
-import * as yup from "yup"
+import * as yup from "yup";
 import { Label } from "@/components/ui/label";
-import { months, years } from "./Payment";
 import { toast } from "sonner";
 import Loading from "@/components/Loading";
+import type { MonthPayment } from "../types/payment.type";
 
-function ComputerPayment({page}:{page: number}) {
-    const client = useQueryClient();
-    const {data, isLoading, isError, error} = useGetAllComputerPayments(page);
-    const { mutate: updatePayment, isPending: updatePaymentIsPending, isError: updatePaymentIsError, error: updatePaymentError } = useUpdatePayment();
-    const { mutate: deletePayment, isPending: deletePaymentIsPending, isError: deletePaymentIsError, error: deletePaymentError } = useDeletePayment();
+function ComputerPayment({ page }: { page: number }) {
+  const client = useQueryClient();
+  const { data, isLoading, isError, error } = useGetAllComputerPayments(page);
 
-    const formik = useFormik({
-              initialValues: {
-                id: "",
-                student_id: "",
-                amount: "",
-                month: "",
-                year: ""
-              },
-              onSubmit(values) {
-                const data  = {
-                  ...values
-                }
-                updatePayment(data, {onSuccess(){
-                  client.invalidateQueries({queryKey: ["all-payments"]})
-                }})
-              },
-              validationSchema: yup.object({
-                amount: yup.number().typeError("Amount must be a valid digit").required("Amount is required"),
-                month: yup.string().required("Month is required"),
-                year: yup.number().typeError("Year must be a valid digit").required("Year is required")
-              })
-            });
+  const {
+    mutate: updatePayment,
+    isPending: updatePaymentIsPending,
+    isError: updatePaymentIsError,
+    error: updatePaymentError,
+  } = useUpdatePayment();
 
-    useEffect(() => {
-        if(isError) {
-            toast.error(error.message);
-        }
-    }, [isError]);
+  const {
+    mutate: deletePayment,
+    isPending: deletePaymentIsPending,
+    isError: deletePaymentIsError,
+    error: deletePaymentError,
+  } = useDeletePayment();
 
-    useEffect(() => {
-      if(updatePaymentIsError) {
-        toast.error(updatePaymentError.message);
-      }
-      if(deletePaymentIsError) {
-        toast.error(deletePaymentError.message);
-      }
-    }, [updatePaymentIsError, deletePaymentIsError]);
+  const formik = useFormik({
+    initialValues: {
+      id: "",
+      student_id: "",
+      amount: "",
+      month: "",
+      year: "",
+    },
+    onSubmit(values) {
+      updatePayment(values, {
+        onSuccess() {
+          client.invalidateQueries({ queryKey: ["all-payments"] });
+        },
+      });
+    },
+    validationSchema: yup.object({
+      amount: yup
+        .number()
+        .typeError("Amount must be a number")
+        .required("Amount is required"),
+      month: yup.string().required("Month is required"),
+      year: yup
+        .number()
+        .typeError("Year must be a number")
+        .required("Year is required"),
+    }),
+  });
 
-  return isLoading ? <Loading /> : (
+  useEffect(() => {
+    if (isError) toast.error(error.message);
+  }, [isError]);
+
+  useEffect(() => {
+    if (updatePaymentIsError) toast.error(updatePaymentError.message);
+    if (deletePaymentIsError) toast.error(deletePaymentError.message);
+  }, [updatePaymentIsError, deletePaymentIsError]);
+
+  return isLoading ? (
+    <Loading />
+  ) : (
     <Table>
-      <TableCaption>A list of your recent payment.</TableCaption>
+      <TableCaption>A list of your recent computer payments.</TableCaption>
+
       <TableHeader>
         <TableRow>
-          <TableHead className="w-[100px]">Student Name</TableHead>
-          <TableHead>Student ID</TableHead>
-          <TableHead>Month 1</TableHead>
-          <TableHead>Month 2</TableHead>
-          <TableHead>Month 3</TableHead>
-          <TableHead>Month 4</TableHead>
-          <TableHead>Month 5</TableHead>
-          <TableHead>Month 6</TableHead>
-          <TableHead>Month 7</TableHead>
-          <TableHead>Month 8</TableHead>
+          <TableHead>ID</TableHead>
+          <TableHead>Student Name</TableHead>
+
+          {Array.from({ length: 3 }).map((_, i) => (
+            <TableHead key={i} className="text-center">
+              Book {i + 1}
+            </TableHead>
+          ))}
+
           <TableHead>Action</TableHead>
         </TableRow>
       </TableHeader>
+
       <TableBody>
         {data?.payments.map((p) => (
           <TableRow key={p.student_id}>
+            <TableCell>{p.student.student_code}</TableCell>
             <TableCell className="font-medium">{p.student?.name}</TableCell>
-            <TableCell>{p.student_id}</TableCell>
-            <TableCell>
-              {p.student?.monthPayments?.map((p) => {
-              return <TableCell key={p.student_id}>
-                {p.month_1 ? <div className="p-2 rounded-full flex justify-center items-center bg-green-100 dark:bg-green-900"><Check /></div>: <div className="p-2 rounded-full flex justify-center items-center bg-red-100 dark:bg-red-900"><X /></div>}
-              </TableCell>
-            })}
-            </TableCell>
-            <TableCell>
-              {p.student?.monthPayments?.map((p) => {
-              return <TableCell key={p.student_id}>
-                {p.month_2 ? <div className="p-2 rounded-full flex justify-center items-center bg-green-100 dark:bg-green-900"><Check /></div>: <div className="p-2 rounded-full flex justify-center items-center bg-red-100 dark:bg-red-900"><X /></div>}
-              </TableCell>
-            })}
-            </TableCell>
-            <TableCell>
-              {p.student?.monthPayments?.map((p) => {
-              return <TableCell key={p.student_id}>
-                {p.month_3 ? <div className="p-2 rounded-full flex justify-center items-center bg-green-100 dark:bg-green-900"><Check /></div>: <div className="p-2 rounded-full flex justify-center items-center bg-red-100 dark:bg-red-900"><X /></div>}
-              </TableCell>
-            })}
-            </TableCell>
-            <TableCell>
-              {p.student?.monthPayments?.map((p) => {
-              return <TableCell key={p.student_id}>
-                {p.month_4 ? <div className="p-2 rounded-full flex justify-center items-center bg-green-100 dark:bg-green-900"><Check /></div>: <div className="p-2 rounded-full flex justify-center items-center bg-red-100 dark:bg-red-900"><X /></div>}
-              </TableCell>
-            })}
-            </TableCell>
-            <TableCell>
-              {p.student?.monthPayments?.map((p) => {
-              return <TableCell key={p.student_id}>
-                {p.month_5 ? <div className="p-2 rounded-full flex justify-center items-center bg-green-100 dark:bg-green-900"><Check /></div>: <div className="p-2 rounded-full flex justify-center items-center bg-red-100 dark:bg-red-900"><X /></div>}
-              </TableCell>
-            })}
-            </TableCell>
-            <TableCell>
-              {p.student?.monthPayments?.map((p) => {
-              return <TableCell key={p.student_id}>
-                {p.month_6 ? <div className="p-2 rounded-full flex justify-center items-center bg-green-100 dark:bg-green-900"><Check /></div>: <div className="p-2 rounded-full flex justify-center items-center bg-red-100 dark:bg-red-900"><X /></div>}
-              </TableCell>
-            })}
-            </TableCell>
-            <TableCell>
-              {p.student?.monthPayments?.map((p) => {
-              return <TableCell key={p.student_id}>
-                {p.month_7 ? <div className="p-2 rounded-full flex justify-center items-center bg-green-100 dark:bg-green-900"><Check /></div>: <div className="p-2 rounded-full flex justify-center items-center bg-red-100 dark:bg-red-900"><X /></div>}
-              </TableCell>
-            })}
-            </TableCell>
-            <TableCell>
-              {p.student?.monthPayments?.map((p) => {
-              return <TableCell key={p.student_id}>
-                {p.month_8 ? <div className="p-2 rounded-full flex justify-center items-center bg-green-100 dark:bg-green-900"><Check /></div>: <div className="p-2 rounded-full flex justify-center items-center bg-red-100 dark:bg-red-900"><X /></div>}
-              </TableCell>
-            })}
-            </TableCell>
+
+            {(() => {
+              const mp = p.student.monthPayments[0];
+              return Array.from({ length: 3 }).map((_, index) => {
+                const key = `month_${index + 1}` as keyof MonthPayment;
+                const value = mp[key];
+
+                return (
+                  <TableCell key={index} className="text-center py-3">
+                    {value ? (
+                      <div
+                        className="
+                        px-2 py-2 rounded-full w-fit mx-auto 
+                        bg-emerald-100 dark:bg-emerald-900/40 
+                        border border-emerald-300 dark:border-emerald-800
+                        text-emerald-700 dark:text-emerald-300
+                        flex justify-center items-center gap-1
+                        font-medium text-sm shadow-sm
+                      "
+                      >
+                        <Check className="w-4 h-4" />
+                      </div>
+                    ) : (
+                      <div
+                        className="
+                        px-2 py-2 rounded-full w-fit mx-auto
+                        bg-red-100 dark:bg-red-900/40 
+                        border border-red-300 dark:border-red-800
+                        text-red-700 dark:text-red-300
+                        flex justify-center items-center gap-1
+                        font-medium text-sm shadow-sm
+                      "
+                      >
+                        <X className="w-4 h-4" />
+                      </div>
+                    )}
+                  </TableCell>
+                );
+              });
+            })()}
+
             <TableCell className="flex gap-2 p-4">
-              <AlertDialog>
-            <AlertDialogTrigger><FiEdit size={18} className="cursor-pointer text-blue-500" /></AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Update Payment</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Confirm updating the payment status for
-                    <form onSubmit={() => formik.handleSubmit} className="w-full mt-4 grid gap-4">
-                      <div className="grid">
-                        <div className="grid gap-2">
-                        <Label>Student ID</Label>
-                        <Input onChange={() => formik.handleChange} onBlur={formik.handleBlur} name="student_id" value={formik.values.student_id} placeholder="Student ID" />
-                        </div>
-                        <p className="text-red-500 font-bold">{formik.touched.student_id && formik.errors.student_id}</p>
-                      </div>
-                      <div className="grid">
-                        <div className="grid gap-2">
+              {/* <AlertDialog>
+                <AlertDialogTrigger>
+                  <FiEdit size={18} className="cursor-pointer text-blue-500" />
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Update Payment</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      <form className="w-full mt-4 grid gap-4">
                         <Label>Amount</Label>
-                        <Input onChange={() => formik.handleChange} onBlur={formik.handleBlur} name="Amount" value={formik.values.amount} placeholder="Amount" />
-                        </div>
-                        <p className="text-red-500 font-bold">{formik.touched.amount && formik.errors.amount}</p>
-                      </div>
-                      <div className="grid">
-                        <Select>
-                        <SelectTrigger className="w-[180px]">
-                          <SelectValue placeholder="Years" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {years.map((y, i) => {
-                            return <SelectItem key={i} value={JSON.stringify(y.year)}>{y.year}</SelectItem>
-                          })}
-                        </SelectContent>
-                      </Select>
-                       <p className="text-red-500 font-bold">{formik.touched.year && formik.errors.year}</p>
-                      </div>
-                      <div className="grid">
-                        <Select>
-                        <SelectTrigger className="w-[180px]">
-                          <SelectValue placeholder="Months" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {
-                            months.map((m, i) => {
-                              return <SelectItem key={i} value={m.month}>{m.month}</SelectItem>
-                            })
+                        <Input
+                          name="amount"
+                          value={formik.values.amount}
+                          onChange={formik.handleChange}
+                        />
+
+                        <Label>Month</Label>
+                        <Select
+                          onValueChange={(v) =>
+                            formik.setFieldValue("month", v)
                           }
-                        </SelectContent>
-                      </Select>
-                       <p className="text-red-500 font-bold">{formik.touched.month && formik.errors.month}</p>
-                      </div>
-                    </form>
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={() =>  {formik.setFieldValue("id", p.id),
-                    formik.setFieldValue("student_id", p.student_id)
-                  }} disabled={updatePaymentIsPending}>{updatePaymentIsPending ? "Saving...": "Save"}</AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-            <AlertDialog>
-            <AlertDialogTrigger><MdDelete size={18} className='cursor-pointer text-red-500' /></AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Delete Payment</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This action cannot be undone. This will permanently delete this
-                    payment and remove there data relations.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction className="bg-red-500 hover:bg-red-600 duration-200" onClick={() => deletePayment(p.id, {onSuccess() {client.invalidateQueries({queryKey: ["all-payments"]})}})} disabled={deletePaymentIsPending}>{deletePaymentIsPending ? "Deleting...": "Delete"}</AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select month" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="month_1">Month 1</SelectItem>
+                            <SelectItem value="month_2">Month 2</SelectItem>
+                            <SelectItem value="month_3">Month 3</SelectItem>
+                          </SelectContent>
+                        </Select>
+
+                        <Label>Year</Label>
+                        <Input
+                          name="year"
+                          value={formik.values.year}
+                          onChange={formik.handleChange}
+                        />
+                      </form>
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      disabled={updatePaymentIsPending}
+                      onClick={() => {
+                        formik.setFieldValue("id", p.id);
+                        formik.setFieldValue("student_id", p.student_id);
+                        formik.handleSubmit();
+                      }}
+                    >
+                      {updatePaymentIsPending ? "Saving..." : "Save"}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog> */}
+
+              {/* DELETE */}
+              {/* <AlertDialog>
+                <AlertDialogTrigger>
+                  <MdDelete size={18} className="cursor-pointer text-red-500" />
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Delete Payment</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action is irreversible.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      disabled={deletePaymentIsPending}
+                      onClick={() =>
+                        deletePayment(p.id, {
+                          onSuccess() {
+                            client.invalidateQueries({
+                              queryKey: ["all-payments"],
+                            });
+                          },
+                        })
+                      }
+                    >
+                      {deletePaymentIsPending ? "Deleting..." : "Delete"}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog> */}
             </TableCell>
           </TableRow>
         ))}
       </TableBody>
     </Table>
-  )
+  );
 }
 
-export default ComputerPayment
+export default ComputerPayment;
