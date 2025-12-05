@@ -21,7 +21,7 @@ function AllPayment({ page }: { page: number }) {
   }, [isError])
 
   return isLoading ? (
-    <div className='relative'>
+    <div className='relative w-full h-full'>
       <Loading />
     </div>
   ) : (

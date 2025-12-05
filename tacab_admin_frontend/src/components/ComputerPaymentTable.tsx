@@ -12,8 +12,6 @@ import { useEffect } from 'react'
 import { toast } from 'sonner'
 import Loading from '@/components/Loading'
 import type { MonthPayment } from '../pages/types/payment.type'
-import DeletePaymentDialog from './DeletePaymentDialog'
-import UpdatePaymentDialog from './UpdatePaymentDialog'
 
 function ComputerPayment({ page }: { page: number }) {
   const { data, isLoading, isError, error } = useGetAllComputerPayments(page)
@@ -23,7 +21,7 @@ function ComputerPayment({ page }: { page: number }) {
   }, [isError])
 
   return isLoading ? (
-    <div className='relative'>
+    <div className='relative w-full h-full'>
       <Loading />
     </div>
   ) : (
@@ -38,8 +36,6 @@ function ComputerPayment({ page }: { page: number }) {
               Book {i + 1}
             </TableHead>
           ))}
-
-          <TableHead>Action</TableHead>
         </TableRow>
       </TableHeader>
 
@@ -53,7 +49,7 @@ function ComputerPayment({ page }: { page: number }) {
               const mp = p.monthPayments?.[0]
               return Array.from({ length: 3 }).map((_, index) => {
                 const key = `month_${index + 1}` as keyof MonthPayment
-                const value = mp[key]
+                const value = mp![key]
 
                 return (
                   <TableCell key={index} className='text-center py-3'>
@@ -88,14 +84,6 @@ function ComputerPayment({ page }: { page: number }) {
                 )
               })
             })()}
-
-            <TableCell className='flex gap-2 p-4'>
-              <DeletePaymentDialog id={p.monthPayments?.[0]?.id} />
-              <UpdatePaymentDialog
-                id={p.monthPayments?.[0]?.id}
-                student_id={p.id}
-              />
-            </TableCell>
           </TableRow>
         ))}
       </TableBody>

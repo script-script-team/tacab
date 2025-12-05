@@ -22,7 +22,7 @@ const ItPayment = ({ page }: { page: number }) => {
 
   if (isLoading)
     return (
-      <div className='relative'>
+      <div className='relative w-full h-full'>
         <Loading />
       </div>
     )
@@ -52,7 +52,7 @@ const ItPayment = ({ page }: { page: number }) => {
             <TableCell className='py-4 font-medium'>{pay?.name}</TableCell>
 
             {(() => {
-              const mp = pay.monthPayments[0]
+              const mp = pay.monthPayments![0]
 
               return Array.from({ length: 8 }).map((_, index) => {
                 const key = `month_${index + 1}` as keyof MonthPayment
