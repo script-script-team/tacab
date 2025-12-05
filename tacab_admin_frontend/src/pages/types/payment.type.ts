@@ -1,8 +1,9 @@
 export interface allPayment {
-  ok: boolean;
+  ok:        boolean;
   totalPage: number;
-  payments: Payment[];
+  payments:  Student[];
 }
+
 
 export interface Payment {
   id: string;
@@ -16,16 +17,17 @@ export interface Payment {
 }
 
 export interface Student {
-  monthPayments: MonthPayment[];
   id: number;
   student_code: number;
   name: string;
   phone_number: string;
   subject: string;
   createdAt: Date;
+  monthPayments: MonthPayment[];
 }
 
 export interface MonthPayment {
+  id: string;
   student_id: number;
   month_1: boolean;
   month_2: boolean;

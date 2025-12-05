@@ -7,8 +7,8 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import ItPayment from "./ItPayment";
-import ComputerPayment from "./ComputerPayment";
+import ItPayment from "../../components/ItPaymentTable";
+import ComputerPayment from "../../components/ComputerPaymentTable";
 import { NewPaymentDialog } from "@/components/NewPaymentDialog";
 
 export const months = [

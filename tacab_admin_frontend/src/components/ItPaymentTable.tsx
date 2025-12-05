@@ -39,7 +39,7 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import { toast } from "sonner";
 import Loading from "@/components/Loading";
-import type { MonthPayment } from "../types/payment.type";
+import type { MonthPayment } from "../pages/types/payment.type";
 
 const ItPayment = ({ page }: { page: number }) => {
   const client = useQueryClient();
@@ -109,14 +109,14 @@ const ItPayment = ({ page }: { page: number }) => {
             key={pay.id}
             className="transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-900/20"
           >
-            <TableCell className="py-4">{pay.student.student_code}</TableCell>
+            <TableCell className="py-4">{pay.student_code}</TableCell>
             <TableCell className="py-4 font-medium">
-              {pay.student?.name}
+              {pay?.name}
             </TableCell>
 
             {/* === FIXED IT STUDENT: READ month_1 → month_8 === */}
             {(() => {
-              const mp = pay.student.monthPayments[0]; // only object
+              const mp = pay.monthPayments[0]; // only object
 
               return Array.from({ length: 8 }).map((_, index) => {
                 const key = `month_${index + 1}` as keyof MonthPayment;
@@ -210,7 +210,7 @@ const ItPayment = ({ page }: { page: number }) => {
                           type="submit"
                           onClick={() => {
                             formik.setFieldValue("id", pay.id);
-                            formik.setFieldValue("student_id", pay.student_id);
+                            formik.setFieldValue("student_id", pay.id);
                           }}
                         >
                           {updatePaymentIsPending ? "Saving..." : "Save"}
@@ -238,7 +238,7 @@ const ItPayment = ({ page }: { page: number }) => {
                       <AlertDialogAction
                         className="bg-red-500 hover:bg-red-600 transition"
                         onClick={() =>
-                          deletePayment(pay.id, {
+                          deletePayment(pay.monthPayments[0].id, {
                             onSuccess() {
                               toast.success("Payment deleted");
                               client.invalidateQueries({
