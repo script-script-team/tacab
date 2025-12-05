@@ -72,6 +72,11 @@ export interface IGetSingleStudentRes {
   student: IFullStudentProp
 }
 
+export interface IGetStudentByStudentCodeRes {
+  ok: boolean
+  name: string
+}
+
 export interface IGetAllStudentsRes {
   ok: boolean
   total: number

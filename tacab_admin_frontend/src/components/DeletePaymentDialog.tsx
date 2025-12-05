@@ -8,28 +8,27 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { useDeletePayment } from "@/react-query/payment.hooks";
-import { useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
-import { MdDelete } from "react-icons/md";
-import { toast } from "sonner";
+} from '@/components/ui/alert-dialog'
+import { useDeletePayment } from '@/react-query/payment.hooks'
+import { useQueryClient } from '@tanstack/react-query'
+import { useEffect } from 'react'
+import { MdDelete } from 'react-icons/md'
+import { toast } from 'sonner'
 
 function DeletePaymentDialog({ id }: { id: string }) {
+  const client = useQueryClient()
+  const { mutate, isPending, isError, error } = useDeletePayment()
 
-    const client = useQueryClient();
-    const { mutate, isPending, isError, error } = useDeletePayment();
-
-      useEffect(() => {
-        if(isError) {
-            toast.error(error?.message);
-        }
-      }, [isError]);
+  useEffect(() => {
+    if (isError) {
+      toast.error(error?.message)
+    }
+  }, [isError])
 
   return (
     <AlertDialog>
       <AlertDialogTrigger>
-        <MdDelete size={18} className="cursor-pointer text-red-500" />
+        <MdDelete size={18} className='cursor-pointer text-red-500' />
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -44,15 +43,19 @@ function DeletePaymentDialog({ id }: { id: string }) {
             disabled={isPending}
             onClick={() =>
               mutate(id, {
-                onSuccess() {
+                onSuccess: () => {
                   client.invalidateQueries({
-                    queryKey: ["all-payments"],
-                  });
+                    queryKey: ['all-payments'],
+                  })
+                  toast.success('Payment deleted successfully')
+                },
+                onError(err: Error) {
+                  toast.error(err.message || 'Failed to delete payment')
                 },
               })
             }
           >
-            {isPending ? "Deleting..." : "Delete"}
+            {isPending ? 'Deleting...' : 'Delete'}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -60,4 +63,4 @@ function DeletePaymentDialog({ id }: { id: string }) {
   )
 }
 
-export default DeletePaymentDialog;
+export default DeletePaymentDialog

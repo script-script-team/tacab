@@ -6,6 +6,7 @@ import type { IUpdateUploadRes } from '@/pages/types/upload.types'
 import type {
   IGetAllStudentsRes,
   IGetSingleStudentRes,
+  IGetStudentByStudentCodeRes,
 } from '@/pages/types/student.types'
 
 export const useGetAllItStudents = (page: number) => {
@@ -172,6 +173,32 @@ export const useRegisterStudent = () => {
         }
 
         return res.data as IUpdateUploadRes
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+          throw new Error(error.response.data?.message || 'Unknown Error')
+        }
+        throw error
+      }
+    },
+  })
+}
+
+export const useGetStudentByStudentCode = () => {
+  return useMutation({
+    mutationKey: ['get-student-by-code'],
+    mutationFn: async (student_code: string) => {
+      try {
+        const res = await api.get(
+          `${BASE_API_URL}/api/student/get-student-by-student-code/${student_code}`
+        )
+
+        if (!res.data.ok) {
+          throw new Error(
+            res.data.message || 'Fieled to get student by student code'
+          )
+        }
+
+        return res.data as IGetStudentByStudentCodeRes
       } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
           throw new Error(error.response.data?.message || 'Unknown Error')
