@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom'
 import QuickTasks from '@/components/QuickTasks'
 import AllPayment from '@/components/AllPayment'
 import { Button } from '@/components/ui/button'
+import { ToatalIncome } from '@/components/income'
 
 function DashIntro() {
   const { data, isLoading } = useGetDashboardSummary()
@@ -72,12 +73,13 @@ function DashIntro() {
             )}
           </div>
 
-          <div className='w-full flex bg-white dark:bg-gray-950 rounded-lg'>
+          <div className='w-full flex gap-2 bg-white dark:bg-gray-950 rounded-lg'>
             <Statistics />
           </div>
         </div>
 
         <div className='xs:w-full sm:w-full md:w-[50%] lg:w-[50%] xl:w-[50%] flex flex-col gap-2'>
+          <ToatalIncome />
           <QuickTasks />
           <div className='rounded-lg bg-white dark:bg-gray-950 p-4 flex flex-col gap-16 flex-1'>
             <div className='flex flex-col gap-4'>

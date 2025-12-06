@@ -49,3 +49,27 @@ export const GetStatistics = () => {
     },
   })
 }
+
+export const useIncome = () => {
+  return useQuery({
+    queryKey: ["income"],
+    queryFn: async() => {
+      try {
+
+        const res = await api.get(`/api/dashboard/income`)
+
+        if (!res.data.ok) {
+          throw new Error(res.data.message || 'Fieled to get the statistics')
+        }
+
+        return res.data
+        
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.message) {
+          throw new Error(error.response?.data.message || 'Unkown Error')
+        }
+        throw error
+      }
+    }
+  });
+}
