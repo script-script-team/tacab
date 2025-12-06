@@ -6,7 +6,7 @@ export interface allPayment {
 
 
 export interface Payment {
-  id: string;
+  id: number;
   amount: number;
   student_id: number;
   month: string;

@@ -15,13 +15,12 @@ import { NewStudentDialog } from '@/components/RegisterStudent'
 import ITManageStudent from '@/components/ITManageStudent'
 
 const ManageStudents = () => {
-  const [itPage, setItPage] = useState(1)
-  const [comPage, setComPage] = useState(1)
+  const [page, setPage] = useState(1)
   const [value, SetValue] = useState('')
   const [select, setSelected] = useState('it')
-  const { data, isLoading } = useGetAllItStudents(itPage)
+  const { data, isLoading } = useGetAllItStudents(page)
   const { data: comData, isLoading: comLoading } =
-    useGetAllComputerStudents(comPage)
+    useGetAllComputerStudents(page)
   const { data: student, isLoading: searchLoading } = useSearchStudent(value)
 
   const ITStudents = data?.students
@@ -59,8 +58,8 @@ const ManageStudents = () => {
                   <>
                     <Button
                       className='cursor-pointer'
-                      disabled={isLoading || searchLoading || itPage === 1}
-                      onClick={() => setItPage(itPage - 1)}
+                      disabled={isLoading || searchLoading || page === 1}
+                      onClick={() => setPage(page - 1)}
                     >
                       <ChevronLeft />
                     </Button>
@@ -69,9 +68,9 @@ const ManageStudents = () => {
                       disabled={
                         isLoading ||
                         searchLoading ||
-                        itPage >= (data?.total ?? 0)
+                        page >= (data?.total ?? 0)
                       }
-                      onClick={() => setItPage(itPage + 1)}
+                      onClick={() => setPage(page + 1)}
                     >
                       <ChevronRight />
                     </Button>
@@ -80,8 +79,8 @@ const ManageStudents = () => {
                   <>
                     <Button
                       className='cursor-pointer'
-                      disabled={searchLoading || comLoading || comPage === 1}
-                      onClick={() => setComPage(comPage - 1)}
+                      disabled={searchLoading || comLoading || page === 1}
+                      onClick={() => setPage(page - 1)}
                     >
                       <ChevronLeft />
                     </Button>
@@ -90,9 +89,9 @@ const ManageStudents = () => {
                       disabled={
                         searchLoading ||
                         comLoading ||
-                        comPage >= (comData?.total ?? 0)
+                        page >= (comData?.total ?? 0)
                       }
-                      onClick={() => setComPage(comPage + 1)}
+                      onClick={() => setPage(page + 1)}
                     >
                       <ChevronRight />
                     </Button>
@@ -105,11 +104,17 @@ const ManageStudents = () => {
           <div className='flex w-full flex-col gap-6'>
             <Tabs defaultValue='it'>
               <TabsList>
-                <TabsTrigger onClick={() => setSelected('it')} value='it'>
+                <TabsTrigger onClick={() => {
+                  setSelected('it');
+                  setPage(1);
+                }} value='it'>
                   IT Students
                 </TabsTrigger>
                 <TabsTrigger
-                  onClick={() => setSelected('computer')}
+                  onClick={() => {
+                    setSelected('computer');
+                    setPage(1);
+                  }}
                   value='computer'
                 >
                   Computer Students

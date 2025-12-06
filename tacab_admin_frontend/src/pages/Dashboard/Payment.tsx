@@ -80,11 +80,17 @@ function Payment() {
         <Tabs className="w-full" defaultValue="it">
           <div className="w-full flex justify-between items-center mt-4">
             <TabsList>
-              <TabsTrigger onClick={() => setSelected("it")} value="it">
+              <TabsTrigger onClick={() => {
+                setSelected("it")
+                setPage(1);
+              }} value="it">
                 IT Students
               </TabsTrigger>
               <TabsTrigger
-                onClick={() => setSelected("computer")}
+                onClick={() => {
+                  setSelected("computer");
+                  setPage(1);
+                }}
                 value="computer"
               >
                 Computer Students

@@ -36,7 +36,7 @@ function ComputerPayment({ page }: { page: number }) {
           <TableHead>ID</TableHead>
           <TableHead>Student Name</TableHead>
 
-          {Array.from({ length: 3 }).map((_, i) => (
+          {Array.from({ length: 8 }).map((_, i) => (
             <TableHead key={i} className="text-center">
               Book {i + 1}
             </TableHead>
@@ -53,8 +53,8 @@ function ComputerPayment({ page }: { page: number }) {
             <TableCell className="font-medium">{p?.name}</TableCell>
 
             {(() => {
-              const mp = p.monthPayments[0];
-              return Array.from({ length: 3 }).map((_, index) => {
+              const mp = p.monthPayments?.[0];
+              return Array.from({ length: 8 }).map((_, index) => {
                 const key = `month_${index + 1}` as keyof MonthPayment;
                 const value = mp[key];
 
@@ -93,8 +93,8 @@ function ComputerPayment({ page }: { page: number }) {
             })()}
 
             <TableCell className="flex gap-2 p-4">
-              <DeletePaymentDialog id={p.monthPayments[0].id} />
-              <UpdatePaymentDialog id={p.monthPayments[0].id} student_id={p.id} />
+              <DeletePaymentDialog id={p.monthPayments?.[0]?.id} />
+              <UpdatePaymentDialog id={p.monthPayments?.[0]?.id} student_id={p.id} />
             </TableCell>
           </TableRow>
         ))}
