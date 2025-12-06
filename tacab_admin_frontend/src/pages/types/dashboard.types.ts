@@ -7,6 +7,7 @@ export interface IGetDashboardSummaryRes {
     totalAdmins: number
     totalUploads: number
     totalStudents: number
+    totalPayments: number
     recentUploads: IUploadProp
     admins: IAdminProp[]
   }

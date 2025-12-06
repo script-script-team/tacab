@@ -1,11 +1,14 @@
 import { Avatar } from '@/components/ui/avatar'
 import { Statistics } from '@/components/ui/Statistics'
 import Count from 'react-countup'
-import { FileText, UserLock, Users } from 'lucide-react'
+import { DollarSign, FileText, UserLock, Users } from 'lucide-react'
 import { useGetDashboardSummary } from '@/react-query/dashboard.hooks'
 import CustomAvatar from '@/components/CustomAvatar'
 import Loading from '@/components/Loading'
 import { Link } from 'react-router-dom'
+import QuickTasks from '@/components/QuickTasks'
+import AllPayment from '@/components/AllPayment'
+import { Button } from '@/components/ui/button'
 
 function DashIntro() {
   const { data, isLoading } = useGetDashboardSummary()
@@ -14,6 +17,7 @@ function DashIntro() {
   const totalStudents = data?.data.totalStudents
   const totalUploads = data?.data.totalUploads
   const totalAdmins = data?.data.totalAdmins
+  const totalPayments = data?.data.totalPayments
   // const recentUploads = data?.data.recentUploads
   const admins = data?.data.admins
 
@@ -26,7 +30,7 @@ function DashIntro() {
     },
     {
       icons: FileText,
-      color: 'text-green-500',
+      color: 'text-yellow-500',
       text: 'Uploads',
       value: totalUploads,
     },
@@ -35,6 +39,12 @@ function DashIntro() {
       color: 'text-orange-500',
       text: 'Admins',
       value: totalAdmins,
+    },
+    {
+      icons: DollarSign,
+      color: 'text-green-500',
+      text: 'Payments',
+      value: totalPayments,
     },
   ]
 
@@ -67,41 +77,53 @@ function DashIntro() {
           </div>
         </div>
 
-        <div className='xs:w-full sm:w-full md:w-[50%] lg:w-[50%] xl:w-[50%] rounded-lg bg-white dark:bg-gray-950 p-4 flex flex-col gap-16'>
-          <div className='flex flex-col gap-4'>
-            <div className='flex justify-between'>
-              <h2 className='text-gray-400 font-medium'>Admins:</h2>
-              <Link to={'/admins'}>
-                <h2 className='text-blue-600 hover:text-blue-400 hover:underline cursor-pointer'>
-                  See all
-                </h2>
-              </Link>
-            </div>
-            <div className='flex flex-col gap-2'>
-              {admins?.map((a, i) => {
-                return (
-                  <div
-                    key={i}
-                    className='flex justify-between p-2 rounded-lg hover:bg-gray-100 hover:dark:bg-gray-800 duration-100 items-center'
-                  >
-                    <div className='flex gap-2'>
-                      <Avatar>
-                        <CustomAvatar name={a.name} />
-                      </Avatar>
+        <div className='xs:w-full sm:w-full md:w-[50%] lg:w-[50%] xl:w-[50%] flex flex-col gap-2'>
+          <QuickTasks />
+          <div className='rounded-lg bg-white dark:bg-gray-950 p-4 flex flex-col gap-16 flex-1'>
+            <div className='flex flex-col gap-4'>
+              <div className='flex justify-between'>
+                <h2 className='text-gray-400 font-medium'>Admins:</h2>
+                <Link to={'/admins'}>
+                  <h2 className='text-blue-600 hover:text-blue-400 hover:underline cursor-pointer'>
+                    See all
+                  </h2>
+                </Link>
+              </div>
+              <div className='flex flex-col gap-2'>
+                {admins?.map((a, i) => {
+                  return (
+                    <div
+                      key={i}
+                      className='flex justify-between p-2 rounded-lg hover:bg-gray-100 hover:dark:bg-gray-800 duration-100 items-center'
+                    >
+                      <div className='flex gap-2'>
+                        <Avatar>
+                          <CustomAvatar name={a.name} />
+                        </Avatar>
+                        <div className='flex flex-col'>
+                          <small className='font-bold'>{a.name}</small>
+                          <small>{a.email}</small>
+                        </div>
+                      </div>
                       <div className='flex flex-col'>
-                        <small className='font-bold'>{a.name}</small>
-                        <small>{a.email}</small>
+                        <small className='font-bold text-cyan-700'>Admin</small>
                       </div>
                     </div>
-                    <div className='flex flex-col'>
-                      <small className='font-bold text-cyan-700'>Admin</small>
-                    </div>
-                  </div>
-                )
-              })}
+                  )
+                })}
+              </div>
             </div>
           </div>
         </div>
+      </div>
+      <div className='rounded-lg bg-white dark:bg-gray-950 p-4 space-y-2'>
+        <h3 className='text-gray-400 font-medium'>Recent Payments:</h3>
+        <AllPayment page={1} />
+        <Link to={'/payment'}>
+          <Button className='float-right' variant={'link'}>
+            Show more
+          </Button>
+        </Link>
       </div>
     </div>
   )

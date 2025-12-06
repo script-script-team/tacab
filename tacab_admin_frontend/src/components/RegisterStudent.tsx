@@ -70,7 +70,7 @@ export function NewStudentDialog() {
       <DialogTrigger asChild>
         <Button>
           <Plus />
-          Register
+          Register Student
         </Button>
       </DialogTrigger>
 
