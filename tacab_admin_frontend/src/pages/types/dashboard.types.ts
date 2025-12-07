@@ -12,3 +12,14 @@ export interface IGetDashboardSummaryRes {
     admins: IAdminProp[]
   }
 }
+
+export interface income {
+  ok:    boolean;
+  total: Total[];
+}
+
+export interface Total {
+  date:  string;
+  total: number;
+}
+

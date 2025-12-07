@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import api from './axios'
-import type { IGetDashboardSummaryRes } from '@/pages/types/dashboard.types'
+import type { IGetDashboardSummaryRes, income } from '@/pages/types/dashboard.types'
 import axios from 'axios'
 import type { statistics } from '@/pages/types/statistics.type'
 
@@ -50,19 +50,43 @@ export const GetStatistics = () => {
   })
 }
 
-export const useIncome = () => {
+export const useItIncome = () => {
   return useQuery({
-    queryKey: ["income"],
+    queryKey: ["it-income"],
     queryFn: async() => {
       try {
 
-        const res = await api.get(`/api/dashboard/income`)
+        const res = await api.get(`/api/dashboard/itIncome`)
 
         if (!res.data.ok) {
           throw new Error(res.data.message || 'Fieled to get the statistics')
         }
 
-        return res.data
+        return res.data as income
+        
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.message) {
+          throw new Error(error.response?.data.message || 'Unkown Error')
+        }
+        throw error
+      }
+    }
+  });
+}
+
+export const useComIncome = () => {
+  return useQuery({
+    queryKey: ["com-Income"],
+    queryFn: async() => {
+      try {
+
+        const res = await api.get(`/api/dashboard/comIncome`)
+
+        if (!res.data.ok) {
+          throw new Error(res.data.message || 'Fieled to get the statistics')
+        }
+
+        return res.data as income
         
       } catch (error) {
         if (axios.isAxiosError(error) && error.message) {

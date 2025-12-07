@@ -17,37 +17,42 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart"
-import { useIncome } from "@/react-query/dashboard.hooks"
+import { useComIncome, useItIncome } from "@/react-query/dashboard.hooks"
 import { useEffect } from "react"
 import { toast } from "sonner"
 import Loading from "./Loading"
 
 export const description = "A radial chart with stacked sections"
 
-const chartData = [{ month: "january", desktop: 1260, mobile: 570 }]
+export function ToatalIncome() {
+
+  const it = useItIncome();
+  const com = useComIncome();
+
+  const totalItIncome = it.data?.total.reduce((a, b) => a + b.total, 0)
+  const totalComIncome = com.data?.total.reduce((a, b) => a + b.total, 0)
+
+  const chartData = [{ month: "january", itIncome: totalItIncome, comIncome: totalComIncome }]
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "var(--chart-1)",
+  itIncome: {
+    label: "IT: ",
+    color: "var(--chart-3)",
   },
-  mobile: {
-    label: "Mobile",
+  comIncome: {
+    label: "computer: ",
     color: "var(--chart-2)",
   },
 } satisfies ChartConfig
 
-export function ToatalIncome() {
-
-  const {data, isLoading, isError, error} = useIncome();
-
   useEffect(() => {
-    if(isError) toast.error(error.message);
-  }, [isError]);
+    if(it.isError) toast.error(it.error.message);
+    if(com.isError) toast.error(com.error.message);
+  }, [it.isError, com.isError]);
 
-  if(isLoading) return <div className="w-full h-[50vh] rounded-lg"><Loading /></div>
+  if(it.isLoading) return <div className="w-full h-[50vh] rounded-lg"><Loading /></div>
   
-  const totalIncome = chartData[0].desktop + chartData[0].mobile
+  const totalIncome = totalItIncome! + totalComIncome!
 
   return (
     <Card className="flex flex-col">
@@ -81,7 +86,7 @@ export function ToatalIncome() {
                           y={(viewBox.cy || 0) - 16}
                           className="fill-foreground text-2xl font-bold"
                         >
-                          {totalIncome.toLocaleString()}
+                          ${totalIncome.toLocaleString()}
                         </tspan>
                         <tspan
                           x={viewBox.cx}
@@ -97,15 +102,15 @@ export function ToatalIncome() {
               />
             </PolarRadiusAxis>
             <RadialBar
-              dataKey="desktop"
+              dataKey="itIncome"
               stackId="a"
               cornerRadius={5}
-              fill="var(--color-desktop)"
+              fill="var(--color-itIncome)"
               className="stroke-transparent stroke-2"
             />
             <RadialBar
-              dataKey="mobile"
-              fill="var(--color-mobile)"
+              dataKey="comIncome"
+              fill="var(--color-comIncome)"
               stackId="a"
               cornerRadius={5}
               className="stroke-transparent stroke-2"
