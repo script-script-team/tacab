@@ -29,8 +29,18 @@ export function ToatalIncome() {
   const it = useItIncome();
   const com = useComIncome();
 
-  const totalItIncome = it.data?.total.reduce((a, b) => a + b.total, 0)
-  const totalComIncome = com.data?.total.reduce((a, b) => a + b.total, 0)
+  const totalItIncome = it.data?.total.reduce((a, b) => a + b.total, 0);
+  const totalComIncome = com.data?.total.reduce((a, b) => a + b.total, 0);
+  const totalIncome = totalItIncome! + totalComIncome!;
+  const currentIT = it.data?.total[0].total;
+  const currentCOM = com.data?.total[0].total;
+  const currentTotal = currentIT! + currentCOM!;
+  const past = [...it.data?.total?.slice(1).map(i => i.total)!, ...com.data?.total.slice(1).map(i => i.total)!,];
+  const avg = past.reduce((a, b) => a + b, 0) / past.length;
+  const percentage = avg === 0 ? 100 : ((currentTotal - avg) / avg) * 100;
+
+
+
 
   const chartData = [{ month: "january", itIncome: totalItIncome, comIncome: totalComIncome }]
 
@@ -51,8 +61,6 @@ const chartConfig = {
   }, [it.isError, com.isError]);
 
   if(it.isLoading) return <div className="w-full h-[50vh] rounded-lg"><Loading /></div>
-  
-  const totalIncome = totalItIncome! + totalComIncome!
 
   return (
     <Card className="flex flex-col">
@@ -120,7 +128,7 @@ const chartConfig = {
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm">
         <div className="flex items-center gap-2 leading-none font-medium">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          Trending up by {percentage}% this month <TrendingUp className="h-4 w-4" />
         </div>
         <div className="text-muted-foreground leading-none">
           Showing total income for the last 8 months
