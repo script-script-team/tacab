@@ -39,9 +39,6 @@ export function ToatalIncome() {
   const avg = past.reduce((a, b) => a + b, 0) / past.length;
   const percentage = avg === 0 ? 100 : ((currentTotal - avg) / avg) * 100;
 
-
-
-
   const chartData = [{ month: "january", itIncome: totalItIncome, comIncome: totalComIncome }]
 
 const chartConfig = {
