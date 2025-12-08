@@ -78,12 +78,12 @@ function Uploads() {
         <div className='space-y-2'>
           <h1 className='font-medium'>Total uploads: ({uploads?.total})</h1>
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-4'>
-            {uploads?.uploads.slice(0, 3).map((upload, index) => (
+            {uploads?.uploads?.slice(0, 3).map((upload, index) => (
               <Upload
-                term={upload.term}
-                year={upload.year}
-                number_of_students={upload._count.students}
-                admin={upload.admin.name}
+                term={upload?.term}
+                year={upload?.year}
+                number_of_students={upload?._count?.students}
+                admin={upload?.admin?.name}
                 key={index}
               />
             ))}
