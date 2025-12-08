@@ -62,16 +62,16 @@ const ComputerStudentTable = ({
               </TableCell>
               <TableCell>{d.phone_number}</TableCell>
               <TableCell>{d.subject}</TableCell>
-              <TableCell>{d.marks.windows ?? '-'}</TableCell>
-              <TableCell>{d.marks.word ?? '-'}</TableCell>
-              <TableCell>{d.marks.excel ?? '-'}</TableCell>
-              <TableCell>{d.marks.power_point ?? '-'}</TableCell>
-              <TableCell>{d.marks.access ?? '-'}</TableCell>
-              <TableCell>{d.marks.publisher ?? '-'}</TableCell>
-              <TableCell>{d.marks.outlook ?? '-'}</TableCell>
-              <TableCell>{d.marks.computer_literacy ?? '-'}</TableCell>
-              <TableCell>{d.marks.average ?? '-'}</TableCell>
-              <TableCell>{d.marks.grade ?? '-'}</TableCell>
+              <TableCell>{d.marks?.windows ?? '-'}</TableCell>
+              <TableCell>{d.marks?.word ?? '-'}</TableCell>
+              <TableCell>{d.marks?.excel ?? '-'}</TableCell>
+              <TableCell>{d.marks?.power_point ?? '-'}</TableCell>
+              <TableCell>{d.marks?.access ?? '-'}</TableCell>
+              <TableCell>{d.marks?.publisher ?? '-'}</TableCell>
+              <TableCell>{d.marks?.outlook ?? '-'}</TableCell>
+              <TableCell>{d.marks?.computer_literacy ?? '-'}</TableCell>
+              <TableCell>{d.marks?.average ?? '-'}</TableCell>
+              <TableCell>{d.marks?.grade ?? '-'}</TableCell>
 
               <TableCell className='flex gap-2'>
                 <DeleteStudentDialog id={d.id} />
