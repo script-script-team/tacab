@@ -35,7 +35,7 @@ export function ToatalIncome() {
   const currentIT = it.data?.total[0].total;
   const currentCOM = com.data?.total[0].total;
   const currentTotal = currentIT! + currentCOM!;
-  const past = [...it.data?.total?.slice(1).map(i => i.total)!, ...com.data?.total.slice(1).map(i => i.total)!,];
+  const past = [...(it?.data?.total?.slice(1).map(i => i.total) ?? []), ...(com?.data?.total.slice(1).map(i => i.total) ?? []),];
   const avg = past.reduce((a, b) => a + b, 0) / past.length;
   const percentage = avg === 0 ? 100 : ((currentTotal - avg) / avg) * 100;
 
