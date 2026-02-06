@@ -13,6 +13,9 @@ import { Settings } from './pages/Dashboard/Settings'
 import Payment from './pages/Dashboard/Payment'
 import ManageStudents from './pages/Dashboard/ManageStudents'
 import StudentDetail from './pages/Dashboard/StudentDetail'
+import ForgetPassword from './pages/ForgetPassword'
+import VerifyCode from './pages/verifyCode'
+import ResetPassword from './pages/resetPassword'
 
 export const router = createBrowserRouter([
   {
@@ -79,6 +82,18 @@ export const router = createBrowserRouter([
           },
         ],
       },
+      {
+        path: 'forget-password',
+        element: <ForgetPassword />,
+      },
+      {
+        path: 'verify-code',
+        element: <VerifyCode />,
+      },
+      {
+        path: 'reset-password',
+        element: <ResetPassword />,
+      }
     ],
   },
   {

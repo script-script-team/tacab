@@ -13,7 +13,7 @@ export const useGetDashboardSummary = () => {
 
         if (!res.data.ok) {
           throw new Error(
-            res.data.message || 'Fieled to get the dashboard summary'
+            res.data.message || 'Failed to get the dashboard summary'
           )
         }
 

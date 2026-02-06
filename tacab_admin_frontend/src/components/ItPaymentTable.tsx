@@ -52,11 +52,11 @@ const ItPayment = ({ page }: { page: number }) => {
             <TableCell className='py-4 font-medium'>{pay?.name}</TableCell>
 
             {(() => {
-              const mp = pay.monthPayments![0]
+              const mp = pay.monthPayments?.[0]
 
               return Array.from({ length: 8 }).map((_, index) => {
                 const key = `month_${index + 1}` as keyof MonthPayment
-                const value = mp[key]
+                const value = mp?.[key]
 
                 return (
                   <TableCell key={index} className='text-center py-3'>

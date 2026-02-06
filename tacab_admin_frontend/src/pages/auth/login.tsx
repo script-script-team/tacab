@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button'
 import * as yup from 'yup'
 import { useFormik } from 'formik'
 import { Input } from '@/components/ui/input'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { useLogin } from '@/react-query/login.hook'
@@ -109,6 +109,14 @@ function Login() {
                 <p className='text-red-500 font-bold'>
                   {formik.touched.password && formik.errors.password}
                 </p>
+              </div>
+              <div className='flex justify-end'>
+                <Link
+                  to='/forget-password'
+                  className='text-sm font-medium text-blue-600 hover:text-blue-700 hover:underline cursor-pointer'
+                >
+                  Forget Password?
+                </Link>
               </div>
             </div>
             <Button
