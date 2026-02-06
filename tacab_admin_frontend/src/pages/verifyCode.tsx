@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 const VerifyCode = () => {
 
   const {mutate: verifyCode, isPending, isError, error} = useVerifyResetCode();
+  const email = JSON.parse(localStorage.getItem("forgot-password")!)
   const navigate = useNavigate();
 
   const formik = useFormik({
@@ -19,7 +20,7 @@ const VerifyCode = () => {
     onSubmit(values) {
       verifyCode({
         code: values.code,
-        email: "[EMAIL_ADDRESS]"
+        email: email
       }, {
         onSuccess: () => {
           navigate('/reset-password');

@@ -19,6 +19,7 @@ const ForgetPassword = () => {
     onSubmit(values) {
       sendEmail(values.email, {
         onSuccess: () => {
+          localStorage.setItem("forgot-password", values.email)
           navigate('/verify-code');
         }
       });
