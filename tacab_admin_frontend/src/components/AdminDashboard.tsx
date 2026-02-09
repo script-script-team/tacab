@@ -4,6 +4,7 @@ import { DeleteAlert } from './DeleteAlert'
 import CustomAvatar from './CustomAvatar'
 import { AdminInfoDialog } from './AdminInfoDialog'
 import { UpdateAdminDialog } from './UpdateAdminDialog'
+import Badge from './Badge'
 
 export const AdminDashboard = ({ admin }: { admin: IAdminProp }) => {
   const iconSize = 20
@@ -24,6 +25,7 @@ export const AdminDashboard = ({ admin }: { admin: IAdminProp }) => {
           <p className='text-sm text-gray-500 dark:text-gray-400'>
             {admin.email}
           </p>
+          <Badge text={admin.role} />
         </div>
       </div>
       <div className='flex justify-between items-center gap-5 mt-8'>

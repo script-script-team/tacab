@@ -1,3 +1,10 @@
+export const ROLE = {
+  ADMIN: 'ADMIN',
+  REGISTRATION: 'REGISTRATION',
+} as const
+
+export type ROLE = (typeof ROLE)[keyof typeof ROLE]
+
 export interface IAdminDashboardProp {
   name: string
   email: string
@@ -8,6 +15,7 @@ export interface IAdminProp {
   email: string
   name: string
   phone_number: string
+  role: ROLE
   main_admin: boolean
   createdAt: string
   updatedAt: string

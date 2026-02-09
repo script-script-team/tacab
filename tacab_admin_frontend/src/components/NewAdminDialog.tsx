@@ -11,22 +11,33 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { ROLE } from '@/pages/types/admin.types'
 import { useCreateAdmin } from '@/react-query/admin.hooks'
 import { useQueryClient } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from './ui/select'
+import { useState } from 'react'
 
 interface FormData {
   name: string
   email: string
   phone_number: string
+  role: ROLE
   password: string
   confirm_password: string
 }
 
 export function NewAdminDialog() {
   const { mutate: newAdmin, isPending } = useCreateAdmin()
+  const [roleValue, setValue] = useState<ROLE>(ROLE.REGISTRATION)
   const queryClient = useQueryClient()
   const {
     register,
@@ -38,6 +49,7 @@ export function NewAdminDialog() {
       name: '',
       email: '',
       phone_number: '',
+      role: roleValue,
       password: '',
       confirm_password: '',
     },
@@ -116,6 +128,31 @@ export function NewAdminDialog() {
                 <p className='text-sm text-red-500'>
                   {errors.phone_number.message}
                 </p>
+              )}
+            </div>
+
+            <div className='grid gap-2'>
+              <Label htmlFor='role'>Role</Label>
+              <Select
+                onValueChange={(value: ROLE) => {
+                  setValue(value as ROLE)
+                }}
+                value={roleValue}
+                defaultValue={ROLE.REGISTRATION}
+              >
+                <SelectTrigger id='role' className='w-full'>
+                  <SelectValue placeholder='Select a role' />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.values(ROLE).map((role) => (
+                    <SelectItem key={role} value={role}>
+                      {role}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {errors.role && (
+                <p className='text-sm text-red-500'>{errors.role.message}</p>
               )}
             </div>
 

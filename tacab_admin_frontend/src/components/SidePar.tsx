@@ -6,9 +6,13 @@ import { FaBook, FaClipboardList } from 'react-icons/fa'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { FiSettings } from 'react-icons/fi'
 import { MdPayment } from 'react-icons/md'
+import { useSelector } from 'react-redux'
+import type { RootState } from '@/pages/redux/store'
+import { ROLE } from '@/pages/types/admin.types'
 
 function SidePar() {
   const location = useLocation()
+  const user = useSelector((state: RootState) => state.loginSlice.admin)
   const path = location.pathname
 
   const navigate = useNavigate()
@@ -17,16 +21,19 @@ function SidePar() {
       name: 'Dashboard',
       path: '/',
       icon: <TbLayoutDashboardFilled />,
+      adminOnly: true,
     },
     {
       name: 'Upload Results',
       path: '/uploads',
       icon: <RiUploadCloud2Fill />,
+      adminOnly: true,
     },
     {
       name: 'Manage Uploads',
       path: '/results',
       icon: <FaClipboardList />,
+      adminOnly: true,
     },
     {
       name: 'Manage Students',
@@ -42,6 +49,7 @@ function SidePar() {
       name: 'Manage Admins',
       path: '/admins',
       icon: <RiUserSettingsLine />,
+      adminOnly: true,
     },
     {
       name: 'Manage Payments',
@@ -52,6 +60,7 @@ function SidePar() {
       name: 'Settings',
       path: '/settings',
       icon: <FiSettings />,
+      adminOnly: true,
     },
   ]
 
@@ -66,34 +75,36 @@ function SidePar() {
         <h2 className='text-lg text-gray-400 font-medium'>Menu</h2>
 
         <div className='flex md:flex-col lg:flex-col xl:flex-col xs:justify-between sm:justify-between md:gap-4 lg:gap-4 xl:gap-4 sm:flex-row xs:flex-row'>
-          {opt.map((opt, index) => {
-            return (
-              <div
-                onClick={() => navigate(`${opt.path}`)}
-                key={index}
-                className={`cursor-pointer flex items-center gap-3 rounded-tr-md rounded-br-md ${
-                  opt.path === path ? 'bg-gray-100 dark:bg-gray-800' : ''
-                } relative before:-translate-y-8 overflow-hidden before:content-[''] before:w-[5px] before:h-full ${
-                  opt.path === path
-                    ? 'before:bg-green-500 before:translate-y-0'
-                    : ''
-                } before:left-0 before:absolute before:rounded-full before:duration-700`}
-              >
+          {opt
+            .filter((item) => !item.adminOnly || user.role == ROLE.ADMIN)
+            .map((opt, index) => {
+              return (
                 <div
-                  className={`w-8 h-8 xs:rounded-full sm:rounded-full md:rounded-sm lg:rounded-sm xl:rounded-sm ${
+                  onClick={() => navigate(`${opt.path}`)}
+                  key={index}
+                  className={`cursor-pointer flex items-center gap-3 rounded-tr-md rounded-br-md ${
+                    opt.path === path ? 'bg-gray-100 dark:bg-gray-800' : ''
+                  } relative before:-translate-y-8 overflow-hidden before:content-[''] before:w-[5px] before:h-full ${
                     opt.path === path
-                      ? 'text-black dark:text-white'
-                      : 'bg-blue-500 text-white dark:text-black'
-                  } flex justify-center items-center`}
+                      ? 'before:bg-green-500 before:translate-y-0'
+                      : ''
+                  } before:left-0 before:absolute before:rounded-full before:duration-700`}
                 >
-                  {opt.icon}
+                  <div
+                    className={`w-8 h-8 xs:rounded-full sm:rounded-full md:rounded-sm lg:rounded-sm xl:rounded-sm ${
+                      opt.path === path
+                        ? 'text-black dark:text-white'
+                        : 'bg-blue-500 text-white dark:text-black'
+                    } flex justify-center items-center`}
+                  >
+                    {opt.icon}
+                  </div>
+                  <h2 className='text-sm sm:hidden xs:hidden md:block lg:block xl:block'>
+                    {opt.name}
+                  </h2>
                 </div>
-                <h2 className='text-sm sm:hidden xs:hidden md:block lg:block xl:block'>
-                  {opt.name}
-                </h2>
-              </div>
-            )
-          })}
+              )
+            })}
         </div>
       </div>
     </div>
