@@ -6,7 +6,7 @@ import { useForgotPassword } from '@/react-query/forgotPassword.hooks'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
-const ENABLE_COOLDOWN = false
+const ENABLE_COOLDOWN = true
 const COOLDOWN_SECONDS = 60
 const STORAGE_KEY = 'forgot_password_cooldown_until'
 
