@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
 import Upload from '@/components/Upload'
-import { Plus } from 'lucide-react'
+import { DownloadIcon, Plus } from 'lucide-react'
 import { useRef, useState } from 'react'
 import type { ChangeEvent } from 'react'
 import { useDispatch } from 'react-redux'
@@ -12,6 +12,7 @@ import { toast } from 'sonner'
 import type { IStudentProp } from '../types/student.types'
 import { Link } from 'react-router-dom'
 import NotFoundMessage from './NotFoundMessage'
+import { BASE_API_URL } from '../constant'
 
 function Uploads() {
   const { data: uploads, isLoading } = useGetAllUploads(1)
@@ -23,6 +24,14 @@ function Uploads() {
 
   const handleButtonClick = () => {
     fileInputRef.current?.click()
+  }
+
+  const handleITDownload = () => {
+    window.location.href = `${BASE_API_URL}/download-it-sample`
+  }
+
+  const handleComputerDownload = () => {
+    window.location.href = `${BASE_API_URL}/download-computer-sample`
   }
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -57,10 +66,25 @@ function Uploads() {
         ) : (
           <UploadDialog data={extractRes || []} subject={subject || ''} />
         )}
-        <Button onClick={handleButtonClick}>
-          <Plus />
-          Upload File
-        </Button>
+
+        <div className='flex gap-4 items-center'>
+          <div className='flex items-center gap-2'>
+            <div>Download:</div>
+            <Button onClick={handleITDownload} variant={'outline'}>
+              <DownloadIcon />
+              IT Sample
+            </Button>
+            <Button onClick={handleComputerDownload} variant={'outline'}>
+              <DownloadIcon />
+              Computer Sample
+            </Button>
+          </div>
+
+          <Button onClick={handleButtonClick}>
+            <Plus />
+            Upload File
+          </Button>
+        </div>
         <input
           ref={fileInputRef}
           type='file'
