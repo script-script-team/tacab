@@ -38,8 +38,8 @@ const DashboardHeader = () => {
               <Button
                 onClick={() => {
                   logoutFn(undefined, {
-                    onSuccess: (res) => {
-                      toast.success(res.message)
+                    onSuccess: () => {
+                      toast.success('Logged out successfully')
                       navigate('/auth/login')
                     },
                     onError: (err) => {

@@ -18,7 +18,7 @@ function AllPayment({ page }: { page: number }) {
 
   useEffect(() => {
     if (isError) toast.error(error.message)
-  }, [isError])
+  }, [isError, error?.message])
 
   return isLoading ? (
     <div className='relative w-full h-full'>
