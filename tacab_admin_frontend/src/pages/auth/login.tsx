@@ -12,6 +12,7 @@ import { useDispatch } from 'react-redux'
 import { login } from '../redux/auth/login.slice'
 import { useState } from 'react'
 import { Eye, EyeClosed, Mail } from 'lucide-react'
+import { ROLE } from '../types/admin.types'
 
 function Login() {
   const navigate = useNavigate()
@@ -28,11 +29,13 @@ function Login() {
         onSuccess: (res) => {
           toast.success('logged in successfully')
           dispatch(login(res.admin))
-          // store access token in localStorage (so it persists across reloads)
           localStorage.setItem('access_token', res.access_token)
-          // store refresh token in-memory only for better security
           setRefreshToken(res.refresh_token)
-          navigate('/')
+          if (res.admin.role === ROLE.ADMIN) {
+            navigate('/')
+          } else {
+            navigate('/manage-students')
+          }
         },
         onError: (error) => {
           toast.error(error.message || 'Login failed')

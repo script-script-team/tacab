@@ -24,40 +24,44 @@ const DashboardHeader = () => {
     <header className='flex bg-white dark:bg-gray-950 rounded-lg p-3 justify-between items-center'>
       <Theme />
 
-      {loading ? <Loading /> : <div className='flex gap-2'>
-        <Popover>
-          <PopoverTrigger>
-            <Avatar className='cursor-pointer'>
-              <CustomAvatar name={admin.name} />
-            </Avatar>
-          </PopoverTrigger>
-          <PopoverContent>
-            <Button
-              onClick={() => {
-                logoutFn(undefined, {
-                  onSuccess: (res) => {
-                    toast.success(res.message)
-                    navigate('/auth/login')
-                  },
-                  onError: (err) => {
-                    toast.success(err.message)
-                  },
-                })
-                dispatch(logout())
-              }}
-              variant={'destructive'}
-              className='cursor-pointer'
-              disabled={isPending}
-            >
-              Logout
-            </Button>
-          </PopoverContent>
-        </Popover>
-        <div className='flex flex-col'>
-          <small className='font-bold'>{admin.name}</small>
-          <small className='text-[10px]'>{admin.email}</small>
+      {loading ? (
+        <Loading />
+      ) : (
+        <div className='flex gap-2'>
+          <Popover>
+            <PopoverTrigger>
+              <Avatar className='cursor-pointer'>
+                <CustomAvatar name={admin.name} />
+              </Avatar>
+            </PopoverTrigger>
+            <PopoverContent>
+              <Button
+                onClick={() => {
+                  logoutFn(undefined, {
+                    onSuccess: (res) => {
+                      toast.success(res.message)
+                      navigate('/auth/login')
+                    },
+                    onError: (err) => {
+                      toast.success(err.message)
+                    },
+                  })
+                  dispatch(logout())
+                }}
+                variant={'destructive'}
+                className='cursor-pointer'
+                disabled={isPending}
+              >
+                Logout
+              </Button>
+            </PopoverContent>
+          </Popover>
+          <div className='flex flex-col'>
+            <small className='font-bold'>{admin.name}</small>
+            <small className='text-[10px]'>{admin.email}</small>
+          </div>
         </div>
-      </div>}
+      )}
     </header>
   )
 }

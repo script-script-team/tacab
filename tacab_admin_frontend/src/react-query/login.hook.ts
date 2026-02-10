@@ -4,7 +4,6 @@ import axios from 'axios'
 import { clearRefreshToken } from '@/lib/tokenStore'
 import type { ILoginResponse, IWhoAmIRes } from '@/pages/types/login.type'
 
-// ✅ Login hook
 export const useLogin = () => {
   return useMutation({
     mutationFn: async (data: { email: string; password: string }) => {
@@ -26,7 +25,6 @@ export const useLogin = () => {
   })
 }
 
-// ✅ Logout hook
 export const useLogout = () => {
   return useMutation({
     mutationKey: ['logout'],
@@ -36,14 +34,7 @@ export const useLogout = () => {
         localStorage.removeItem('access_token')
         clearRefreshToken()
 
-        // Optional: call logout endpoint if needed
-        const res = await api.get('/api/auth/logout')
-
-        if (!res.data.ok) {
-          throw new Error(res.data.message || 'Logout failed')
-        }
-
-        return res.data
+        return
       } catch (error) {
         console.error(error)
         if (axios.isAxiosError(error)) {
