@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import { api } from "./axios.hoooks"
-import type { PaymentWithStudent } from "@/types/payment.type"
+import type { PaymentsResponse } from "@/types/payment.type"
 
 export const usePayment = (id: number) => {
     return useQuery({
@@ -14,7 +14,7 @@ export const usePayment = (id: number) => {
                   throw new Error(res.data.message || 'Fieled to get payment')
                 }
 
-                return res.data.payments as PaymentWithStudent[]
+                return res.data as PaymentsResponse
 
             } catch (error) {
                 if (axios.isAxiosError(error) && error.response) {

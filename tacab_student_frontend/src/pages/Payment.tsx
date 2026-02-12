@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
-import { CreditCard, Calendar, DollarSign, Download } from 'lucide-react';
+import { CreditCard, Calendar, DollarSign, Check, X } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { usePayment } from '@/react-query/payment.hook';
 import { useSelector } from 'react-redux';
 import type { RootState } from '@/redux/store';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import type { MonthPayment } from '@/types/payment.type';
 
 const Payment: React.FC = () => {
     const data = useSelector((state: RootState) => state.student.result)
@@ -34,10 +34,6 @@ const Payment: React.FC = () => {
         return <div>Loading...</div>
     }
 
-    const totalPaid = Array.isArray(payments) 
-        ? payments.reduce((sum: number, p: any) => sum + (p.amount || 0), 0)
-        : 0;
-
     return (
         <div className="min-h-screen p-4 md:p-8">
             <div className="max-w-6xl mx-auto">
@@ -56,7 +52,7 @@ const Payment: React.FC = () => {
                             </div>
                             <div>
                                 <p className="text-sm">Total Paid</p>
-                                <p className="text-xl font-bold text-gray-500">${totalPaid.toFixed(2)}</p>
+                                <p className="text-xl font-bold text-gray-500">${payments?.payments?.reduce((sum: number, p: any) => sum + (p.amount || 0), 0).toFixed(2)}</p>
                             </div>
                         </div>
                     </div>
@@ -68,7 +64,7 @@ const Payment: React.FC = () => {
                             <div>
                                 <p className="text-sm">Last Payment</p>
                                 <p className="text-xl font-bold text-gray-500">
-                                    {payments[0] ? `${payments[0].month} ${payments[0].year}` : 'N/A'}
+                                    {payments?.payments?.[0] ? `${payments?.payments?.[0]?.month} ${payments?.payments?.[0]?.year}` : 'N/A'}
                                 </p>
                             </div>
                         </div>
@@ -95,43 +91,74 @@ const Payment: React.FC = () => {
                     </div>
                     <div className="overflow-x-auto p-5">
                         <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Transaction ID</TableHead>
-                                    <TableHead>Period</TableHead>
-                                    <TableHead>Amount</TableHead>
-                                    <TableHead>Date Paid</TableHead>
-                                    <TableHead className='text-right'>Action</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {payments.length === 0 ? (
-                                    <TableRow>
-                                        <TableCell colSpan={5} className="text-center text-gray-500">No payment records found.</TableCell>
-                                    </TableRow>
-                                ) : (
-                                    payments.map((payment: any) => (
-                                        <TableRow key={payment.id}>
-                                            <TableCell className="font-mono text-gray-500">{payment.id.substring(0, 8)}...</TableCell>
-                                            <TableCell>
-                                                <span className="font-medium text-gray-500">{payment.month} {payment.year}</span>
-                                            </TableCell>
-                                            <TableCell>
-                                                <span className="font-semibold text-gray-500">${payment.amount.toFixed(2)}</span>
-                                            </TableCell>
-                                            <TableCell className="text-gray-500">
-                                                {new Date(payment.createdAt).toLocaleDateString()}
-                                            </TableCell>
-                                            <TableCell className="text-right">
-                                                <Button className="text-blue-600 hover:text-blue-800 p-2 rounded-full hover:bg-blue-50 transition-colors">
-                                                    <Download size={18} />
-                                                </Button>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))
-                                )}
-                            </TableBody>
-                        </Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead className='py-4 font-semibold'>ID</TableHead>
+          <TableHead className='py-4 font-semibold'>Student Name</TableHead>
+
+          {Array.from({ length: 8 }).map((_, i) => (
+            <TableHead key={i} className='py-4 font-semibold text-center'>
+              Month {i + 1}
+            </TableHead>
+          ))}
+        </TableRow>
+      </TableHeader>
+
+      <TableBody>
+        {payments?.payments?.map((pay) => (
+          <TableRow
+            key={pay.id}
+            className='transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-900/20'
+          >
+            <TableCell className='py-4'>{pay.id}</TableCell>
+            <TableCell className='py-4 font-medium'>{pay?.student.name}</TableCell>
+
+            {(() => {
+              const mp = pay?.student?.monthPayments?.[0]
+
+              return Array.from({ length: 8 }).map((_, index) => {
+                const key = `month_${index + 1}` as keyof MonthPayment
+                const value = mp?.[key]
+
+                return (
+                  <TableCell key={index} className='text-center py-3'>
+                    {value ? (
+                      <div
+                        className='
+                          px-2 py-2 rounded-full w-fit mx-auto
+                          bg-emerald-100 dark:bg-emerald-900/40 
+                          border border-emerald-300 dark:border-emerald-800
+                          text-emerald-700 dark:text-emerald-300
+                          flex justify-center items-center gap-1
+                          font-medium text-sm
+                          shadow-sm
+                        '
+                      >
+                        <Check className='w-4 h-4' />
+                      </div>
+                    ) : (
+                      <div
+                        className='
+                          px-2 py-2 rounded-full w-fit mx-auto
+                          bg-red-100 dark:bg-red-900/40 
+                          border border-red-300 dark:border-red-800
+                          text-red-700 dark:text-red-300
+                          flex justify-center items-center gap-1
+                          font-medium text-sm
+                          shadow-sm
+                        '
+                      >
+                        <X className='w-4 h-4' />
+                      </div>
+                    )}
+                  </TableCell>
+                )
+              })
+            })()}
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
                     </div>
                 </div>
             </div>
