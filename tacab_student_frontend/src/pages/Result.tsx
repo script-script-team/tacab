@@ -5,6 +5,7 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import Payment from './Payment'
 
 function Result() {
   const data = useSelector((state: RootState) => state.student.result)
@@ -146,6 +147,7 @@ function Result() {
           </div>
         </div>
       </div>
+      <Payment />
       <Footer />
     </div>
   )
