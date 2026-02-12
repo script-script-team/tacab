@@ -28,26 +28,17 @@ export interface IMarks {
   updatedAt: string
 }
 
+export type PaymentStatus = 'PAID' | 'UNPAID' | 'PARTIALLY_PAID';
+
 export interface IPayment {
   id: string
+  student_id: number
   amount: number
-  month: string
+  month: number
   year: number
+  status: PaymentStatus
   createdAt: string
   updatedAt: string
-}
-
-export interface IMonthPayment {
-  id: string
-  student_id: number
-  month_1: boolean
-  month_2: boolean
-  month_3: boolean
-  month_4: boolean
-  month_5: boolean
-  month_6: boolean
-  month_7: boolean
-  month_8: boolean
 }
 
 export interface IFullStudentProp {
@@ -63,7 +54,6 @@ export interface IFullStudentProp {
   updatedAt: string
   marks: IMarks
   payments: IPayment[]
-  monthPayments: IMonthPayment[] | null
   totalPayment: number
 }
 

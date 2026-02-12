@@ -11,9 +11,9 @@ import { useGetAllItPayments } from '@/react-query/payment.hooks'
 import { useEffect } from 'react'
 import { toast } from 'sonner'
 import Loading from '@/components/Loading'
-import type { MonthPayment } from '../pages/types/payment.type'
 
-const ItPayment = ({ page }: { page: number }) => {
+
+const ItPaymentTable = ({ page }: { page: number }) => {
   const { data, isLoading, isError, error } = useGetAllItPayments(page)
 
   useEffect(() => {
@@ -51,48 +51,38 @@ const ItPayment = ({ page }: { page: number }) => {
             <TableCell className='py-4'>{pay.student_code}</TableCell>
             <TableCell className='py-4 font-medium'>{pay?.name}</TableCell>
 
-            {(() => {
-              const mp = pay.monthPayments?.[0]
+            {Array.from({ length: 8 }).map((_, index) => {
+              const payment = pay.payments?.find(
+                (p: any) => p.month === index + 1
+              )
 
-              return Array.from({ length: 8 }).map((_, index) => {
-                const key = `month_${index + 1}` as keyof MonthPayment
-                const value = mp?.[key]
+              const isPaid = payment?.status === 'PAID'
+              const isPartial = payment?.status === 'PARTIALLY_PAID'
 
-                return (
-                  <TableCell key={index} className='text-center py-3'>
-                    {value ? (
-                      <div
-                        className='
-                          px-2 py-2 rounded-full w-fit mx-auto
-                          bg-emerald-100 dark:bg-emerald-900/40 
-                          border border-emerald-300 dark:border-emerald-800
-                          text-emerald-700 dark:text-emerald-300
-                          flex justify-center items-center gap-1
-                          font-medium text-sm
-                          shadow-sm
-                        '
-                      >
-                        <Check className='w-4 h-4' />
-                      </div>
-                    ) : (
-                      <div
-                        className='
-                          px-2 py-2 rounded-full w-fit mx-auto
-                          bg-red-100 dark:bg-red-900/40 
-                          border border-red-300 dark:border-red-800
-                          text-red-700 dark:text-red-300
-                          flex justify-center items-center gap-1
-                          font-medium text-sm
-                          shadow-sm
-                        '
-                      >
-                        <X className='w-4 h-4' />
-                      </div>
-                    )}
-                  </TableCell>
-                )
-              })
-            })()}
+              let bgClass = 'bg-red-100 dark:bg-red-900/40 border-red-300 dark:border-red-800 text-red-700 dark:text-red-300'
+              let icon = <X className='w-4 h-4' />
+
+              if (isPaid) {
+                bgClass = 'bg-emerald-100 dark:bg-emerald-900/40 border-emerald-300 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300'
+                icon = <Check className='w-4 h-4' />
+              } else if (isPartial) {
+                bgClass = 'bg-yellow-100 dark:bg-yellow-900/40 border-yellow-300 dark:border-yellow-800 text-yellow-700 dark:text-yellow-300'
+                icon = <Check className='w-4 h-4' />
+              }
+
+              return (
+                <TableCell key={index} className='text-center py-3'>
+                  <div
+                    className={`
+                      px-2 py-2 rounded-full w-fit mx-auto border flex justify-center items-center gap-1 font-medium text-sm shadow-sm
+                      ${bgClass}
+                    `}
+                  >
+                    {icon}
+                  </div>
+                </TableCell>
+              )
+            })}
           </TableRow>
         ))}
       </TableBody>
@@ -100,4 +90,4 @@ const ItPayment = ({ page }: { page: number }) => {
   )
 }
 
-export default ItPayment
+export default ItPaymentTable

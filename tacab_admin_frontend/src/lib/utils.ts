@@ -1,14 +1,13 @@
-import type { IMonthPayment, IPayment } from '@/pages/types/student.types'
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import type { IPayment } from '@/pages/types/student.types'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
 export const shortText = (text: string) => {
-  const short = text.slice(0, 6) + '...'
-  return short
+  return text.length > 6 ? text.slice(0, 6) + '...' : text
 }
 
 export const calculateTotalPayment = (payments: IPayment[]): number => {
@@ -16,24 +15,19 @@ export const calculateTotalPayment = (payments: IPayment[]): number => {
   return payments.reduce((sum, p) => sum + p.amount, 0)
 }
 
-export const calculateProgress = (monthPayments: IMonthPayment[] | null) => {
-  if (!monthPayments || !monthPayments[0]) return { percent: 0, count: 0 }
+export const calculateProgress = (payments: IPayment[] | undefined) => {
+  if (!payments || payments.length === 0) return { percent: 0, count: 0 }
 
-  const mp = monthPayments[0]
+  // Count unique months that are fully PAID
+  const paidMonths = new Set(
+    payments
+      .filter((p) => p.status === 'PAID')
+      .map((p) => `${p.month}-${p.year}`)
+  )
 
-  const months = [
-    mp.month_1,
-    mp.month_2,
-    mp.month_3,
-    mp.month_4,
-    mp.month_5,
-    mp.month_6,
-    mp.month_7,
-    mp.month_8,
-  ]
-
-  const paidCount = months.filter(Boolean).length
-  const percent = (paidCount / 8) * 100
+  const paidCount = paidMonths.size
+  // Assuming 8 months course duration as per previous logic
+  const percent = Math.min((paidCount / 8) * 100, 100)
 
   return { percent, count: paidCount }
 }

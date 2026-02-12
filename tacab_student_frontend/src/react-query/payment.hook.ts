@@ -3,12 +3,12 @@ import axios from "axios"
 import { api } from "./axios.hoooks"
 import type { PaymentsResponse } from "@/types/payment.type"
 
-export const usePayment = (id: number) => {
+export const usePayment = (id: number, page: number) => {
     return useQuery({
-        queryKey: ['payment'],
+        queryKey: ['payment', page],
         queryFn: async() => {
             try {
-                const res = await api.get(`/api/payment/student/` + id)
+                const res = await api.get(`/api/payment/student/` + id + `?page=` + page)
         
                 if (!res.data.ok) {
                   throw new Error(res.data.message || 'Fieled to get payment')

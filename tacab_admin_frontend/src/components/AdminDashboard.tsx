@@ -4,7 +4,7 @@ import { DeleteAlert } from './DeleteAlert'
 import CustomAvatar from './CustomAvatar'
 import { AdminInfoDialog } from './AdminInfoDialog'
 import { UpdateAdminDialog } from './UpdateAdminDialog'
-import Badge from './Badge'
+import { Badge } from './Badge'
 
 export const AdminDashboard = ({ admin }: { admin: IAdminProp }) => {
   const iconSize = 20

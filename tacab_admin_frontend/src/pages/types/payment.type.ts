@@ -17,18 +17,7 @@ export interface Payment {
   student: IFullStudentProp
 }
 
-export interface MonthPayment {
-  id: string
-  student_id: number
-  month_1: boolean
-  month_2: boolean
-  month_3: boolean
-  month_4: boolean
-  month_5: boolean
-  month_6: boolean
-  month_7: boolean
-  month_8: boolean
-}
+
 
 export interface addPaymentBody {
   amount: number

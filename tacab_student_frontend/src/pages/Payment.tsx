@@ -1,17 +1,17 @@
-import React, { useEffect } from 'react';
-import { CreditCard, Calendar, DollarSign, Check, X } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { CreditCard, Calendar, DollarSign, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Input } from '@/components/ui/input';
 import { usePayment } from '@/react-query/payment.hook';
 import { useSelector } from 'react-redux';
 import type { RootState } from '@/redux/store';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
-import type { MonthPayment } from '@/types/payment.type';
+import { Button } from '@/components/ui/button';
 
 const Payment: React.FC = () => {
     const data = useSelector((state: RootState) => state.student.result)
-    const { data: payments, isLoading, isError, error } = usePayment(data?.student.id)
+    const [page, setPage] = useState(1);
+    const { data: paymentsData, isLoading, isError, error } = usePayment(data?.student.id, page)
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -30,29 +30,45 @@ const Payment: React.FC = () => {
         return null
     }
 
-    if (isLoading || !payments) {
-        return <div>Loading...</div>
+    if (isLoading || !paymentsData) {
+        return <div className="flex h-screen items-center justify-center">Loading payments...</div>
     }
+
+    const paymentList = paymentsData.payments || [];
+    const lastPayment = paymentList.length > 0 ? paymentList[paymentList.length - 1] : null;
+
+    const getStatusBadge = (status: string) => {
+        switch (status) {
+            case 'PAID':
+                return <span className="px-2 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700 border border-green-200">Paid</span>;
+            case 'PARTIALLY_PAID':
+                return <span className="px-2 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-700 border border-yellow-200">Partial</span>;
+            case 'UNPAID':
+                return <span className="px-2 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700 border border-red-200">Unpaid</span>;
+            default:
+                return <span className="px-2 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 border border-gray-200">{status}</span>;
+        }
+    };
 
     return (
         <div className="min-h-screen p-4 md:p-8">
-            <div className="max-w-6xl mx-auto">
-                <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+            <div className="max-w-6xl mx-auto space-y-8">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
-                        <h1 className="text-2xl font-bold">Student Payments</h1>
+                        <h1 className="text-2xl font-bold tracking-tight">Student Payments</h1>
                         <p className="text-gray-500 text-sm">Manage and track your tuition fee history</p>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="p-6 rounded-xl shadow-sm border">
                         <div className="flex items-center gap-4">
                             <div className="p-3 bg-blue-50 text-blue-600 rounded-lg">
                                 <DollarSign size={24} />
                             </div>
                             <div>
-                                <p className="text-sm">Total Paid</p>
-                                <p className="text-xl font-bold text-gray-500">${payments?.payments?.reduce((sum: number, p: any) => sum + (p.amount || 0), 0).toFixed(2)}</p>
+                                <p className="text-sm font-medium text-gray-500">Total Paid</p>
+                                <p className="text-2xl font-bold text-gray-500">${paymentsData.totalPayment}</p>
                             </div>
                         </div>
                     </div>
@@ -62,9 +78,9 @@ const Payment: React.FC = () => {
                                 <Calendar size={24} />
                             </div>
                             <div>
-                                <p className="text-sm">Last Payment</p>
-                                <p className="text-xl font-bold text-gray-500">
-                                    {payments?.payments?.[0] ? `${payments?.payments?.[0]?.month} ${payments?.payments?.[0]?.year}` : 'N/A'}
+                                <p className="text-sm font-medium text-gray-500">Last Payment</p>
+                                <p className="text-2xl font-bold text-gray-500">
+                                    {lastPayment ? `${lastPayment.month}/${lastPayment.year}` : 'N/A'}
                                 </p>
                             </div>
                         </div>
@@ -75,90 +91,70 @@ const Payment: React.FC = () => {
                                 <CreditCard size={24} />
                             </div>
                             <div>
-                                <p className="text-sm">Student ID</p>
-                                <p className="text-xl font-bold text-gray-500">#{data.student.id || 'N/A'}</p>
+                                <p className="text-sm font-medium text-gray-500">Student ID</p>
+                                <p className="text-2xl font-bold text-gray-500">#{data.student.id || 'N/A'}</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div className="rounded-xl shadow-sm border overflow-hidden">
-                    <div className="p-4 border-b flex items-center justify-between">
-                        <h2 className="font-semibold">Payment History</h2>
-                        <div className="relative">
-                            <Input type="text" placeholder="Search payments..." />
+                    <div className="p-6 border-b flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <h2 className="text-lg font-semibold">Payment History</h2>
+                        <div className="flex gap-2">
+                            <Button
+                  className='cursor-pointer'
+                  disabled={isLoading || page === 1}
+                  onClick={() => setPage(page - 1)}
+                >
+                  <ChevronLeft />
+                </Button>
+                <Button
+                  className='cursor-pointer'
+                  disabled={isLoading || page >= (paymentsData.totalPage ?? 0)}
+                  onClick={() => setPage(page + 1)}
+                >
+                  <ChevronRight />
+                </Button>
                         </div>
                     </div>
-                    <div className="overflow-x-auto p-5">
+                    <div className="overflow-x-auto">
                         <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead className='py-4 font-semibold'>ID</TableHead>
-          <TableHead className='py-4 font-semibold'>Student Name</TableHead>
-
-          {Array.from({ length: 8 }).map((_, i) => (
-            <TableHead key={i} className='py-4 font-semibold text-center'>
-              Month {i + 1}
-            </TableHead>
-          ))}
-        </TableRow>
-      </TableHeader>
-
-      <TableBody>
-        {payments?.payments?.map((pay) => (
-          <TableRow
-            key={pay.id}
-            className='transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-900/20'
-          >
-            <TableCell className='py-4'>{pay.id}</TableCell>
-            <TableCell className='py-4 font-medium'>{pay?.student.name}</TableCell>
-
-            {(() => {
-              const mp = pay?.student?.monthPayments?.[0]
-
-              return Array.from({ length: 8 }).map((_, index) => {
-                const key = `month_${index + 1}` as keyof MonthPayment
-                const value = mp?.[key]
-
-                return (
-                  <TableCell key={index} className='text-center py-3'>
-                    {value ? (
-                      <div
-                        className='
-                          px-2 py-2 rounded-full w-fit mx-auto
-                          bg-emerald-100 dark:bg-emerald-900/40 
-                          border border-emerald-300 dark:border-emerald-800
-                          text-emerald-700 dark:text-emerald-300
-                          flex justify-center items-center gap-1
-                          font-medium text-sm
-                          shadow-sm
-                        '
-                      >
-                        <Check className='w-4 h-4' />
-                      </div>
-                    ) : (
-                      <div
-                        className='
-                          px-2 py-2 rounded-full w-fit mx-auto
-                          bg-red-100 dark:bg-red-900/40 
-                          border border-red-300 dark:border-red-800
-                          text-red-700 dark:text-red-300
-                          flex justify-center items-center gap-1
-                          font-medium text-sm
-                          shadow-sm
-                        '
-                      >
-                        <X className='w-4 h-4' />
-                      </div>
-                    )}
-                  </TableCell>
-                )
-              })
-            })()}
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead className="py-4 font-semibold">Date</TableHead>
+                                    <TableHead className="py-4 font-semibold">Month/Year</TableHead>
+                                    <TableHead className="py-4 font-semibold">Status</TableHead>
+                                    <TableHead className="py-4 font-semibold text-right">Amount</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {paymentList.length === 0 ? (
+                                    <TableRow>
+                                        <TableCell colSpan={4} className="text-center py-8">
+                                            No payment records found.
+                                        </TableCell>
+                                    </TableRow>
+                                ) : (
+                                    paymentList.map((pay) => (
+                                        <TableRow key={pay.id}>
+                                            <TableCell className="py-4">
+                                                {new Date(pay.createdAt).toLocaleDateString()}
+                                            </TableCell>
+                                            <TableCell className="py-4 font-medium">
+                                                {pay.month} / {pay.year}
+                                            </TableCell>
+                                            <TableCell className="py-4">
+                                                {getStatusBadge(pay.status)}
+                                            </TableCell>
+                                            <TableCell className="py-4 text-right font-bold">
+                                                ${pay.amount.toFixed(2)}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))
+                                )}
+                            </TableBody>
+                        </Table>
                     </div>
                 </div>
             </div>

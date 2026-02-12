@@ -1,5 +1,5 @@
 import type { IUploadInfo } from '@/pages/types/upload.types'
-import Badge from './Badge'
+import { Badge } from './Badge'
 import { Button } from './ui/button'
 import { Link } from 'react-router-dom'
 

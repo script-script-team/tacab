@@ -1,3 +1,4 @@
+
 import { useParams } from 'react-router-dom'
 import { useGetSingleStudent } from '../../react-query/student.hooks'
 import type { IMarks } from '../../pages/types/student.types'
@@ -9,7 +10,7 @@ import {
 } from '@/lib/utils'
 import { InfoItem } from '@/components/InfoItem'
 import { ProgressBar } from '@/components/ProgressBar'
-import { MonthGrid } from '@/components/MonthGrid'
+import { Badge } from '@/components/Badge'
 import { Printer } from 'lucide-react'
 import { UpdateStudentDialog } from '@/components/UpdateStudentDialog'
 import DeleteStudentDialog from '@/components/DeleteStudentDialog'
@@ -77,6 +78,20 @@ const MarksTable = ({ marks }: { marks: IMarks | null }) => {
   )
 }
 
+// Helper for status badge
+const getStatusBadge = (status: string) => {
+  switch (status) {
+    case 'PAID':
+      return <Badge variant="success">Paid</Badge>
+    case 'PARTIALLY_PAID':
+      return <Badge variant="warning">Partial</Badge>
+    case 'UNPAID':
+      return <Badge variant="destructive">Unpaid</Badge>
+    default:
+      return <Badge variant="secondary">{status}</Badge>
+  }
+}
+
 const StudentDetail = () => {
   const { id } = useParams()
   const { data, isLoading, isError, error } = useGetSingleStudent(Number(id))
@@ -101,8 +116,8 @@ const StudentDetail = () => {
 
   const student = data.student
   const totalPaid = calculateTotalPayment(student.payments)
-  const { percent, count } = calculateProgress(student.monthPayments || null)
-  const remainingMonths = 8 - count
+  const { percent, count } = calculateProgress(student.payments)
+  const remainingMonths = Math.max(0, 8 - count)
 
   return (
     <div className='relative w-full min-h-[83.5vh] p-3 flex flex-col gap-4 bg-white dark:bg-gray-950 rounded-lg h-full'>
@@ -148,18 +163,9 @@ const StudentDetail = () => {
             </div>
           </div>
 
-          {/* Payment Progress & Grid */}
+          {/* Payment Progress */}
           <div className='bg-white dark:bg-gray-900 rounded-xl shadow-sm border p-6'>
             <ProgressBar percent={percent} count={count} />
-            <div className='mt-8'>
-              <h3 className='text-lg font-bold text-gray-700 dark:text-gray-200 mb-4'>
-                Monthly Payment Status
-              </h3>
-              <MonthGrid
-                monthPayments={student.monthPayments}
-                subject={student.subject}
-              />
-            </div>
           </div>
 
           {/* Payment History Table */}
@@ -173,6 +179,7 @@ const StudentDetail = () => {
                   <tr>
                     <th className='px-4 py-3'>Date</th>
                     <th className='px-4 py-3'>Month/Year</th>
+                    <th className='px-4 py-3'>Status</th>
                     <th className='px-4 py-3 text-right'>Amount</th>
                   </tr>
                 </thead>
@@ -187,7 +194,10 @@ const StudentDetail = () => {
                           {formatDate(payment.createdAt)}
                         </td>
                         <td className='px-4 py-3 font-medium text-gray-900 dark:text-gray-200'>
-                          {payment.month} {payment.year}
+                          {payment.month}/{payment.year}
+                        </td>
+                        <td className='px-4 py-3'>
+                          {getStatusBadge(payment.status)}
                         </td>
                         <td className='px-4 py-3 text-right font-bold text-green-600 dark:text-green-400'>
                           {formatCurrency(payment.amount)}
@@ -197,7 +207,7 @@ const StudentDetail = () => {
                   ) : (
                     <tr>
                       <td
-                        colSpan={3}
+                        colSpan={4}
                         className='px-4 py-8 text-center text-gray-400 dark:text-gray-600'
                       >
                         No payment history found.
@@ -207,7 +217,7 @@ const StudentDetail = () => {
                 </tbody>
                 <tfoot className='bg-gray-50 dark:bg-gray-800 font-bold text-gray-900 dark:text-gray-200'>
                   <tr>
-                    <td colSpan={2} className='px-4 py-3 text-right'>
+                    <td colSpan={3} className='px-4 py-3 text-right'>
                       Total Paid
                     </td>
                     <td className='px-4 py-3 text-right text-green-700 dark:text-green-400'>
