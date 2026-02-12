@@ -49,7 +49,7 @@ function ComputerPayment({ page }: { page: number }) {
               const mp = p.monthPayments?.[0]
               return Array.from({ length: 3 }).map((_, index) => {
                 const key = `month_${index + 1}` as keyof MonthPayment
-                const value = mp![key]
+                const value = mp?.[key]
 
                 return (
                   <TableCell key={index} className='text-center py-3'>
