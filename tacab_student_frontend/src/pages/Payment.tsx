@@ -13,7 +13,7 @@ import Footer from '@/components/Footer';
 const Payment: React.FC = () => {
     const data = useSelector((state: RootState) => state.student.result)
     const [page, setPage] = useState(1);
-    const { data: paymentsData, isLoading, isError, error } = usePayment(data?.student.id, page)
+    const { data: paymentsData, isLoading, isError, error } = usePayment(data?.student?.id, page)
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -54,7 +54,7 @@ const Payment: React.FC = () => {
 
     return (
         <div className='flex flex-col'>
-        <Header id={data?.student?.student_code} studentName={data?.student?.name?.[0].toUpperCase()} />
+        <Header id={data?.student?.id} studentName={data?.student?.name?.[0].toUpperCase()} />
         <div className="min-h-screen mt-16 p-4 md:p-8">
             <div className="max-w-6xl mx-auto space-y-8">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
