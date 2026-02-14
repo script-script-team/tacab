@@ -7,6 +7,8 @@ import type { RootState } from '@/redux/store';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 const Payment: React.FC = () => {
     const data = useSelector((state: RootState) => state.student.result)
@@ -51,7 +53,9 @@ const Payment: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen p-4 md:p-8">
+        <div className='flex flex-col'>
+        <Header id={data?.student?.student_code} studentName={data?.student?.name?.[0].toUpperCase()} />
+        <div className="min-h-screen mt-16 p-4 md:p-8">
             <div className="max-w-6xl mx-auto space-y-8">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
@@ -92,7 +96,7 @@ const Payment: React.FC = () => {
                             </div>
                             <div>
                                 <p className="text-sm font-medium text-gray-500">Student ID</p>
-                                <p className="text-2xl font-bold text-gray-500">#{data.student.id || 'N/A'}</p>
+                                <p className="text-2xl font-bold text-gray-500">#{data?.student?.student_code || 'N/A'}</p>
                             </div>
                         </div>
                     </div>
@@ -159,6 +163,8 @@ const Payment: React.FC = () => {
                 </div>
             </div>
         </div>
+        <Footer />
+    </div>
     );
 };
 

@@ -93,9 +93,12 @@ function Header({ studentName, id }: { studentName: string; id: number }) {
               </div>
             </PopoverTrigger>
             <PopoverContent className='grid gap-2'>
+              <Button className='cursor-pointer' onClick={() => navigate('/payment')}>
+                Payment
+              </Button>
               <AlertDialog>
                 <AlertDialogTrigger>
-                  <Button className='cursor-pointer hover:underline'>
+                  <Button className='cursor-pointer'>
                     Change Password
                   </Button>
                 </AlertDialogTrigger>

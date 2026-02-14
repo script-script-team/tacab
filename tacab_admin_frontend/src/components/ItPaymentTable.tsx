@@ -11,7 +11,15 @@ import { useGetAllItPayments } from '@/react-query/payment.hooks'
 import { useEffect } from 'react'
 import { toast } from 'sonner'
 import Loading from '@/components/Loading'
-
+import {
+  Popover,
+  PopoverContent,
+  PopoverDescription,
+  PopoverHeader,
+  PopoverTitle,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { Button } from './ui/button'
 
 const ItPaymentTable = ({ page }: { page: number }) => {
   const { data, isLoading, isError, error } = useGetAllItPayments(page)
@@ -72,14 +80,7 @@ const ItPaymentTable = ({ page }: { page: number }) => {
 
               return (
                 <TableCell key={index} className='text-center py-3'>
-                  <div
-                    className={`
-                      px-2 py-2 rounded-full w-fit mx-auto border flex justify-center items-center gap-1 font-medium text-sm shadow-sm
-                      ${bgClass}
-                    `}
-                  >
-                    {icon}
-                  </div>
+                  
                 </TableCell>
               )
             })}

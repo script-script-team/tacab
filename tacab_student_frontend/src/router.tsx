@@ -3,6 +3,7 @@ import Home from './pages/Home'
 import Result from './pages/Result'
 import Login from './pages/auth/login'
 import NotFound from './pages/NotFound'
+import Payment from './pages/Payment'
 
 export const router = createBrowserRouter([
   {
@@ -17,6 +18,10 @@ export const router = createBrowserRouter([
         path: '/result',
         element: <Result />,
       },
+      {
+        path: '/payment',
+        element: <Payment />,
+      }
     ],
   },
   {

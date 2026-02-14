@@ -1,4 +1,3 @@
-
 import { useParams } from 'react-router-dom'
 import { useGetSingleStudent } from '../../react-query/student.hooks'
 import type { IMarks } from '../../pages/types/student.types'
@@ -14,6 +13,15 @@ import { Badge } from '@/components/Badge'
 import { Printer } from 'lucide-react'
 import { UpdateStudentDialog } from '@/components/UpdateStudentDialog'
 import DeleteStudentDialog from '@/components/DeleteStudentDialog'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 
 const MarksTable = ({ marks }: { marks: IMarks | null }) => {
   if (!marks)
@@ -37,58 +45,45 @@ const MarksTable = ({ marks }: { marks: IMarks | null }) => {
   ]
 
   return (
-    <div className='overflow-hidden rounded-lg border border-gray-200 dark:border-gray-800'>
-      <table className='min-w-full divide-y divide-gray-200 dark:divide-gray-800'>
-        <thead className='bg-gray-50 dark:bg-gray-800'>
-          <tr>
-            <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-200'>
-              Subject
-            </th>
-            <th className='px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-200'>
-              Score
-            </th>
-          </tr>
-        </thead>
-        <tbody className='bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-800'>
+    <div className='rounded-md border'>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Subject</TableHead>
+            <TableHead className='text-right'>Score</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {subjects.map((sub) => {
             const score = marks[sub.key as keyof IMarks]
             if (score === undefined || score === null) return null
             return (
-              <tr key={sub.key}>
-                <td className='px-6 py-3 text-sm font-medium text-gray-900 dark:text-gray-200'>
-                  {sub.label}
-                </td>
-                <td className='px-6 py-3 text-sm text-right text-gray-700 dark:text-gray-200'>
-                  {score}
-                </td>
-              </tr>
+              <TableRow key={sub.key}>
+                <TableCell className='font-medium'>{sub.label}</TableCell>
+                <TableCell className='text-right'>{score}</TableCell>
+              </TableRow>
             )
           })}
-          <tr className='bg-blue-50 dark:bg-blue-800'>
-            <td className='px-6 py-4 text-base font-bold text-blue-900 dark:text-blue-200'>
-              Final Grade
-            </td>
-            <td className='px-6 py-4 text-base font-bold text-right text-blue-900 dark:text-blue-200'>
-              {marks.grade}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+          <TableRow className='bg-muted/50 font-bold'>
+            <TableCell>Final Grade</TableCell>
+            <TableCell className='text-right'>{marks.grade}</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
     </div>
   )
 }
 
-// Helper for status badge
 const getStatusBadge = (status: string) => {
   switch (status) {
     case 'PAID':
-      return <Badge variant="success">Paid</Badge>
+      return <Badge variant='success'>Paid</Badge>
     case 'PARTIALLY_PAID':
-      return <Badge variant="warning">Partial</Badge>
+      return <Badge variant='warning'>Partial</Badge>
     case 'UNPAID':
-      return <Badge variant="destructive">Unpaid</Badge>
+      return <Badge variant='destructive'>Unpaid</Badge>
     default:
-      return <Badge variant="secondary">{status}</Badge>
+      return <Badge variant='secondary'>{status}</Badge>
   }
 }
 
@@ -105,14 +100,11 @@ const StudentDetail = () => {
   if (isError)
     return (
       <div className='text-center text-red-500 mt-10'>
-        Error:{' '}
-        {error instanceof Error ? error.message : 'Failed to load student'}
+        Error: {error instanceof Error ? error.message : 'Failed to load student'}
       </div>
     )
   if (!data?.ok || !data.student)
-    return (
-      <div className='text-center text-red-500 mt-10'>Student not found</div>
-    )
+    return <div className='text-center text-red-500 mt-10'>Student not found</div>
 
   const student = data.student
   const totalPaid = calculateTotalPayment(student.payments)
@@ -126,12 +118,10 @@ const StudentDetail = () => {
           <h1 className='text-3xl font-bold text-gray-700 dark:text-gray-200'>
             {student.name}
           </h1>
-          <p className='text-gray-500 mt-1'>
-            Student Code: #{student.student_code}
-          </p>
+          <p className='text-gray-500 mt-1'>Student Code: #{student.student_code}</p>
         </div>
         <div className='flex gap-3'>
-          <Printer onClick={() => window.print()} size={18} />
+          <Printer onClick={() => window.print()} size={18} className='cursor-pointer' />
           <UpdateStudentDialog student={student} />
           <DeleteStudentDialog id={student.id} />
         </div>
@@ -147,91 +137,66 @@ const StudentDetail = () => {
               <InfoItem label='Full Name' value={student.name} />
               <InfoItem label='Phone Number' value={student.phone_number} />
               <InfoItem label='Subject' value={student.subject} />
-              <InfoItem
-                label='Joined Date'
-                value={formatDate(student.createdAt)}
-              />
-              <InfoItem
-                label='Total Paid'
-                value={formatCurrency(totalPaid)}
-                isCurrency
-              />
-              <InfoItem
-                label='Remaining Months'
-                value={`${remainingMonths} Months`}
-              />
+              <InfoItem label='Joined Date' value={formatDate(student.createdAt)} />
+              <InfoItem label='Total Paid' value={formatCurrency(totalPaid)} isCurrency />
+              <InfoItem label='Remaining Months' value={`${remainingMonths} Months`} />
             </div>
           </div>
 
-          {/* Payment Progress */}
           <div className='bg-white dark:bg-gray-900 rounded-xl shadow-sm border p-6'>
             <ProgressBar percent={percent} count={count} />
           </div>
 
-          {/* Payment History Table */}
           <div className='bg-white dark:bg-gray-900 rounded-xl shadow-sm border p-6'>
             <h2 className='text-xl font-bold text-gray-800 dark:text-gray-200 mb-4'>
               Payment History
             </h2>
-            <div className='overflow-x-auto'>
-              <table className='min-w-full text-left text-sm'>
-                <thead className='bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400 uppercase font-semibold'>
-                  <tr>
-                    <th className='px-4 py-3'>Date</th>
-                    <th className='px-4 py-3'>Month/Year</th>
-                    <th className='px-4 py-3'>Status</th>
-                    <th className='px-4 py-3 text-right'>Amount</th>
-                  </tr>
-                </thead>
-                <tbody className='divide-y divide-gray-100'>
+            <div className='rounded-md border'>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Month/Year</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className='text-right'>Amount</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
                   {student.payments && student.payments.length > 0 ? (
                     student.payments.map((payment) => (
-                      <tr
-                        key={payment.id}
-                        className='hover:bg-gray-50 transition-colors'
-                      >
-                        <td className='px-4 py-3 text-gray-700 dark:text-gray-200'>
-                          {formatDate(payment.createdAt)}
-                        </td>
-                        <td className='px-4 py-3 font-medium text-gray-900 dark:text-gray-200'>
+                      <TableRow key={payment.id}>
+                        <TableCell>{formatDate(payment.createdAt)}</TableCell>
+                        <TableCell className='font-medium'>
                           {payment.month}/{payment.year}
-                        </td>
-                        <td className='px-4 py-3'>
-                          {getStatusBadge(payment.status)}
-                        </td>
-                        <td className='px-4 py-3 text-right font-bold text-green-600 dark:text-green-400'>
+                        </TableCell>
+                        <TableCell>{getStatusBadge(payment.status)}</TableCell>
+                        <TableCell className='text-right font-bold text-green-600 dark:text-green-400'>
                           {formatCurrency(payment.amount)}
-                        </td>
-                      </tr>
+                        </TableCell>
+                      </TableRow>
                     ))
                   ) : (
-                    <tr>
-                      <td
-                        colSpan={4}
-                        className='px-4 py-8 text-center text-gray-400 dark:text-gray-600'
-                      >
+                    <TableRow>
+                      <TableCell colSpan={4} className='h-24 text-center text-muted-foreground'>
                         No payment history found.
-                      </td>
-                    </tr>
+                      </TableCell>
+                    </TableRow>
                   )}
-                </tbody>
-                <tfoot className='bg-gray-50 dark:bg-gray-800 font-bold text-gray-900 dark:text-gray-200'>
-                  <tr>
-                    <td colSpan={3} className='px-4 py-3 text-right'>
-                      Total Paid
-                    </td>
-                    <td className='px-4 py-3 text-right text-green-700 dark:text-green-400'>
+                </TableBody>
+                <TableFooter>
+                  <TableRow>
+                    <TableCell colSpan={3}>Total Paid</TableCell>
+                    <TableCell className='text-right text-green-700 dark:text-green-400'>
                       {formatCurrency(totalPaid)}
-                    </td>
-                  </tr>
-                </tfoot>
-              </table>
+                    </TableCell>
+                  </TableRow>
+                </TableFooter>
+              </Table>
             </div>
           </div>
         </div>
 
         <div className='space-y-8'>
-          {/* Marks Section */}
           <div className='bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-6'>
             <div className='flex justify-between items-center mb-6'>
               <h2 className='text-xl font-bold text-gray-800 dark:text-gray-200'>
