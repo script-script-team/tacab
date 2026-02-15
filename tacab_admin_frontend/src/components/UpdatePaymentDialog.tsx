@@ -1,5 +1,12 @@
 import { FiEdit } from 'react-icons/fi'
 import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
 import { useUpdatePayment } from '@/react-query/payment.hooks'
 import { useEffect } from 'react'
@@ -101,13 +108,43 @@ function UpdatePaymentDialog({ payment }: { payment: Payment }) {
           <DialogHeader>
             <DialogTitle>Update Payment</DialogTitle>
             <DialogDescription>
-              Update the payment for {safePayment.student.name}.
-              <br /> Total requirement: $15.
-              Remaining: ${15 - formik.values.amount}.
+              Update the payment information of the student.
             </DialogDescription>
           </DialogHeader>
 
           <div className='grid gap-4 my-5'>
+            {/* Student ID */}
+            <div className='grid gap-2'>
+              <Label htmlFor='student_id'>Student ID</Label>
+              <div className='flex items-center gap-2'>
+                <Input
+                  id='student_id'
+                  name='student_id'
+                  type='text'
+                  autoComplete='off'
+                  value={formik.values.student_id}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  disabled={isPending}
+                />
+              </div>
+              {formik.touched.student_id && formik.errors.student_id && (
+                <p className='text-sm text-red-500'>
+                  {formik.errors.student_id}
+                </p>
+              )}
+            </div>
+
+            <div className='grid gap-2'>
+              <Label>Student Name</Label>
+              <Input
+                id='name'
+                type='text'
+                value={safePayment.student.name}
+                disabled
+              />
+            </div>
+
             {/* Amount */}
             <div className='grid gap-2'>
               <Label htmlFor='amount'>Amount</Label>
@@ -124,6 +161,61 @@ function UpdatePaymentDialog({ payment }: { payment: Payment }) {
                 <p className='text-sm text-red-500'>{formik.errors.amount}</p>
               )}
             </div>
+
+            {/* Month */}
+            <div className='grid gap-2'>
+              <Label htmlFor='month'>Month</Label>
+              <Select
+                name='month'
+                value={formik.values.month}
+                onValueChange={(value) => formik.setFieldValue('month', value)}
+                disabled={isPending}
+              >
+                <SelectTrigger id='month' className='w-full'>
+                  <SelectValue placeholder='Select a month' />
+                </SelectTrigger>
+                <SelectContent>
+                  {[
+                    'January',
+                    'February',
+                    'March',
+                    'April',
+                    'May',
+                    'June',
+                    'July',
+                    'August',
+                    'September',
+                    'October',
+                    'November',
+                    'December',
+                  ].map((month) => (
+                    <SelectItem key={month} value={month}>
+                      {month}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {formik.touched.month && formik.errors.month && (
+                <p className='text-sm text-red-500'>{formik.errors.month}</p>
+              )}
+            </div>
+
+            {/* Year */}
+            <div className='grid gap-2'>
+              <Label htmlFor='year'>Year</Label>
+              <Input
+                id='year'
+                name='year'
+                type='number'
+                value={formik.values.year}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                disabled={isPending}
+              />
+              {formik.touched.year && formik.errors.year && (
+                <p className='text-sm text-red-500'>{formik.errors.year}</p>
+              )}
+            </div>
           </div>
 
           <DialogFooter>
@@ -133,8 +225,8 @@ function UpdatePaymentDialog({ payment }: { payment: Payment }) {
               </Button>
             </DialogClose>
 
-            <Button type='submit' disabled={isPending}>
-              {isPending ? 'Updating...' : 'Update'}
+            <Button type='submit' disabled={isPending || formik.isSubmitting}>
+              {isPending || formik.isSubmitting ? 'Updating...' : 'Update'}
             </Button>
           </DialogFooter>
         </form>

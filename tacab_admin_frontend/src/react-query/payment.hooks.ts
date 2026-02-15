@@ -127,6 +127,30 @@ export const useUpdatePayment = () => {
   })
 }
 
+export const useCompletePayment = () => {
+  return useMutation({
+    mutationKey: ['complete-payment'],
+    mutationFn: async ({ id, amount }: { id: string, amount: number }) => {
+      try {
+        const res = await api.put(`/api/payment/complete/${id}`, {
+          amount: Number(amount),
+        })
+
+        if (!res.data.ok) {
+          throw new Error(res.data.message || 'Failed to update the data')
+        }
+
+        return res.data
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+          throw new Error(error.response.data.message || 'Unkown Error')
+        }
+        throw error
+      }
+    },
+  })
+}
+
 export const useDeletePayment = () => {
   return useMutation({
     mutationKey: ['delete-payment'],

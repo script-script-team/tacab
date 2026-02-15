@@ -7,7 +7,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Check, X } from 'lucide-react'
-import { useGetAllItPayments, useUpdatePayment } from '@/react-query/payment.hooks'
+import { useGetAllItPayments } from '@/react-query/payment.hooks'
 import { useEffect } from 'react'
 import { toast } from 'sonner'
 import Loading from '@/components/Loading'
@@ -25,9 +25,10 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import type { IPayment } from '@/pages/types/student.types'
 import { useQueryClient } from '@tanstack/react-query'
+import { useCompletePayment } from '@/react-query/payment.hooks'
 
 const PaymentCell = ({ payment }: { payment?: IPayment }) => {
-  const { mutate, isPending, isError, error } = useUpdatePayment()
+  const { mutate, isPending, isError, error } = useCompletePayment()
   const client = useQueryClient()
 
   useEffect(() => {
@@ -56,12 +57,12 @@ const PaymentCell = ({ payment }: { payment?: IPayment }) => {
     onSubmit: (values) => {
       mutate({
         id: values.id,
-        amount: Number(values.amount)
+        amount: Number(values.amount),
       }, {
         onSuccess: () => {
           toast.success('Payment updated successfully')
           formik.resetForm()
-          client.invalidateQueries({ queryKey: ['it-payments'] })
+          client.invalidateQueries({ queryKey: ['all-it-payments'] })
         }
       })
     },

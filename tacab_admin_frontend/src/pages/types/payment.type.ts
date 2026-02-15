@@ -30,6 +30,9 @@ export interface addPaymentBody {
 export interface updatePaymentBody {
   id: string
   amount: number
+  student_id: string
+  month: string
+  year: string
 }
 
 export interface IGetAllPayments {
