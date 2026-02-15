@@ -11,6 +11,7 @@ export interface Payment {
   amount: number
   student_id: number
   month: string
+  status: string
   year: number
   createdAt: Date
   updatedAt: Date
@@ -29,9 +30,6 @@ export interface addPaymentBody {
 export interface updatePaymentBody {
   id: string
   amount: number
-  student_id: string
-  month: string
-  year: string
 }
 
 export interface IGetAllPayments {

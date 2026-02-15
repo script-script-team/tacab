@@ -7,7 +7,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Check, X } from 'lucide-react'
-import { useGetAllItPayments } from '@/react-query/payment.hooks'
+import { useGetAllItPayments, useUpdatePayment } from '@/react-query/payment.hooks'
 import { useEffect } from 'react'
 import { toast } from 'sonner'
 import Loading from '@/components/Loading'
@@ -20,13 +20,106 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { Button } from './ui/button'
+import { Input } from './ui/input'
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
+import type { IPayment } from '@/pages/types/student.types'
+import { useQueryClient } from '@tanstack/react-query'
+
+const PaymentCell = ({ payment }: { payment?: IPayment }) => {
+  const { mutate, isPending, isError, error } = useUpdatePayment()
+  const client = useQueryClient()
+
+  useEffect(() => {
+    if (isError) toast.error((error as any)?.message || 'Update failed')
+  }, [isError, error])
+
+  const isPaid = payment?.status === 'PAID'
+  const isPartial = payment?.status === 'PARTIALLY_PAID'
+
+  let bgClass = 'bg-red-100 dark:bg-red-900/40 border-red-300 dark:border-red-800 text-red-700 dark:text-red-300'
+  let icon = <X className='w-4 h-4' />
+
+  if (isPaid) {
+    bgClass = 'bg-emerald-100 dark:bg-emerald-900/40 border-emerald-300 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300'
+    icon = <Check className='w-4 h-4' />
+  } else if (isPartial) {
+    bgClass = 'bg-yellow-100 dark:bg-yellow-900/40 border-yellow-300 dark:border-yellow-800 text-yellow-700 dark:text-yellow-300'
+    icon = <Check className='w-4 h-4' />
+  }
+
+  const formik = useFormik({
+    initialValues: {
+      id: payment?.id || '',
+      amount: '',
+    },
+    onSubmit: (values) => {
+      mutate({
+        id: values.id,
+        amount: Number(values.amount)
+      }, {
+        onSuccess: () => {
+          toast.success('Payment updated successfully')
+          formik.resetForm()
+          client.invalidateQueries({ queryKey: ['it-payments'] })
+        }
+      })
+    },
+    validationSchema: Yup.object({
+      amount: Yup.number().required('Amount is required').positive('Must be positive'),
+    })
+  })
+
+  return (
+    <TableCell className='text-center py-3'>
+      {isPartial ? (
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button className={`px-2 py-2 rounded-full w-fit mx-auto border flex justify-center items-center gap-1 font-medium text-sm shadow-sm ${bgClass}`}>
+              {icon}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent>
+            <PopoverHeader>
+              <PopoverTitle>Payment Details</PopoverTitle>
+              <PopoverDescription>
+                Total Required: $15.00
+                <br />
+                Remaining: ${(15 - (payment?.amount || 0)).toFixed(2)}
+              </PopoverDescription>
+              <form onSubmit={formik.handleSubmit} className='flex flex-col gap-2 mt-4'>
+                <Input
+                  type='number'
+                  step='0.01'
+                  placeholder='Amount to pay'
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  name='amount'
+                  value={formik.values.amount}
+                  className='h-8'
+                />
+                <Button size='sm' className='w-full h-8' disabled={isPending}>
+                  {isPending ? 'Updating...' : 'Complete Payment'}
+                </Button>
+              </form>
+            </PopoverHeader>
+          </PopoverContent>
+        </Popover>
+      ) : (
+        <Button className={`px-2 py-2 rounded-full w-fit mx-auto border flex justify-center items-center gap-1 font-medium text-sm shadow-sm ${bgClass}`}>
+          {icon}
+        </Button>
+      )}
+    </TableCell>
+  )
+}
 
 const ItPaymentTable = ({ page }: { page: number }) => {
   const { data, isLoading, isError, error } = useGetAllItPayments(page)
 
   useEffect(() => {
-    if (isError) toast.error(error.message)
-  }, [isError])
+    if (isError) toast.error((error as any)?.message || 'Failed to fetch payments')
+  }, [isError, error])
 
   if (isLoading)
     return (
@@ -64,24 +157,11 @@ const ItPaymentTable = ({ page }: { page: number }) => {
                 (p: any) => p.month === index + 1
               )
 
-              const isPaid = payment?.status === 'PAID'
-              const isPartial = payment?.status === 'PARTIALLY_PAID'
-
-              let bgClass = 'bg-red-100 dark:bg-red-900/40 border-red-300 dark:border-red-800 text-red-700 dark:text-red-300'
-              let icon = <X className='w-4 h-4' />
-
-              if (isPaid) {
-                bgClass = 'bg-emerald-100 dark:bg-emerald-900/40 border-emerald-300 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300'
-                icon = <Check className='w-4 h-4' />
-              } else if (isPartial) {
-                bgClass = 'bg-yellow-100 dark:bg-yellow-900/40 border-yellow-300 dark:border-yellow-800 text-yellow-700 dark:text-yellow-300'
-                icon = <Check className='w-4 h-4' />
-              }
-
               return (
-                <TableCell key={index} className='text-center py-3'>
-                  
-                </TableCell>
+                <PaymentCell
+                  key={index}
+                  payment={payment}
+                />
               )
             })}
           </TableRow>

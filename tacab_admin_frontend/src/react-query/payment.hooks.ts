@@ -110,8 +110,6 @@ export const useUpdatePayment = () => {
       try {
         const res = await api.put(`/api/payment/${data.id}`, {
           ...data,
-          year: Number(data.year),
-          student_id: Number(data.student_id),
         })
 
         if (!res.data.ok) {
