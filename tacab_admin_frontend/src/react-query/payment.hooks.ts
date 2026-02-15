@@ -6,6 +6,7 @@ import type {
   addPaymentBody,
   updatePaymentBody,
   IGetAllPayments,
+  allFees,
 } from '@/pages/types/payment.type'
 
 export const useGetAllPayments = (page: number) => {
@@ -110,6 +111,52 @@ export const useUpdatePayment = () => {
       try {
         const res = await api.put(`/api/payment/${data.id}`, {
           ...data,
+        })
+
+        if (!res.data.ok) {
+          throw new Error(res.data.message || 'Failed to update the data')
+        }
+
+        return res.data
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+          throw new Error(error.response.data.message || 'Unkown Error')
+        }
+        throw error
+      }
+    },
+  })
+}
+
+export const useGetFee = () => {
+  return useQuery({
+    queryKey: ['fee'],
+    queryFn: async () => {
+      try {
+        const res = await api.get('/api/fee')
+
+        if (!res.data.ok) {
+          throw new Error(res.data.message || 'Failed to get the data')
+        }
+
+        return res.data as allFees
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+          throw new Error(error.response.data.message || 'Unkown Error')
+        }
+        throw error
+      }
+    },
+  })
+}
+
+export const useUpdateFee = () => {
+  return useMutation({
+    mutationKey: ['update-fee'],
+    mutationFn: async ({subject, amount}: {subject: string, amount: number}) => {
+      try {
+        const res = await api.put(`/api/fee/${subject}`, {
+          amount: Number(amount),
         })
 
         if (!res.data.ok) {

@@ -7,7 +7,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Check, X } from 'lucide-react'
-import { useGetAllItPayments } from '@/react-query/payment.hooks'
+import { useGetAllItPayments, useGetFee } from '@/react-query/payment.hooks'
 import { useEffect } from 'react'
 import { toast } from 'sonner'
 import Loading from '@/components/Loading'
@@ -71,6 +71,14 @@ const PaymentCell = ({ payment }: { payment?: IPayment }) => {
     })
   })
 
+  const { data: feeData, isLoading: feeLoading, isError: feeIsError, error: feeError } = useGetFee()
+
+  const feeFee = feeData?.fees.find((fee) => fee.subject === 'IT')
+
+  useEffect(() => {
+    if (feeIsError) toast.error((feeError as any)?.message || 'Failed to fetch fee')
+  }, [feeIsError, feeError])
+
   return (
     <TableCell className='text-center py-3'>
       {isPartial ? (
@@ -84,9 +92,9 @@ const PaymentCell = ({ payment }: { payment?: IPayment }) => {
             <PopoverHeader>
               <PopoverTitle>Payment Details</PopoverTitle>
               <PopoverDescription>
-                Total Required: $15.00
+                Total Required: ${feeLoading ? 'Loading...' : feeFee?.amount}
                 <br />
-                Remaining: ${(15 - (payment?.amount || 0)).toFixed(2)}
+                Remaining: ${feeLoading ? 'Loading...' : (feeFee?.amount! - (payment?.amount || 0))}
               </PopoverDescription>
               <form onSubmit={formik.handleSubmit} className='flex flex-col gap-2 mt-4'>
                 <Input

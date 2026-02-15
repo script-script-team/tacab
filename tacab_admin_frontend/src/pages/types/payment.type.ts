@@ -18,7 +18,17 @@ export interface Payment {
   student: IFullStudentProp
 }
 
+export interface allFees {
+  ok: boolean
+  fees: Fee[]
+}
 
+export interface Fee {
+  id: string
+  subject: string
+  amount: number
+  updatedAt: string
+}
 
 export interface addPaymentBody {
   amount: number
