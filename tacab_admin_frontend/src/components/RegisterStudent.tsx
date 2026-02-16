@@ -52,7 +52,8 @@ export function NewStudentDialog() {
     try {
       newStudent(data, {
         onSuccess: (res) => {
-          queryClient.invalidateQueries({ queryKey: ['all-students'] })
+          queryClient.invalidateQueries({ queryKey: ['it-students'] })
+          queryClient.invalidateQueries({ queryKey: ['computer-students'] })
           toast.success(res.message || 'Student created successfully')
         },
         onError: (err) => {
@@ -60,7 +61,7 @@ export function NewStudentDialog() {
         },
       })
     } catch (err) {
-      toast.error('Failed to create admin')
+      toast.error('Failed to create student')
       console.error(err)
     }
   }
