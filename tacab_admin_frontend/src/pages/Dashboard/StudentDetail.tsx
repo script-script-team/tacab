@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom'
 import { useGetSingleStudent } from '../../react-query/student.hooks'
-import type { IMarks } from '../../pages/types/student.types'
+import type { IMarks, IPayment } from '../../pages/types/student.types'
 import {
   calculateProgress,
   calculateTotalPayment,
@@ -22,6 +22,22 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import {
+  Popover,
+  PopoverContent,
+  PopoverDescription,
+  PopoverHeader,
+  PopoverTitle,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
+import { useGetFee, useCompletePayment } from '@/react-query/payment.hooks'
+import { useEffect } from 'react'
+import { toast } from 'sonner'
+import { useQueryClient } from '@tanstack/react-query'
 
 const MarksTable = ({ marks }: { marks: IMarks | null }) => {
   if (!marks)
@@ -74,17 +90,90 @@ const MarksTable = ({ marks }: { marks: IMarks | null }) => {
   )
 }
 
-const getStatusBadge = (status: string) => {
-  switch (status) {
-    case 'PAID':
-      return <Badge variant='success'>Paid</Badge>
-    case 'PARTIALLY_PAID':
-      return <Badge variant='warning'>Partial</Badge>
-    case 'UNPAID':
-      return <Badge variant='destructive'>Unpaid</Badge>
-    default:
-      return <Badge variant='secondary'>{status}</Badge>
+const InteractiveStatusBadge = ({ payment, studentSubject, studentId }: { payment: IPayment, studentSubject: string, studentId: number }) => {
+  const { mutate, isPending, isError, error } = useCompletePayment()
+  const client = useQueryClient()
+
+  useEffect(() => {
+    if (isError) toast.error((error as any)?.message || 'Update failed')
+  }, [isError, error])
+
+  const formik = useFormik({
+    initialValues: {
+      id: payment.id || '',
+      amount: '',
+    },
+    onSubmit: (values) => {
+      mutate({
+        id: values.id,
+        amount: Number(values.amount),
+      }, {
+        onSuccess: () => {
+          toast.success('Payment updated successfully')
+          formik.resetForm()
+          client.invalidateQueries({ queryKey: ['single-student', Number(studentId)] })
+        }
+      })
+    },
+    validationSchema: Yup.object({
+      amount: Yup.number().required('Amount is required').positive('Must be positive'),
+    })
+  })
+
+  const { data: feeData, isLoading: feeLoading, isError: feeIsError, error: feeError } = useGetFee()
+
+  const feeFee = feeData?.fees.find((fee) => fee.subject === studentSubject)
+
+  useEffect(() => {
+    if (feeIsError) toast.error((feeError as any)?.message || 'Failed to fetch fee')
+  }, [feeIsError, feeError])
+
+  if (payment.status === 'PAID') {
+    return <Badge variant='success'>Paid</Badge>
   }
+
+  if (payment.status === 'PARTIALLY_PAID') {
+    return (
+      <Popover>
+        <PopoverTrigger asChild>
+          <div className='cursor-pointer'>
+            <Badge variant='warning'>Partial</Badge>
+          </div>
+        </PopoverTrigger>
+        <PopoverContent>
+          <PopoverHeader>
+            <PopoverTitle>Payment Details</PopoverTitle>
+            <PopoverDescription>
+              Total Required: ${feeLoading ? 'Loading...' : feeFee ? feeFee.amount : 'N/A'}
+              <br />
+              Remaining: ${feeLoading ? 'Loading...' : feeFee ? (feeFee.amount - (payment?.amount || 0)).toFixed(2) : 'N/A'}
+            </PopoverDescription>
+            <form onSubmit={formik.handleSubmit} className='flex flex-col gap-2 mt-4'>
+              <Input
+                type='number'
+                step='0.01'
+                placeholder='Amount to pay'
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                name='amount'
+                value={formik.values.amount}
+                className='h-8'
+              />
+              <Button size='sm' className='w-full h-8' disabled={isPending}>
+                {isPending ? 'Updating...' : 'Complete Payment'}
+              </Button>
+            </form>
+          </PopoverHeader>
+        </PopoverContent>
+      </Popover>
+    )
+  }
+
+  if (payment.status === 'UNPAID') {
+    return <Badge variant='destructive'>Unpaid</Badge>
+  }
+
+  return <Badge variant='secondary'>{payment.status}</Badge>
 }
 
 const StudentDetail = () => {
@@ -169,7 +258,13 @@ const StudentDetail = () => {
                         <TableCell className='font-medium'>
                           {payment.month}/{payment.year}
                         </TableCell>
-                        <TableCell>{getStatusBadge(payment.status)}</TableCell>
+                        <TableCell>
+                          <InteractiveStatusBadge
+                            payment={payment}
+                            studentSubject={student.subject}
+                            studentId={student.id}
+                          />
+                        </TableCell>
                         <TableCell className='text-right font-bold text-green-600 dark:text-green-400'>
                           {formatCurrency(payment.amount)}
                         </TableCell>
