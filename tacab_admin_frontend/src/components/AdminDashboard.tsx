@@ -25,7 +25,9 @@ export const AdminDashboard = ({ admin }: { admin: IAdminProp }) => {
           <p className='text-sm text-gray-500 dark:text-gray-400'>
             {admin.email}
           </p>
-          <Badge text={admin.role} />
+          <div className='mt-2'>
+            <Badge variant='success' text={admin.role} />
+          </div>
         </div>
       </div>
       <div className='flex justify-between items-center gap-5 mt-8'>
