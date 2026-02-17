@@ -56,6 +56,7 @@ export function DeleteAlert({
               variant={'destructive'}
               onClick={handleDelete}
               disabled={isPending}
+              className='text-white'
             >
               {isPending ? 'Deleting...' : 'Delete'}
             </Button>

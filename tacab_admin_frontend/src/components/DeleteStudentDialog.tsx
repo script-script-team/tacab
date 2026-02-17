@@ -52,6 +52,7 @@ const DeleteStudentDialog = ({ id }: { id: number }) => {
               variant={'destructive'}
               onClick={handleDeleting}
               disabled={isPending}
+              className='text-white'
             >
               {isPending ? 'Deleting...' : 'Delete'}
             </Button>

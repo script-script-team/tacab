@@ -40,6 +40,7 @@ function DeletePaymentDialog({ id }: { id: string }) {
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
+            className='bg-red-500 hover:bg-red-600 text-white'
             disabled={isPending}
             onClick={() =>
               mutate(id, {
