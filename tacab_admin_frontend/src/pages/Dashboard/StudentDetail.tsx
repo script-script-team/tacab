@@ -29,7 +29,7 @@ import {
   PopoverHeader,
   PopoverTitle,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from '@/components/ui/popover'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useFormik } from 'formik'
@@ -90,7 +90,15 @@ const MarksTable = ({ marks }: { marks: IMarks | null }) => {
   )
 }
 
-const InteractiveStatusBadge = ({ payment, studentSubject, studentId }: { payment: IPayment, studentSubject: string, studentId: number }) => {
+const InteractiveStatusBadge = ({
+  payment,
+  studentSubject,
+  studentId,
+}: {
+  payment: IPayment
+  studentSubject: string
+  studentId: number
+}) => {
   const { mutate, isPending, isError, error } = useCompletePayment()
   const client = useQueryClient()
 
@@ -104,28 +112,41 @@ const InteractiveStatusBadge = ({ payment, studentSubject, studentId }: { paymen
       amount: '',
     },
     onSubmit: (values) => {
-      mutate({
-        id: values.id,
-        amount: Number(values.amount),
-      }, {
-        onSuccess: () => {
-          toast.success('Payment updated successfully')
-          formik.resetForm()
-          client.invalidateQueries({ queryKey: ['single-student', Number(studentId)] })
-        }
-      })
+      mutate(
+        {
+          id: values.id,
+          amount: Number(values.amount),
+        },
+        {
+          onSuccess: () => {
+            toast.success('Payment updated successfully')
+            formik.resetForm()
+            client.invalidateQueries({
+              queryKey: ['single-student', Number(studentId)],
+            })
+          },
+        },
+      )
     },
     validationSchema: Yup.object({
-      amount: Yup.number().required('Amount is required').positive('Must be positive'),
-    })
+      amount: Yup.number()
+        .required('Amount is required')
+        .positive('Must be positive'),
+    }),
   })
 
-  const { data: feeData, isLoading: feeLoading, isError: feeIsError, error: feeError } = useGetFee()
+  const {
+    data: feeData,
+    isLoading: feeLoading,
+    isError: feeIsError,
+    error: feeError,
+  } = useGetFee()
 
   const feeFee = feeData?.fees.find((fee) => fee.subject === studentSubject)
 
   useEffect(() => {
-    if (feeIsError) toast.error((feeError as any)?.message || 'Failed to fetch fee')
+    if (feeIsError)
+      toast.error((feeError as any)?.message || 'Failed to fetch fee')
   }, [feeIsError, feeError])
 
   if (payment.status === 'PAID') {
@@ -144,11 +165,20 @@ const InteractiveStatusBadge = ({ payment, studentSubject, studentId }: { paymen
           <PopoverHeader>
             <PopoverTitle>Payment Details</PopoverTitle>
             <PopoverDescription>
-              Total Required: ${feeLoading ? 'Loading...' : feeFee ? feeFee.amount : 'N/A'}
+              Total Required: $
+              {feeLoading ? 'Loading...' : feeFee ? feeFee.amount : 'N/A'}
               <br />
-              Remaining: ${feeLoading ? 'Loading...' : feeFee ? (feeFee.amount - (payment?.amount || 0)).toFixed(2) : 'N/A'}
+              Remaining: $
+              {feeLoading
+                ? 'Loading...'
+                : feeFee
+                  ? (feeFee.amount - (payment?.amount || 0)).toFixed(2)
+                  : 'N/A'}
             </PopoverDescription>
-            <form onSubmit={formik.handleSubmit} className='flex flex-col gap-2 mt-4'>
+            <form
+              onSubmit={formik.handleSubmit}
+              className='flex flex-col gap-2 mt-4'
+            >
               <Input
                 type='number'
                 step='0.01'
@@ -189,11 +219,14 @@ const StudentDetail = () => {
   if (isError)
     return (
       <div className='text-center text-red-500 mt-10'>
-        Error: {error instanceof Error ? error.message : 'Failed to load student'}
+        Error:{' '}
+        {error instanceof Error ? error.message : 'Failed to load student'}
       </div>
     )
   if (!data?.ok || !data.student)
-    return <div className='text-center text-red-500 mt-10'>Student not found</div>
+    return (
+      <div className='text-center text-red-500 mt-10'>Student not found</div>
+    )
 
   const student = data.student
   const totalPaid = calculateTotalPayment(student.payments)
@@ -207,10 +240,16 @@ const StudentDetail = () => {
           <h1 className='text-3xl font-bold text-gray-700 dark:text-gray-200'>
             {student.name}
           </h1>
-          <p className='text-gray-500 mt-1'>Student Code: #{student.student_code}</p>
+          <p className='text-gray-500 mt-1'>
+            Student Code: #{student.student_code}
+          </p>
         </div>
-        <div className='flex gap-3'>
-          <Printer onClick={() => window.print()} size={18} className='cursor-pointer' />
+        <div className='flex gap-3 no-print'>
+          <Printer
+            onClick={() => window.print()}
+            size={18}
+            className='cursor-pointer'
+          />
           <UpdateStudentDialog student={student} />
           <DeleteStudentDialog id={student.id} />
         </div>
@@ -226,17 +265,27 @@ const StudentDetail = () => {
               <InfoItem label='Full Name' value={student.name} />
               <InfoItem label='Phone Number' value={student.phone_number} />
               <InfoItem label='Subject' value={student.subject} />
-              <InfoItem label='Joined Date' value={formatDate(student.createdAt)} />
-              <InfoItem label='Total Paid' value={formatCurrency(totalPaid)} isCurrency />
-              <InfoItem label='Remaining Months' value={`${remainingMonths} Months`} />
+              <InfoItem
+                label='Joined Date'
+                value={formatDate(student.createdAt)}
+              />
+              <InfoItem
+                label='Total Paid'
+                value={formatCurrency(totalPaid)}
+                isCurrency
+              />
+              <InfoItem
+                label='Remaining Months'
+                value={`${remainingMonths} Months`}
+              />
             </div>
           </div>
 
-          <div className='bg-white dark:bg-gray-900 rounded-xl shadow-sm border p-6'>
+          <div className='bg-white dark:bg-gray-900 rounded-xl shadow-sm border p-6 no-print'>
             <ProgressBar percent={percent} count={count} />
           </div>
 
-          <div className='bg-white dark:bg-gray-900 rounded-xl shadow-sm border p-6'>
+          <div className='bg-white dark:bg-gray-900 rounded-xl shadow-sm border p-6 margin-top-print'>
             <h2 className='text-xl font-bold text-gray-800 dark:text-gray-200 mb-4'>
               Payment History
             </h2>
@@ -272,7 +321,10 @@ const StudentDetail = () => {
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={4} className='h-24 text-center text-muted-foreground'>
+                      <TableCell
+                        colSpan={4}
+                        className='h-24 text-center text-muted-foreground'
+                      >
                         No payment history found.
                       </TableCell>
                     </TableRow>

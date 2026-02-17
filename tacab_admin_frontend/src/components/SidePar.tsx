@@ -72,9 +72,9 @@ function SidePar() {
           <h2>Tacab</h2>
         </div>
 
-        <h2 className='text-lg text-gray-400 font-medium'>Menu</h2>
+        <h2 className='text-lg text-gray-400 font-medium no-print'>Menu</h2>
 
-        <div className='flex md:flex-col lg:flex-col xl:flex-col xs:justify-between sm:justify-between md:gap-4 lg:gap-4 xl:gap-4 sm:flex-row xs:flex-row'>
+        <div className=' no-print flex md:flex-col lg:flex-col xl:flex-col xs:justify-between sm:justify-between md:gap-4 lg:gap-4 xl:gap-4 sm:flex-row xs:flex-row'>
           {opt
             .filter((item) => !item.adminOnly || user.role == ROLE.ADMIN)
             .map((opt, index) => {
@@ -84,7 +84,7 @@ function SidePar() {
                   key={index}
                   className={`cursor-pointer flex items-center gap-3 rounded-tr-md rounded-br-md ${
                     opt.path === path ? 'bg-gray-100 dark:bg-gray-800' : ''
-                  } relative before:-translate-y-8 overflow-hidden before:content-[''] before:w-[5px] before:h-full ${
+                  }  relative before:-translate-y-8 overflow-hidden before:content-[''] before:w-[5px] before:h-full ${
                     opt.path === path
                       ? 'before:bg-green-500 before:translate-y-0'
                       : ''

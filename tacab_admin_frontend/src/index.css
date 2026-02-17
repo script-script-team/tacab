@@ -147,3 +147,13 @@
     @apply cursor-pointer
   }
 }
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  .margin-top-print {
+    margin-top: 1000px !important;
+  }
+}

@@ -153,7 +153,13 @@ export const useGetFee = () => {
 export const useUpdateFee = () => {
   return useMutation({
     mutationKey: ['update-fee'],
-    mutationFn: async ({subject, amount}: {subject: string, amount: number}) => {
+    mutationFn: async ({
+      subject,
+      amount,
+    }: {
+      subject: string
+      amount: number
+    }) => {
       try {
         const res = await api.put(`/api/fee/${subject}`, {
           amount: Number(amount),
@@ -177,7 +183,7 @@ export const useUpdateFee = () => {
 export const useCompletePayment = () => {
   return useMutation({
     mutationKey: ['complete-payment'],
-    mutationFn: async ({ id, amount }: { id: string, amount: number }) => {
+    mutationFn: async ({ id, amount }: { id: string; amount: number }) => {
       try {
         const res = await api.put(`/api/payment/complete/${id}`, {
           amount: Number(amount),

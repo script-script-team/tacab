@@ -27,7 +27,7 @@ const DashboardHeader = () => {
       {loading ? (
         <Loading />
       ) : (
-        <div className='flex gap-2'>
+        <div className='flex gap-2 no-print'>
           <Popover>
             <PopoverTrigger>
               <Avatar className='cursor-pointer'>
